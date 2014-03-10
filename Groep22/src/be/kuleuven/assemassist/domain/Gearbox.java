@@ -4,7 +4,7 @@ public enum Gearbox {
 
 	MANUAL(6), AUTOMATIC(5);
 	
-	private int amount;
+	private int  amount;
 	
 	Gearbox(int amount){
 		this.amount = amount;

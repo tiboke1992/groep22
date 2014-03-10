@@ -6,7 +6,7 @@ import java.util.UUID;
 public class CarOrder {
 
 	private UUID id;
-	private Date completionTime;
+	private Date  completionTime;
 	
 	public CarOrder(){
 		this.id = UUID.randomUUID();

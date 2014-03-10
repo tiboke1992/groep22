@@ -5,7 +5,7 @@ public enum Engine {
 	STANDARD(21, 4), PERFORMANCE(2.51, 6);
 	
 	private double size;
-	private int cilinderCount;
+	private int  cilinderCount;
 	
 	Engine(double size, int cilinderCount){
 		this.size = size;

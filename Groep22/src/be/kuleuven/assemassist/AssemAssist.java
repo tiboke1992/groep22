@@ -17,7 +17,9 @@ public class AssemAssist {
 	
 	private Queue<CarOrder> orders;
 	private Queue<CarOrder> completed;
-	
+	/*/
+	 * 
+	 */
 	public static void main(String[] args) {
 		AssemAssist assemAssist = new AssemAssist();
 		Scanner scanner = new Scanner(System.in);
