@@ -2,13 +2,12 @@ package be.kuleuven.assemassist;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Queue;
 import java.util.Scanner;
 
+import be.kuleuven.assemassist.domain.CarManufacturingCompany;
 import be.kuleuven.assemassist.domain.CarModel;
 import be.kuleuven.assemassist.domain.CarOrder;
+import be.kuleuven.assemassist.domain.WorkStation;
 
 public class AssemAssist {
 
@@ -19,8 +18,7 @@ public class AssemAssist {
 																			// proper
 																			// format
 
-	private Queue<CarOrder> orders;
-	private Queue<CarOrder> completed;
+	private CarManufacturingCompany company;
 
 	public static void main(String[] args) {
 		AssemAssist assemAssist = new AssemAssist();
@@ -37,12 +35,12 @@ public class AssemAssist {
 				System.out.println();
 				System.out.println("Overview:");
 				System.out.println("Pending orders:");
-				for (CarOrder order : assemAssist.getOrders()) {
+				for (CarOrder order : assemAssist.getCompany().getProductionSchedule().getPendingCarOrders()) {
 					System.out.println(order.getId() + "\t\t"
 							+ PENDING_FORMAT.format(order.getEstimatedCompletionTime()));
 				}
 				System.out.println("Completed orders:");
-				for (CarOrder order : assemAssist.getCompleted()) {
+				for (CarOrder order : assemAssist.getCompany().getProductionSchedule().getCompletedCarOrders()) {
 					System.out.println(order.getId() + "\t\t" + COMPLETED_FORMAT.format(order.getCompletionTime()));
 				}
 				System.out.println();
@@ -53,37 +51,39 @@ public class AssemAssist {
 				if (option == 1) {
 					CarOrder order = new CarOrder();
 					System.out.println("Available car models:");
-					for (int i = 0; i < assemAssist.getAvailableCarModels().size(); i++) {
-						System.out.println((i + 1) + ") " + assemAssist.getAvailableCarModels().get(i));
+					for (int i = 0; i < assemAssist.getCompany().getAvailableCarModels().size(); i++) {
+						System.out.println((i + 1) + ") " + assemAssist.getCompany().getAvailableCarModels().get(i));
 					}
 					System.out.println("*) Exit");
 					option = scanner.nextInt();
-					if (option > 0 || option <= assemAssist.getAvailableCarModels().size()) {
-						CarModel model = assemAssist.getAvailableCarModels().get(option - 1);
+					if (option > 0 || option <= assemAssist.getCompany().getAvailableCarModels().size()) {
+						CarModel model = assemAssist.getCompany().getAvailableCarModels().get(option - 1);
 						// TODO display order form etc..
 					}
 				}
 				break;
 			case 2:
+				System.out.println("At which workpost are you working?");
+				for (int i = 0; i < WorkStation.getWorkStations().size(); i++)
+					System.out.println(i + 1 + ") " + WorkStation.getWorkStations().get(i));
+				System.out.println("*) Exit");
+				option = scanner.nextInt();
+				if (option > 0 || option <= WorkStation.getWorkStations().size()) {
+					WorkStation workPost = WorkStation.getWorkStations().get(option - 1);
+
+				}
+				break;
 			case 3:
 				throw new UnsupportedOperationException("Not yet supported");
 		}
 		System.out.println("Thank you for using AssemAssist!");
 	}
 
-	private List<CarModel> getAvailableCarModels() {
-		return new ArrayList<>();
-	}
-
 	public AssemAssist() {
-
+		company = new CarManufacturingCompany();// TODO name etc
 	}
 
-	public Queue<CarOrder> getOrders() {
-		return orders;
-	}
-
-	public Queue<CarOrder> getCompleted() {
-		return completed;
+	public CarManufacturingCompany getCompany() {
+		return company;
 	}
 }

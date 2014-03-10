@@ -7,6 +7,7 @@ public class CarOrder {
 
 	private UUID id;
 	private Date completionTime;
+	private DeliveryTime deliveryTime;
 
 	public CarOrder() {
 		this.id = UUID.randomUUID();
