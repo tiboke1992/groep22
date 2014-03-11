@@ -7,22 +7,7 @@ import be.kuleuven.assemassist.domain.options.CarOption;
 
 public class CarModelSpecification {
 
-	/*
-	 * / instantiates CarOrder
-	 */
-
-	private Car car;
-
-	public CarModelSpecification(Car car) {
-		setCar(car);
-	}
-
-	public Car getCar() {
-		return car;
-	}
-
-	public void setCar(Car car) {
-		this.car = car;
+	public CarModelSpecification() {
 	}
 
 	public boolean canHaveAsOption(CarOption option) {
