@@ -1,6 +1,7 @@
 package be.kuleuven.assemassist.domain.options;
 
-public enum Gearbox {
+
+public enum Gearbox implements CarOption {
 
 	MANUAL(6), AUTOMATIC(5);
 

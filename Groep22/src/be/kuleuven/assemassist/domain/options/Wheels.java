@@ -1,6 +1,6 @@
 package be.kuleuven.assemassist.domain.options;
 
-public enum Wheels {
+public enum Wheels implements CarOption {
 
 	COMFORT, SPORTS;
 

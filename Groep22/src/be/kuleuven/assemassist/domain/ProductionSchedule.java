@@ -26,4 +26,9 @@ public class ProductionSchedule {
 	public List<CarOrder> getCompletedCarOrders() {
 		return completedCarOrders;
 	}
+
+	public void addCarOrder(CarOrder order) {
+		order.init();
+		pendingCarOrders.add(order);
+	}
 }

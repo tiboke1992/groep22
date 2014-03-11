@@ -1,6 +1,7 @@
 package be.kuleuven.assemassist.domain.options;
 
-public enum Engine {
+
+public enum Engine implements CarOption {
 
 	STANDARD(21, 4), PERFORMANCE(2.51, 6);
 
