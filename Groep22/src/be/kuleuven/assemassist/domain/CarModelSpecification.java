@@ -5,14 +5,12 @@ import java.util.List;
 
 import be.kuleuven.assemassist.domain.options.CarOption;
 
-public class CarModelSpecification {
+public abstract class CarModelSpecification {
 
 	public CarModelSpecification() {
 	}
 
-	public boolean canHaveAsOption(CarOption option) {
-		return true;
-	}
+	public abstract boolean canHaveAsOption(CarOption option);
 
 	public <T> List<T> filterOutInvalidOptions(CarOption[] options, Class<T> c) {
 		List<T> caroptions = new ArrayList<>();

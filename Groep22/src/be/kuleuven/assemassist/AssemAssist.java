@@ -45,7 +45,6 @@ public class AssemAssist {
 				assemAssist.showMenu();
 				option = scanner.nextInt();
 				if (option == 1) {
-					CarOrder order = new CarOrder();
 					assemAssist.showCarModels();
 					option = scanner.nextInt();
 					if (option > 0 || option <= assemAssist.getCompany().getAvailableCarModels().size()) {
@@ -58,6 +57,7 @@ public class AssemAssist {
 								Wheels wheels = askCarOption(scanner, spec, Wheels.class);
 								if (wheels != null) {
 									Seats seats = askCarOption(scanner, spec, Seats.class);
+									CarOrder order = new CarOrder(spec);
 									order.setEngine(engine);
 									order.setGearbox(gearbox);
 									order.setWheels(wheels);

@@ -11,14 +11,20 @@ public class CarOrder {
 
 	private UUID id;
 	private DeliveryTime deliveryTime;
+	private CarModelSpecification modelSpecification;
 
 	private Engine engine;
 	private Gearbox gearbox;
 	private Seats seats;
 	private Wheels wheels;
 
-	public CarOrder() {
+	public CarOrder(CarModelSpecification modelSpecification) {
 		this.id = UUID.randomUUID();
+		this.modelSpecification = modelSpecification;
+	}
+
+	public void init() {
+		deliveryTime = new DeliveryTime();
 	}
 
 	public UUID getId() {
@@ -61,8 +67,7 @@ public class CarOrder {
 		this.wheels = wheels;
 	}
 
-	public void init() {
-		deliveryTime = new DeliveryTime();
+	public CarModelSpecification getModelSpecification() {
+		return modelSpecification;
 	}
-
 }

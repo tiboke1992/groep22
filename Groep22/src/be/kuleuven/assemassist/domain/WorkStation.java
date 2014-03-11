@@ -5,7 +5,7 @@ import java.util.List;
 
 import be.kuleuven.assemassist.domain.task.AssemblyTask;
 
-public  class WorkStation {
+public abstract class WorkStation {
 
 	// 1
 	private CarMechanic carMechanic;
@@ -16,20 +16,20 @@ public  class WorkStation {
 	// 0..*
 	private List<AssemblyTask> assemblyTasks;
 
-//	public WorkStation(CarMechanic carMechanic, ConveyorBelt conveyorBelt) {
-//		this.setCarMechanic(carMechanic);
-//		this.setConveyorBelt(conveyorBelt);
-//		this.tools = new ArrayList<Tool>();
-//		this.assemblyTasks = new ArrayList<>(assemblyTasks);
-//	}
-//
-//	public WorkStation(CarMechanic carMechanic, ConveyorBelt conveyorBelt,
-//			List<Tool> tools, List<AssemblyTask> assemblyTasks) {
-//		this.setCarMechanic(carMechanic);
-//		this.setConveyorBelt(conveyorBelt);
-//		this.setTools(tools);
-//		this.setAssemblyTasks(assemblyTasks);
-//	}
+	// public WorkStation(CarMechanic carMechanic, ConveyorBelt conveyorBelt) {
+	// this.setCarMechanic(carMechanic);
+	// this.setConveyorBelt(conveyorBelt);
+	// this.tools = new ArrayList<Tool>();
+	// this.assemblyTasks = new ArrayList<>(assemblyTasks);
+	// }
+	//
+	// public WorkStation(CarMechanic carMechanic, ConveyorBelt conveyorBelt,
+	// List<Tool> tools, List<AssemblyTask> assemblyTasks) {
+	// this.setCarMechanic(carMechanic);
+	// this.setConveyorBelt(conveyorBelt);
+	// this.setTools(tools);
+	// this.setAssemblyTasks(assemblyTasks);
+	// }
 
 	public static List<WorkStation> getWorkStations() {
 		List<WorkStation> workStations = new ArrayList<>();
@@ -66,16 +66,12 @@ public  class WorkStation {
 		this.tools = tools;
 	}
 
-	public AssemblyTask getAssemblyTask(){
+	public AssemblyTask getAssemblyTask() {
 		return new AssemblyTask();
 	}
 
 	public void setAssemblyTasks(List<AssemblyTask> assemblyTasks) {
 		this.assemblyTasks = assemblyTasks;
-	}
-	
-	public String toString(){
-		return "";
 	}
 
 }
