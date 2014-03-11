@@ -70,8 +70,10 @@ public class AssemAssist {
 				option = scanner.nextInt();
 				if (option > 0 || option <= WorkStation.getWorkStations().size()) {
 					WorkStation workPost = WorkStation.getWorkStations().get(option - 1);
-
 				}
+				/*/
+				 * show pending assemblytasks
+				 */
 				break;
 			case 3:
 				throw new UnsupportedOperationException("Not yet supported");
