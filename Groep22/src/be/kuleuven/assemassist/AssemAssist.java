@@ -16,7 +16,7 @@ public class AssemAssist {
 																				// format
 	private static final DateFormat PENDING_FORMAT = new SimpleDateFormat();// TODO
 																			// proper
-																			// format
+																			// formatter
 
 	private CarManufacturingCompany company;
 
