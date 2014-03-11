@@ -16,6 +16,7 @@ public class AccessoriesPost extends WorkStation {
 		return "AccessoriesPost";
 	}
 
+	@Override
 	public AssemblyTask getAssemblyTask() {
 		return assemblyTask;
 	}

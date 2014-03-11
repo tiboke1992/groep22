@@ -5,7 +5,7 @@ import java.util.List;
 
 import be.kuleuven.assemassist.domain.task.AssemblyTask;
 
-public abstract class WorkStation {
+public  class WorkStation {
 
 	// 1
 	private CarMechanic carMechanic;
@@ -66,14 +66,16 @@ public abstract class WorkStation {
 		this.tools = tools;
 	}
 
-	public List<AssemblyTask> getAssemblyTasks() {
-		return assemblyTasks;
+	public AssemblyTask getAssemblyTask(){
+		return new AssemblyTask();
 	}
 
 	public void setAssemblyTasks(List<AssemblyTask> assemblyTasks) {
 		this.assemblyTasks = assemblyTasks;
 	}
 	
-	public abstract String toString();
+	public String toString(){
+		return "";
+	}
 
 }

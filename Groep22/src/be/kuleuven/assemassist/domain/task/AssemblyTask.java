@@ -24,4 +24,8 @@ public class AssemblyTask {
 	public void add(AssemblyTask action) {
 		actions.add(action);
 	}
+	
+	public String toString(){
+		return "";
+	}
 }

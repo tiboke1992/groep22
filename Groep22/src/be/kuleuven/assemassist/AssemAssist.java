@@ -8,6 +8,7 @@ import be.kuleuven.assemassist.domain.CarManufacturingCompany;
 import be.kuleuven.assemassist.domain.CarModel;
 import be.kuleuven.assemassist.domain.CarOrder;
 import be.kuleuven.assemassist.domain.WorkStation;
+import be.kuleuven.assemassist.domain.task.AssemblyTask;
 
 public class AssemAssist {
 
@@ -63,6 +64,9 @@ public class AssemAssist {
 				}
 				break;
 			case 2:
+				/*/
+				 * Naar dit gedeelte moete kijken
+				 */
 				System.out.println("At which workpost are you working?");
 				for (int i = 0; i < WorkStation.getWorkStations().size(); i++)
 					System.out.println(i + 1 + ") " + WorkStation.getWorkStations().get(i));
@@ -70,10 +74,18 @@ public class AssemAssist {
 				option = scanner.nextInt();
 				if (option > 0 || option <= WorkStation.getWorkStations().size()) {
 					WorkStation workPost = WorkStation.getWorkStations().get(option - 1);
+					/*/
+					 * show pending assemblytasks
+					 */
+				int counter = 1;
+				for(AssemblyTask a : workPost.getAssemblyTask().getActions()){
+					System.out.println(counter + ": " + a.toString());
+					counter++;
 				}
-				/*/
-				 * show pending assemblytasks
-				 */
+						
+					
+					
+				}			
 				break;
 			case 3:
 				throw new UnsupportedOperationException("Not yet supported");
