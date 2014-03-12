@@ -3,6 +3,7 @@ package be.kuleuven.assemassist.domain;
 import java.util.ArrayList;
 import java.util.List;
 
+import be.kuleuven.assemassist.domain.role.CarMechanic;
 import be.kuleuven.assemassist.domain.task.AssemblyTask;
 
 public abstract class WorkStation {
@@ -16,26 +17,8 @@ public abstract class WorkStation {
 	// 0..*
 	private List<AssemblyTask> assemblyTasks;
 
-	// public WorkStation(CarMechanic carMechanic, ConveyorBelt conveyorBelt) {
-	// this.setCarMechanic(carMechanic);
-	// this.setConveyorBelt(conveyorBelt);
-	// this.tools = new ArrayList<Tool>();
-	// this.assemblyTasks = new ArrayList<>(assemblyTasks);
-	// }
-	//
-	// public WorkStation(CarMechanic carMechanic, ConveyorBelt conveyorBelt,
-	// List<Tool> tools, List<AssemblyTask> assemblyTasks) {
-	// this.setCarMechanic(carMechanic);
-	// this.setConveyorBelt(conveyorBelt);
-	// this.setTools(tools);
-	// this.setAssemblyTasks(assemblyTasks);
-	// }
-
-	public static List<WorkStation> getWorkStations() {
-		List<WorkStation> workStations = new ArrayList<>();
-		workStations.add(new DriveTrainPost());
-		workStations.add(new AccessoriesPost());
-		return workStations;
+	public WorkStation() {
+		assemblyTasks = new ArrayList<>();
 	}
 
 	public Car getCurrentCar() {
