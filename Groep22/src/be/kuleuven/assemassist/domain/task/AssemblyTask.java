@@ -7,25 +7,29 @@ import be.kuleuven.assemassist.domain.Action;
 
 public class AssemblyTask {
 
-	private Queue<AssemblyTask> actions;
+	private Queue<Action> actions;
 
 	public AssemblyTask() {
-		actions = new LinkedList<AssemblyTask>();
+		actions = new LinkedList<Action>();
 	}
 
-	public Queue<AssemblyTask> getActions() {
+	public Queue<Action> getActions() {
 		return actions;
 	}
 
-	public void setActions(Queue<AssemblyTask> actions) {
+	public void setActions(Queue<Action> actions) {
 		this.actions = actions;
 	}
 
-	public void add(AssemblyTask action) {
+	public void add(Action action) {
 		actions.add(action);
 	}
-	
-	public String toString(){
+
+	public String toString() {
 		return "";
+	}
+
+	public boolean isDone() {
+		return false;
 	}
 }

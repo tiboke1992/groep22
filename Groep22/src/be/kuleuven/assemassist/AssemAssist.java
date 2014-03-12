@@ -87,9 +87,11 @@ public class AssemAssist {
 					 * / show pending assemblytasks
 					 */
 					int counter = 1;
-					for (AssemblyTask a : workPost.getAssemblyTask().getActions()) {
-						System.out.println(counter + ": " + a.toString());
-						counter++;
+					for (AssemblyTask a : workPost.getAssemblyTasks()) {
+						if (!a.isDone()) {
+							System.out.println(counter + ": " + a.toString());
+							counter++;
+						}
 					}
 
 				}

@@ -1,30 +1,21 @@
 package be.kuleuven.assemassist.domain;
-import be.kuleuven.assemassist.domain.task.*;
+
+import be.kuleuven.assemassist.domain.task.InstallSeats;
+import be.kuleuven.assemassist.domain.task.MountWheels;
 
 public class AccessoriesPost extends WorkStation {
 
-	private AssemblyTask assemblyTask;
-	
-	public AccessoriesPost(){
-		assemblyTask = new AssemblyTask();
-		assemblyTask.add(new InstallSeats());
-		assemblyTask.add(new MountWheels());
+	private CarAssemblyProcess assemblyProcess;
+
+	public AccessoriesPost() {
+		assemblyProcess = new CarAssemblyProcess();
+		assemblyProcess.addTask(new InstallSeats());
+		assemblyProcess.addTask(new MountWheels());
 	}
-	
+
 	@Override
 	public String toString() {
 		return "AccessoriesPost";
 	}
-
-	@Override
-	public AssemblyTask getAssemblyTask() {
-		return assemblyTask;
-	}
-
-	public void setAssemblyTask(AssemblyTask assemblyTask) {
-		this.assemblyTask = assemblyTask;
-	}
-	
-	
 
 }
