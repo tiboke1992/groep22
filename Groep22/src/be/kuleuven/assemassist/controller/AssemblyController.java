@@ -28,6 +28,8 @@ public class AssemblyController extends Controller {
 	public CarManufacturingCompany company;
 	private Role role;
 	private UI ui;
+	private List<AssemblyTask> assemblyTasks;
+	
 
 	public AssemblyController(CarManufacturingCompany company) {
 		this.company = company;
@@ -53,6 +55,7 @@ public class AssemblyController extends Controller {
 				role = new CarMechanic();
 				ui.showGreeting(role);
 				ui.showWorkPostMenu();
+				ui.pickAssemblyTask();
 				break;
 			case 3:
 				role = new Manager();
@@ -111,10 +114,28 @@ public class AssemblyController extends Controller {
 		List<AssemblyTask> assemblyTasks = new ArrayList<>();
 		for (AssemblyTask task : tasks)
 			assemblyTasks.add(task);
+		this.assemblyTasks = assemblyTasks;
 		ui.showPendingAssemblyTasks(assemblyTasks);
 	}
 
 	public void setUi(UI ui) {
 		this.ui = ui;
 	}
+
+	public void selectTask(int option) {
+		if(option > 0 && option <= this.getAssemblyTasks().size()){
+			AssemblyTask task = this.getAssemblyTasks().get(option-1);
+			/*
+			 * show sequence of actions to perform
+			 */
+		}else{
+			System.out.println("This option does not excist");
+		}
+		
+	}
+	
+	private ArrayList<AssemblyTask> getAssemblyTasks(){
+		return (ArrayList<AssemblyTask>)this.assemblyTasks;
+	}
+		
 }

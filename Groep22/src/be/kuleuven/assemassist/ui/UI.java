@@ -2,6 +2,7 @@ package be.kuleuven.assemassist.ui;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Scanner;
@@ -120,5 +121,12 @@ public class UI {
 				counter++;
 			}
 		}
+	}
+
+	public void pickAssemblyTask() {
+		System.out.println("What task do you want to work on?");
+		int option = scanner.nextInt();
+		controller.selectTask(option);
+		
 	}
 }
