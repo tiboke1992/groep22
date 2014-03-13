@@ -5,7 +5,7 @@ import java.util.Queue;
 
 import be.kuleuven.assemassist.domain.Action;
 
-public class AssemblyTask {
+public abstract class AssemblyTask {
 
 	private Queue<Action> actions;
 
@@ -28,6 +28,8 @@ public class AssemblyTask {
 	public String toString() {
 		return "";
 	}
+
+	public abstract String getInfo();
 
 	public boolean isDone() {
 		return false;

@@ -117,7 +117,7 @@ public class UI {
 		int counter = 1;
 		for (AssemblyTask a : tasks) {
 			if (!a.isDone()) {
-				System.out.println(counter + ": " + a.toString());
+				System.out.println(counter + ": " + a.getInfo());
 				counter++;
 			}
 		}
@@ -128,5 +128,9 @@ public class UI {
 		int option = scanner.nextInt();
 		controller.selectTask(option);
 		
+	}
+	
+	public void showSequence(AssemblyTask task){
+		System.out.println(task.getInfo() + " Has the following sequence of actions");
 	}
 }

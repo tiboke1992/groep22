@@ -126,10 +126,11 @@ public class AssemblyController extends Controller {
 		if(option > 0 && option <= this.getAssemblyTasks().size()){
 			AssemblyTask task = this.getAssemblyTasks().get(option-1);
 			/*
-			 * show sequence of actions to perform
+			 * show sequence of actions to perform + some extra information?
 			 */
+			ui.showSequence(task);
 		}else{
-			System.out.println("This option does not excist");
+			System.out.println("This option does not exist");
 		}
 		
 	}
