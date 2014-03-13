@@ -108,6 +108,7 @@ public class UI {
 			System.out.println(i + 1 + ") " + workStations.get(i));
 		System.out.println("*) Exit");
 		int option = scanner.nextInt();
+
 		controller.selectWorkStation(option - 1);
 	}
 
