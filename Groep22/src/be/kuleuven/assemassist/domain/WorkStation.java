@@ -49,9 +49,7 @@ public abstract class WorkStation {
 		this.tools = tools;
 	}
 
-	public List<AssemblyTask> getAssemblyTasks() {
-		return assemblyTasks;
-	}
+	public abstract ArrayList<AssemblyTask> getAssemblyTasks();
 
 	public void setAssemblyTasks(List<AssemblyTask> assemblyTasks) {
 		this.assemblyTasks = assemblyTasks;

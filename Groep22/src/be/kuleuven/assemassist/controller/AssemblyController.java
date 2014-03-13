@@ -104,7 +104,7 @@ public class AssemblyController extends Controller {
 		return workStations;
 	}
 
-	public void selectWorkStation(int workStation) {
+	public void selectWorkStation(int workStation) { 
 		WorkStation workPost = getWorkStations().get(workStation);
 		((CarMechanic) role).setWorkStation(workPost);
 		Collection<AssemblyTask> tasks = workPost.getAssemblyTasks();
