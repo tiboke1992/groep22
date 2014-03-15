@@ -29,7 +29,6 @@ public class AssemblyController extends Controller {
 	private Role role;
 	private UI ui;
 	private List<AssemblyTask> assemblyTasks;
-	
 
 	public AssemblyController(CarManufacturingCompany company) {
 		super(company);
@@ -45,29 +44,30 @@ public class AssemblyController extends Controller {
 
 	public void loginAs(int roleId) {
 		switch (roleId) {
-			case 1:
-				role = new GarageHolder();
-				ui.showGreeting(role);
-				ui.showOrders();
-				ui.showMenu();
-				break;
-			case 2:
-				role = new CarMechanic();
-				ui.showGreeting(role);
-				ui.showWorkPostMenu();
-				//ui.pickAssemblyTask();
-				break;
-			case 3:
-				role = new Manager();
-				ui.showGreeting(role);
-				break;
-			default:
-				throw new IllegalArgumentException("Invalid roleId " + roleId);
+		case 1:
+			role = new GarageHolder();
+			ui.showGreeting(role);
+			ui.showOrders();
+			ui.showMenu();
+			break;
+		case 2:
+			role = new CarMechanic();
+			ui.showGreeting(role);
+			ui.showWorkPostMenu();
+			// ui.pickAssemblyTask();
+			break;
+		case 3:
+			role = new Manager();
+			ui.showGreeting(role);
+			break;
+		default:
+			throw new IllegalArgumentException("Invalid roleId " + roleId);
 		}
 	}
 
 	public Collection<CarOrder> getPendingCarOrders() {
-		Queue<CarOrder> orders = company.getProductionSchedule().getPendingCarOrders();
+		Queue<CarOrder> orders = company.getProductionSchedule()
+				.getPendingCarOrders();
 		List<CarOrder> ordersCopy = new ArrayList<>();
 		for (CarOrder carOrder : orders)
 			ordersCopy.add(carOrder);
@@ -75,7 +75,8 @@ public class AssemblyController extends Controller {
 	}
 
 	public Collection<CarOrder> getCompletedCarOrders() {
-		List<CarOrder> orders = company.getProductionSchedule().getCompletedCarOrders();
+		List<CarOrder> orders = company.getProductionSchedule()
+				.getCompletedCarOrders();
 		List<CarOrder> ordersCopy = new ArrayList<>();
 		for (CarOrder carOrder : orders)
 			ordersCopy.add(carOrder);
@@ -107,36 +108,8 @@ public class AssemblyController extends Controller {
 		return workStations;
 	}
 
-	public void selectWorkStation(int workStation) { 
-//		WorkStation workPost = getWorkStations().get(workStation);
-//		//((CarMechanic) role).setWorkStation(workPost);
-//		//Collection<AssemblyTask> tasks = workPost.getAssemblyTasks();
-//		List<AssemblyTask> assemblyTasks = new ArrayList<>();
-//		for (AssemblyTask task : tasks)
-//			assemblyTasks.add(task);
-//		this.assemblyTasks = assemblyTasks;
-//		ui.showPendingAssemblyTasks(assemblyTasks);
-	}
-
 	public void setUi(UI ui) {
 		this.ui = ui;
 	}
 
-	public void selectTask(int option) {
-		if(option > 0 && option <= this.getAssemblyTasks().size()){
-			AssemblyTask task = this.getAssemblyTasks().get(option-1);
-			/*
-			 * show sequence of actions to perform + some extra information?
-			 */
-			
-		}else{
-			System.out.println("This option does not exist");
-		}
-		
-	}
-	
-	private ArrayList<AssemblyTask> getAssemblyTasks(){
-		return (ArrayList<AssemblyTask>)this.assemblyTasks;
-	}
-		
 }
