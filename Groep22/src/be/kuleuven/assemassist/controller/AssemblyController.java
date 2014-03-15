@@ -32,7 +32,7 @@ public class AssemblyController extends Controller {
 	
 
 	public AssemblyController(CarManufacturingCompany company) {
-		this.company = company;
+		super(company);
 	}
 
 	public List<CarModel> getAvailableCarModels() {
@@ -55,7 +55,7 @@ public class AssemblyController extends Controller {
 				role = new CarMechanic();
 				ui.showGreeting(role);
 				ui.showWorkPostMenu();
-				ui.pickAssemblyTask();
+				//ui.pickAssemblyTask();
 				break;
 			case 3:
 				role = new Manager();
@@ -108,14 +108,14 @@ public class AssemblyController extends Controller {
 	}
 
 	public void selectWorkStation(int workStation) { 
-		WorkStation workPost = getWorkStations().get(workStation);
-		((CarMechanic) role).setWorkStation(workPost);
-		Collection<AssemblyTask> tasks = workPost.getAssemblyTasks();
-		List<AssemblyTask> assemblyTasks = new ArrayList<>();
-		for (AssemblyTask task : tasks)
-			assemblyTasks.add(task);
-		this.assemblyTasks = assemblyTasks;
-		ui.showPendingAssemblyTasks(assemblyTasks);
+//		WorkStation workPost = getWorkStations().get(workStation);
+//		//((CarMechanic) role).setWorkStation(workPost);
+//		//Collection<AssemblyTask> tasks = workPost.getAssemblyTasks();
+//		List<AssemblyTask> assemblyTasks = new ArrayList<>();
+//		for (AssemblyTask task : tasks)
+//			assemblyTasks.add(task);
+//		this.assemblyTasks = assemblyTasks;
+//		ui.showPendingAssemblyTasks(assemblyTasks);
 	}
 
 	public void setUi(UI ui) {
@@ -128,7 +128,7 @@ public class AssemblyController extends Controller {
 			/*
 			 * show sequence of actions to perform + some extra information?
 			 */
-			ui.showSequence(task);
+			
 		}else{
 			System.out.println("This option does not exist");
 		}
