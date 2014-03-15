@@ -4,8 +4,16 @@ import be.kuleuven.assemassist.domain.CarAssemblyProcess;
 import be.kuleuven.assemassist.domain.task.InstallSeats;
 import be.kuleuven.assemassist.domain.task.MountWheels;
 
+/**
+ * This class is the Accessories Post of the assembly process.
+ */
+
 public class AccessoriesPost extends WorkStation {
 
+	/**
+	 * This constructor creates a new CarAssemblyProcess and adds the tasks
+	 * which are needed to complete this process
+	 */
 	public AccessoriesPost() {
 		CarAssemblyProcess assemblyProcess = new CarAssemblyProcess();
 		assemblyProcess.addTask(new InstallSeats());

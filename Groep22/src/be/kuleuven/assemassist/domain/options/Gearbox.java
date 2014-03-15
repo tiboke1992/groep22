@@ -2,6 +2,11 @@ package be.kuleuven.assemassist.domain.options;
 
 import static be.kuleuven.assemassist.util.Util.capitalizeFirstCharacter;
 
+/**
+ * 
+ * This enum represents the different kind of gear boxes on a car
+ * 
+ */
 public enum Gearbox implements CarOption {
 
 	MANUAL(6), AUTOMATIC(5);

@@ -8,6 +8,15 @@ import be.kuleuven.assemassist.domain.ConveyorBelt;
 import be.kuleuven.assemassist.domain.Tool;
 import be.kuleuven.assemassist.domain.role.CarMechanic;
 
+/**
+ * 
+ * This class forms a superclass for all workstations. It has a car mechanic who
+ * works at this workstation, a car for the mechanic to work on, a conveyor belt
+ * which transports the car between workstations and a list of tools that the
+ * car mechanic uses.
+ * 
+ */
+
 public abstract class WorkStation {
 
 	private CarMechanic carMechanic;

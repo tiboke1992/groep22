@@ -1,5 +1,9 @@
 package be.kuleuven.assemassist.domain.task.action;
-
+/**
+ * 
+ * A dummy class for the creation of actions
+ *
+ */
 public class DummyAction extends Action {
 
 	private String desciption;

@@ -4,8 +4,15 @@ import be.kuleuven.assemassist.domain.CarAssemblyProcess;
 import be.kuleuven.assemassist.domain.task.InsertEngine;
 import be.kuleuven.assemassist.domain.task.InsertGearBox;
 
-public class DriveTrainPost extends WorkStation {
+/**
+ * This class is the Drivetrain Post of the assembly Process
+ */
 
+public class DriveTrainPost extends WorkStation {
+	/**
+	 * This constructor creates a new CarAssemblyProcess and adds the tasks
+	 * which are needed to complete this process
+	 */
 	public DriveTrainPost() {
 		CarAssemblyProcess assemblyProcess = new CarAssemblyProcess();
 		assemblyProcess.addTask(new InsertEngine());
