@@ -25,11 +25,7 @@ public abstract class AssemblyTask {
 		actions.add(action);
 	}
 
-	public String toString() {
-		return "";
-	}
-
-	public abstract String getInfo();
+	public abstract String toString();
 
 	public boolean isDone() {
 		return false;

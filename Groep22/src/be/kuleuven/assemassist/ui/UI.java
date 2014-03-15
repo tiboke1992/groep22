@@ -2,7 +2,6 @@ package be.kuleuven.assemassist.ui;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Scanner;
@@ -10,6 +9,7 @@ import java.util.Scanner;
 import org.joda.time.DateTime;
 
 import be.kuleuven.assemassist.controller.AssemblyController;
+import be.kuleuven.assemassist.domain.Action;
 import be.kuleuven.assemassist.domain.CarModelSpecification;
 import be.kuleuven.assemassist.domain.CarOrder;
 import be.kuleuven.assemassist.domain.WorkStation;
@@ -117,7 +117,7 @@ public class UI {
 		int counter = 1;
 		for (AssemblyTask a : tasks) {
 			if (!a.isDone()) {
-				System.out.println(counter + ": " + a.getInfo());
+				System.out.println(counter + ": " + a);
 				counter++;
 			}
 		}
@@ -127,10 +127,13 @@ public class UI {
 		System.out.println("What task do you want to work on?");
 		int option = scanner.nextInt();
 		controller.selectTask(option);
-		
+
 	}
-	
-	public void showSequence(AssemblyTask task){
-		System.out.println(task.getInfo() + " Has the following sequence of actions");
+
+	public void showSequence(AssemblyTask task) {
+		System.out.println(task + " Has the following sequence of actions");
+		for (Action a : task.getActions())
+			System.out.println(a);
+		System.out.println("Press ENTER when you have finished the next action.");
 	}
 }

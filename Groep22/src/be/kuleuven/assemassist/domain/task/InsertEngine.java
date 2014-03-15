@@ -3,7 +3,7 @@ package be.kuleuven.assemassist.domain.task;
 public class InsertEngine extends AssemblyTask {
 
 	@Override
-	public String getInfo() {
+	public String toString() {
 		return "Insert Engine";
 	}
 
