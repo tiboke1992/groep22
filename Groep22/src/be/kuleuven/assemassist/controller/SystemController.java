@@ -26,7 +26,6 @@ public class SystemController extends Controller {
 				role = new CarMechanic();
 				getUi().showGreeting(role);
 				getUi().showWorkPostMenu();
-				getUi().pickAssemblyTask();
 				break;
 			case 3:
 				role = new Manager();

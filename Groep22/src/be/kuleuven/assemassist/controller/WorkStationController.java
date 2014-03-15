@@ -13,6 +13,7 @@ import be.kuleuven.assemassist.domain.workpost.WorkStation;
 public class WorkStationController extends Controller {
 
 	private CarMechanic carMechanic;
+	private AssemblyTask lastTask;
 
 	public WorkStationController(CarManufacturingCompany company) {
 		super(company);
@@ -34,8 +35,8 @@ public class WorkStationController extends Controller {
 	public void selectTask(int option) {
 		List<AssemblyTask> tasks = carMechanic.getWorkStation().getAssemblyProcess().getPendingTasks();
 		if (option > 0 && option <= tasks.size()) {
-			AssemblyTask task = tasks.get(option - 1);
-			getUi().showSequence(task);
+			lastTask = tasks.get(option - 1);
+			getUi().showSequence(lastTask.getPendingActions());// TODO copy of
 		} else {
 			System.out.println("TODO");// TODO
 		}
@@ -44,5 +45,12 @@ public class WorkStationController extends Controller {
 
 	public void setCarMechanic(CarMechanic carMechanic) {
 		this.carMechanic = carMechanic;
+	}
+
+	public void completeNextAction() {
+		if (lastTask == null)
+			throw new IllegalStateException();
+		lastTask.completeAction();
+		getUi().showPendingAssemblyTasks(carMechanic.getWorkStation().getAssemblyProcess().getPendingTasks());
 	}
 }

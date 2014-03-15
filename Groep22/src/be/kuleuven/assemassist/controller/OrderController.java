@@ -37,7 +37,7 @@ public class OrderController extends Controller {
 	}
 
 	public void makeOrder(int modelOption) {
-		CarModel model = getAvailableCarModels().get(modelOption);
+		CarModel model = getCompany().getAvailableCarModels().get(modelOption);
 		CarModelSpecification spec = model.getSpecification();
 		CarOrder order = new CarOrder(spec);
 		order.setEngine(getUi().askCarOption(spec, Engine.class));

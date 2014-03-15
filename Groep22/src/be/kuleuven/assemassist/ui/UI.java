@@ -2,7 +2,6 @@ package be.kuleuven.assemassist.ui;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.Collection;
 import java.util.List;
 import java.util.Scanner;
 
@@ -11,6 +10,7 @@ import org.joda.time.DateTime;
 import be.kuleuven.assemassist.controller.OrderController;
 import be.kuleuven.assemassist.controller.SystemController;
 import be.kuleuven.assemassist.controller.WorkStationController;
+import be.kuleuven.assemassist.domain.CarModel;
 import be.kuleuven.assemassist.domain.CarModelSpecification;
 import be.kuleuven.assemassist.domain.CarOrder;
 import be.kuleuven.assemassist.domain.options.CarOption;
@@ -81,20 +81,21 @@ public class UI {
 		if (option == 1)
 			showCarModels();
 		else
-			systemController.shutdown();
+			shutdown();
 	}
 
 	private void showCarModels() {
 		System.out.println("Available car models:");
-		for (int i = 0; i < orderController.getAvailableCarModels().size(); i++) {
-			System.out.println((i + 1) + ") " + orderController.getAvailableCarModels().get(i));
+		List<CarModel> carModels = orderController.getAvailableCarModels();
+		for (int i = 0; i < carModels.size(); i++) {
+			System.out.println((i + 1) + ") " + carModels.get(i));
 		}
 		System.out.println("*) Exit");
 		int option = scanner.nextInt();
-		if (option > 0 && option <= orderController.getAvailableCarModels().size())
+		if (option > 0 && option <= carModels.size())
 			orderController.makeOrder(option - 1);
 		else
-			systemController.shutdown();
+			shutdown();
 	}
 
 	public <T extends CarOption> T askCarOption(CarModelSpecification spec, Class<T> carOptionClass) {
@@ -107,7 +108,7 @@ public class UI {
 		int option = scanner.nextInt();
 		if (option > 0 && option <= possibleOptions.size())
 			return possibleOptions.get(option - 1);
-		systemController.shutdown();
+		shutdown();
 		return null;
 	}
 
@@ -126,31 +127,26 @@ public class UI {
 		workStationController.selectWorkStation(option - 1);
 	}
 
-	public void showPendingAssemblyTasks(Collection<AssemblyTask> tasks) {
-		int counter = 1;
-		for (AssemblyTask a : tasks) {
-			if (!a.isDone()) {
-				System.out.println(counter + ": " + a);
-				counter++;
-			}
-		}
-	}
-
-	public void pickAssemblyTask() {
+	public void showPendingAssemblyTasks(List<AssemblyTask> tasks) {
 		System.out.println("What task do you want to work on?");
+		for (int i = 0; i < tasks.size(); i++) {
+			System.out.println(i + 1 + ") " + tasks.get(i));
+		}
 		int option = scanner.nextInt();
 		workStationController.selectTask(option);
-
 	}
 
-	public void showSequence(AssemblyTask task) {
-		if (!task.getActions().isEmpty()) {
-			System.out.println(task + " Has the following sequence of actions:");
-			for (Action a : task.getActions())
-				System.out.println("\t" + a);
-			System.out.println("Press ENTER when you have finished the next action.");
-		} else {
+	public void showSequence(List<Action> actions) {
+		for (int i = 0; i < actions.size(); i++)
+			System.out.println((i + 1) + ") " + actions.get(i));
+		System.out.println("Press 0 to exit and any other number when you have finished the next action.");
+		int option = scanner.nextInt();
+		if (option == 0)
+			shutdown();
+		workStationController.completeNextAction();
+	}
 
-		}
+	public void shutdown() {
+		systemController.shutdown();
 	}
 }
