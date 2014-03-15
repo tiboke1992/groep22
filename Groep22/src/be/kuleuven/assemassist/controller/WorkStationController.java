@@ -3,12 +3,12 @@ package be.kuleuven.assemassist.controller;
 import java.util.ArrayList;
 import java.util.List;
 
-import be.kuleuven.assemassist.domain.AccessoriesPost;
 import be.kuleuven.assemassist.domain.CarManufacturingCompany;
-import be.kuleuven.assemassist.domain.DriveTrainPost;
-import be.kuleuven.assemassist.domain.WorkStation;
 import be.kuleuven.assemassist.domain.role.CarMechanic;
 import be.kuleuven.assemassist.domain.task.AssemblyTask;
+import be.kuleuven.assemassist.domain.workpost.AccessoriesPost;
+import be.kuleuven.assemassist.domain.workpost.DriveTrainPost;
+import be.kuleuven.assemassist.domain.workpost.WorkStation;
 
 public class WorkStationController extends Controller {
 

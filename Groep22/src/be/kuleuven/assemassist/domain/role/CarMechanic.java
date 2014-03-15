@@ -1,6 +1,6 @@
 package be.kuleuven.assemassist.domain.role;
 
-import be.kuleuven.assemassist.domain.WorkStation;
+import be.kuleuven.assemassist.domain.workpost.WorkStation;
 
 public class CarMechanic implements Role {
 

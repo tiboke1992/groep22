@@ -46,6 +46,7 @@ public class OrderController extends Controller {
 		order.setSeats(getUi().askCarOption(spec, Seats.class));
 		getCompany().getProductionSchedule().addCarOrder(order);
 		getUi().showDeliveryTime(order.getDeliveryTime().getEstimatedDeliveryTime());
+		getUi().showOrders();
 		getUi().showMenu();
 	}
 

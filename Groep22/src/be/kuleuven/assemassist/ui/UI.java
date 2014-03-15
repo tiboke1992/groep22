@@ -13,12 +13,12 @@ import be.kuleuven.assemassist.controller.SystemController;
 import be.kuleuven.assemassist.controller.WorkStationController;
 import be.kuleuven.assemassist.domain.CarModelSpecification;
 import be.kuleuven.assemassist.domain.CarOrder;
-import be.kuleuven.assemassist.domain.WorkStation;
 import be.kuleuven.assemassist.domain.options.CarOption;
 import be.kuleuven.assemassist.domain.role.CarMechanic;
 import be.kuleuven.assemassist.domain.role.Role;
 import be.kuleuven.assemassist.domain.task.AssemblyTask;
 import be.kuleuven.assemassist.domain.task.action.Action;
+import be.kuleuven.assemassist.domain.workpost.WorkStation;
 
 public class UI {
 
@@ -58,16 +58,17 @@ public class UI {
 	}
 
 	public void showOrders() {
+		System.out.println();
 		System.out.println("Overview:");
 		System.out.println("Pending orders:");
 		for (CarOrder order : orderController.getPendingCarOrders()) {
 			System.out.println(order.getId() + "\t\t"
-					+ PENDING_FORMAT.format(order.getDeliveryTime().getEstimatedDeliveryTime()));
+					+ PENDING_FORMAT.format(order.getDeliveryTime().getEstimatedDeliveryTime().toDate()));
 		}
 		System.out.println("Completed orders:");
 		for (CarOrder order : orderController.getCompletedCarOrders()) {
 			System.out.println(order.getId() + "\t\t"
-					+ COMPLETED_FORMAT.format(order.getDeliveryTime().getEstimatedDeliveryTime()));
+					+ COMPLETED_FORMAT.format(order.getDeliveryTime().getEstimatedDeliveryTime().toDate()));
 		}
 	}
 

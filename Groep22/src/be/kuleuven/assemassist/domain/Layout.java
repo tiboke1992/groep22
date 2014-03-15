@@ -2,6 +2,8 @@ package be.kuleuven.assemassist.domain;
 
 import java.util.List;
 
+import be.kuleuven.assemassist.domain.workpost.WorkStation;
+
 public class Layout {
 
 	// 1

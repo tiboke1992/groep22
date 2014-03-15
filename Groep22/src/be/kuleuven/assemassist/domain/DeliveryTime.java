@@ -5,6 +5,10 @@ import java.util.Map;
 
 import org.joda.time.DateTime;
 
+import be.kuleuven.assemassist.domain.workpost.AccessoriesPost;
+import be.kuleuven.assemassist.domain.workpost.DriveTrainPost;
+import be.kuleuven.assemassist.domain.workpost.WorkStation;
+
 public class DeliveryTime {
 
 	private DateTime startTime;
