@@ -139,7 +139,11 @@ public class UI {
 	public void showSequence(List<Action> actions) {
 		for (int i = 0; i < actions.size(); i++)
 			System.out.println((i + 1) + ") " + actions.get(i));
-		System.out.println("Press 0 to exit and any other number when you have finished the next action.");
+		if(actions.size() == 0){
+			System.out.println("You have already finished this task");
+		}else{
+			System.out.println("Press 0 to exit and any other number when you have finished this action.");
+		}
 		int option = scanner.nextInt();
 		if (option == 0)
 			shutdown();

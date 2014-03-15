@@ -51,6 +51,9 @@ public class WorkStationController extends Controller {
 		if (lastTask == null)
 			throw new IllegalStateException();
 		lastTask.completeAction();
+		if(lastTask.getPendingActions().size() == 0){
+			System.out.println("All actions for this task are completed, we can now move the conveyor belt");
+		}
 		getUi().showPendingAssemblyTasks(carMechanic.getWorkStation().getAssemblyProcess().getPendingTasks());
 	}
 }

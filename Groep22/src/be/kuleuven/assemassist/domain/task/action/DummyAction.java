@@ -2,9 +2,27 @@ package be.kuleuven.assemassist.domain.task.action;
 
 public class DummyAction extends Action {
 
+	private String desciption;
+
+	public DummyAction() {
+		this.setDescription("Dummy action");
+	}
+
+	public DummyAction(String description) {
+		this.setDescription(description);
+	}
+
 	@Override
 	public String toString() {
-		return "Dummy Action";
+		return this.getDescription();
+	}
+
+	private void setDescription(String description) {
+		this.desciption = description;
+	}
+
+	private String getDescription() {
+		return this.desciption;
 	}
 
 }
