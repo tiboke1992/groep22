@@ -1,10 +1,10 @@
 package be.kuleuven.assemassist.domain;
 
-public class CarModel {
+public final class CarModel {
 
-	private String name;
-	private CarModelSpecification specification;
-	private CarManufacturingCompany carManufacturingCompany;
+	private final String name;
+	private final CarModelSpecification specification;
+	private final CarManufacturingCompany carManufacturingCompany;
 
 	public CarModel(CarManufacturingCompany company, String name, CarModelSpecification specification) {
 		this.carManufacturingCompany = company;

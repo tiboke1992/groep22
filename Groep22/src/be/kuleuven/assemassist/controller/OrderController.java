@@ -54,7 +54,7 @@ public class OrderController extends Controller {
 		List<CarModel> models = getCompany().getAvailableCarModels();
 		List<CarModel> modelsCopy = new ArrayList<>(models.size());
 		for (CarModel model : models)
-			modelsCopy.add(model);// TODO moeten we ok elk carmodel zelf klonen?
+			modelsCopy.add(model);
 		return modelsCopy;
 	}
 }
