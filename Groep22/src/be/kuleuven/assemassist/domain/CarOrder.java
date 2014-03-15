@@ -23,6 +23,16 @@ public class CarOrder {
 		this.modelSpecification = modelSpecification;
 	}
 
+	public CarOrder(CarOrder order) {
+		this.id = order.getId();
+		this.modelSpecification = new CarModelSpecification(order.getModelSpecification());
+		this.deliveryTime = order.getDeliveryTime() == null ? null : new DeliveryTime(order.getDeliveryTime());
+		this.engine = order.getEngine();
+		this.gearbox = order.getGearbox();
+		this.seats = order.getSeats();
+		this.wheels = order.getWheels();
+	}
+
 	public void init() {
 		deliveryTime = new DeliveryTime();
 	}

@@ -13,6 +13,12 @@ public class CarModelSpecification {
 		this.allowedOptions = allowedOptions;
 	}
 
+	public CarModelSpecification(CarModelSpecification modelSpecification) {
+		this.allowedOptions = new ArrayList<>();
+		for (CarOption option : modelSpecification.allowedOptions)
+			this.allowedOptions.add(option);
+	}
+
 	public boolean canHaveAsOption(CarOption option) {
 		return allowedOptions.contains(option);
 	}

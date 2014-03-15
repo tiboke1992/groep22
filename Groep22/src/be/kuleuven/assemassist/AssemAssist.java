@@ -3,7 +3,9 @@ package be.kuleuven.assemassist;
 import java.util.ArrayList;
 import java.util.List;
 
-import be.kuleuven.assemassist.controller.AssemblyController;
+import be.kuleuven.assemassist.controller.OrderController;
+import be.kuleuven.assemassist.controller.SystemController;
+import be.kuleuven.assemassist.controller.WorkStationController;
 import be.kuleuven.assemassist.domain.CarManufacturingCompany;
 import be.kuleuven.assemassist.domain.CarModel;
 import be.kuleuven.assemassist.domain.CarModelSpecification;
@@ -20,9 +22,11 @@ public class AssemAssist {
 	public static void main(String[] args) {
 		CarManufacturingCompany carManufacturingCompany = new CarManufacturingCompany("Volkswagen Group", new Manager());
 		addCarModels(carManufacturingCompany);
-		AssemblyController controller = new AssemblyController(carManufacturingCompany);
-		UI ui = new UI(controller);
-		ui.login();
+		SystemController assemblyController = new SystemController(carManufacturingCompany);
+		OrderController orderController = new OrderController(carManufacturingCompany);
+		WorkStationController workStationController = new WorkStationController(carManufacturingCompany);
+		UI ui = new UI(assemblyController, orderController, workStationController);
+		ui.showLoginOptions();
 	}
 
 	private static void addCarModels(CarManufacturingCompany carManufacturingCompany) {

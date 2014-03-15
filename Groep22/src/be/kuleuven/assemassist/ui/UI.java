@@ -8,11 +8,14 @@ import java.util.Scanner;
 
 import org.joda.time.DateTime;
 
-import be.kuleuven.assemassist.controller.AssemblyController;
+import be.kuleuven.assemassist.controller.OrderController;
+import be.kuleuven.assemassist.controller.SystemController;
+import be.kuleuven.assemassist.controller.WorkStationController;
 import be.kuleuven.assemassist.domain.CarModelSpecification;
 import be.kuleuven.assemassist.domain.CarOrder;
 import be.kuleuven.assemassist.domain.WorkStation;
 import be.kuleuven.assemassist.domain.options.CarOption;
+import be.kuleuven.assemassist.domain.role.CarMechanic;
 import be.kuleuven.assemassist.domain.role.Role;
 import be.kuleuven.assemassist.domain.task.AssemblyTask;
 import be.kuleuven.assemassist.domain.task.action.Action;
@@ -22,38 +25,47 @@ public class UI {
 	private static final DateFormat COMPLETED_FORMAT = new SimpleDateFormat();// TODO
 	private static final DateFormat PENDING_FORMAT = new SimpleDateFormat();// TODO
 
-	private AssemblyController controller;
+	private SystemController systemController;
+	private OrderController orderController;
+	private WorkStationController workStationController;
 	private Scanner scanner;
 
-	public UI(AssemblyController controller) {
-		this.controller = controller;
-		this.controller.setUi(this);
+	public UI(SystemController systemController, OrderController orderController,
+			WorkStationController workStationController) {
+		this.systemController = systemController;
+		this.systemController.setUi(this);
+		this.orderController = orderController;
+		this.orderController.setUi(this);
+		this.workStationController = workStationController;
+		this.workStationController.setUi(this);
 		this.scanner = new Scanner(System.in);
 	}
 
-	public void login() {
+	public void showLoginOptions() {
 		System.out.println("Login as:");
 		System.out.println("1) Garage holder");
 		System.out.println("2) Car mechanic");
 		System.out.println("3) Manager");
 		System.out.println("*) Exit");
-		controller.loginAs(scanner.nextInt());
+		systemController.loginAs(scanner.nextInt());
 	}
 
 	public void showGreeting(Role role) {
 		System.out.println("Successfully logged in as " + role + "!");
 		System.out.println();
+		if (role instanceof CarMechanic)
+			workStationController.setCarMechanic((CarMechanic) role);
 	}
 
 	public void showOrders() {
 		System.out.println("Overview:");
 		System.out.println("Pending orders:");
-		for (CarOrder order : controller.getPendingCarOrders()) {
+		for (CarOrder order : orderController.getPendingCarOrders()) {
 			System.out.println(order.getId() + "\t\t"
 					+ PENDING_FORMAT.format(order.getDeliveryTime().getEstimatedDeliveryTime()));
 		}
 		System.out.println("Completed orders:");
-		for (CarOrder order : controller.getCompletedCarOrders()) {
+		for (CarOrder order : orderController.getCompletedCarOrders()) {
 			System.out.println(order.getId() + "\t\t"
 					+ COMPLETED_FORMAT.format(order.getDeliveryTime().getEstimatedDeliveryTime()));
 		}
@@ -68,20 +80,20 @@ public class UI {
 		if (option == 1)
 			showCarModels();
 		else
-			controller.shutdown();
+			systemController.shutdown();
 	}
 
 	private void showCarModels() {
 		System.out.println("Available car models:");
-		for (int i = 0; i < controller.getAvailableCarModels().size(); i++) {
-			System.out.println((i + 1) + ") " + controller.getAvailableCarModels().get(i));
+		for (int i = 0; i < orderController.getAvailableCarModels().size(); i++) {
+			System.out.println((i + 1) + ") " + orderController.getAvailableCarModels().get(i));
 		}
 		System.out.println("*) Exit");
 		int option = scanner.nextInt();
-		if (option > 0 && option <= controller.getAvailableCarModels().size())
-			controller.makeOrder(option - 1);
+		if (option > 0 && option <= orderController.getAvailableCarModels().size())
+			orderController.makeOrder(option - 1);
 		else
-			controller.shutdown();
+			systemController.shutdown();
 	}
 
 	public <T extends CarOption> T askCarOption(CarModelSpecification spec, Class<T> carOptionClass) {
@@ -94,7 +106,7 @@ public class UI {
 		int option = scanner.nextInt();
 		if (option > 0 && option <= possibleOptions.size())
 			return possibleOptions.get(option - 1);
-		controller.shutdown();
+		systemController.shutdown();
 		return null;
 	}
 
@@ -104,13 +116,13 @@ public class UI {
 
 	public void showWorkPostMenu() {
 		System.out.println("At which workpost are you working?");
-		List<WorkStation> workStations = controller.getWorkStations();
+		List<WorkStation> workStations = workStationController.getWorkStations();
 		for (int i = 0; i < workStations.size(); i++)
 			System.out.println(i + 1 + ") " + workStations.get(i));
 		System.out.println("*) Exit");
 		int option = scanner.nextInt();
 
-		controller.selectWorkStation(option - 1);
+		workStationController.selectWorkStation(option - 1);
 	}
 
 	public void showPendingAssemblyTasks(Collection<AssemblyTask> tasks) {
@@ -126,14 +138,18 @@ public class UI {
 	public void pickAssemblyTask() {
 		System.out.println("What task do you want to work on?");
 		int option = scanner.nextInt();
-		controller.selectTask(option);
+		workStationController.selectTask(option);
 
 	}
 
 	public void showSequence(AssemblyTask task) {
-		System.out.println(task + " Has the following sequence of actions:");
-		for (Action a : task.getActions())
-			System.out.println("\t" + a);
-		System.out.println("Press ENTER when you have finished the next action.");
+		if (!task.getActions().isEmpty()) {
+			System.out.println(task + " Has the following sequence of actions:");
+			for (Action a : task.getActions())
+				System.out.println("\t" + a);
+			System.out.println("Press ENTER when you have finished the next action.");
+		} else {
+
+		}
 	}
 }

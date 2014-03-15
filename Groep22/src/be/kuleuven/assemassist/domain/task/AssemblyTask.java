@@ -14,14 +14,15 @@ public abstract class AssemblyTask {
 	}
 
 	public Queue<Action> getActions() {
-		return actions;
-	}
-
-	public void setActions(Queue<Action> actions) {
-		this.actions = actions;
+		Queue<Action> copy = new LinkedList<>();
+		for (Action a : actions)
+			copy.add(a);
+		return copy;
 	}
 
 	public void add(Action action) {
+		if (action == null)
+			throw new IllegalArgumentException("Null action not allowed");
 		actions.add(action);
 	}
 
