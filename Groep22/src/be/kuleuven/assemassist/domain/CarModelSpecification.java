@@ -5,13 +5,19 @@ import java.util.List;
 
 import be.kuleuven.assemassist.domain.options.CarOption;
 
-public abstract class CarModelSpecification {
+public class CarModelSpecification {
 
-	public CarModelSpecification() {
+	private List<CarOption> allowedOptions;
+
+	public CarModelSpecification(List<CarOption> allowedOptions) {
+		this.allowedOptions = allowedOptions;
 	}
 
-	public abstract boolean canHaveAsOption(CarOption option);
+	public boolean canHaveAsOption(CarOption option) {
+		return allowedOptions.contains(option);
+	}
 
+	@SuppressWarnings("unchecked")
 	public <T> List<T> filterOutInvalidOptions(CarOption[] options, Class<T> c) {
 		List<T> caroptions = new ArrayList<>();
 		for (CarOption co : options)

@@ -1,5 +1,6 @@
 package be.kuleuven.assemassist.domain.options;
 
+import static be.kuleuven.assemassist.util.Util.capitalizeFirstCharacter;
 
 public enum Engine implements CarOption {
 
@@ -23,6 +24,6 @@ public enum Engine implements CarOption {
 
 	@Override
 	public String toString() {
-		return name().toLowerCase() + " " + size + " " + cilinderCount + " cilinders";
+		return capitalizeFirstCharacter(name()) + " " + size + " " + cilinderCount + " cilinders";
 	}
 }

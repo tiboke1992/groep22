@@ -7,11 +7,16 @@ import be.kuleuven.assemassist.domain.role.Manager;
 
 public class CarManufacturingCompany {
 
+	private String name;
 	private Manager manager;
 	private ProductionSchedule productionSchedule;
+	private List<CarModel> carModels;
 
-	public CarManufacturingCompany() {
+	public CarManufacturingCompany(String name, Manager manager) {
+		this.name = name;
+		this.manager = manager;
 		this.productionSchedule = new ProductionSchedule();
+		this.carModels = new ArrayList<>();
 	}
 
 	public Manager getManager() {
@@ -22,7 +27,23 @@ public class CarManufacturingCompany {
 		return productionSchedule;
 	}
 
+	public String getName() {
+		return name;
+	}
+
 	public List<CarModel> getAvailableCarModels() {
-		return new ArrayList<>();
+		return carModels;
+	}
+
+	public void addCarModel(CarModel model) {
+		if (!model.getCarManufacturingCompany().equals(this))
+			throw new IllegalArgumentException("Cannot add model from another manufacturer ["
+					+ model.getCarManufacturingCompany() + "] to this manufacturer [" + this + "].");
+		carModels.add(model);
+	}
+
+	@Override
+	public String toString() {
+		return name;
 	}
 }

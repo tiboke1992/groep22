@@ -3,7 +3,7 @@ package be.kuleuven.assemassist.domain.task;
 import java.util.LinkedList;
 import java.util.Queue;
 
-import be.kuleuven.assemassist.domain.Action;
+import be.kuleuven.assemassist.domain.task.action.Action;
 
 public abstract class AssemblyTask {
 

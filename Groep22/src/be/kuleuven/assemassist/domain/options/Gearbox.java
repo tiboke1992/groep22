@@ -1,5 +1,6 @@
 package be.kuleuven.assemassist.domain.options;
 
+import static be.kuleuven.assemassist.util.Util.capitalizeFirstCharacter;
 
 public enum Gearbox implements CarOption {
 
@@ -17,6 +18,6 @@ public enum Gearbox implements CarOption {
 
 	@Override
 	public String toString() {
-		return amount + " speed " + name().toLowerCase();
+		return amount + " speed " + capitalizeFirstCharacter(name());
 	}
 }

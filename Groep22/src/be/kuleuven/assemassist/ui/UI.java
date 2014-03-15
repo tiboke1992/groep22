@@ -9,13 +9,13 @@ import java.util.Scanner;
 import org.joda.time.DateTime;
 
 import be.kuleuven.assemassist.controller.AssemblyController;
-import be.kuleuven.assemassist.domain.Action;
 import be.kuleuven.assemassist.domain.CarModelSpecification;
 import be.kuleuven.assemassist.domain.CarOrder;
 import be.kuleuven.assemassist.domain.WorkStation;
 import be.kuleuven.assemassist.domain.options.CarOption;
 import be.kuleuven.assemassist.domain.role.Role;
 import be.kuleuven.assemassist.domain.task.AssemblyTask;
+import be.kuleuven.assemassist.domain.task.action.Action;
 
 public class UI {
 
@@ -99,7 +99,7 @@ public class UI {
 	}
 
 	public void showDeliveryTime(DateTime time) {
-		System.out.println("Estimated delivery time: " + PENDING_FORMAT.format(time));
+		System.out.println("Estimated delivery time: " + PENDING_FORMAT.format(time.toDate()));
 	}
 
 	public void showWorkPostMenu() {
@@ -131,9 +131,9 @@ public class UI {
 	}
 
 	public void showSequence(AssemblyTask task) {
-		System.out.println(task + " Has the following sequence of actions");
+		System.out.println(task + " Has the following sequence of actions:");
 		for (Action a : task.getActions())
-			System.out.println(a);
+			System.out.println("\t" + a);
 		System.out.println("Press ENTER when you have finished the next action.");
 	}
 }

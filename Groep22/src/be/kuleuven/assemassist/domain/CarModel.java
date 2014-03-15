@@ -1,37 +1,31 @@
 package be.kuleuven.assemassist.domain;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class CarModel {
-	private List<Car> cars;
-	private CarModelSpecification specification; 
-	
-	public CarModel(CarModelSpecification specification){
-		this.setSpecification(specification);
-		this.cars = new ArrayList<Car>();
-	}
-	
-	public CarModel(CarModelSpecification specification, List<Car> cars){
-		this.setSpecification(specification);
-		this.setCars(cars);
-	}
 
-	public List<Car> getCars() {
-		return cars;
-	}
+	private String name;
+	private CarModelSpecification specification;
+	private CarManufacturingCompany carManufacturingCompany;
 
-	public void setCars(List<Car> cars) {
-		this.cars = cars;
+	public CarModel(CarManufacturingCompany company, String name, CarModelSpecification specification) {
+		this.carManufacturingCompany = company;
+		this.name = name;
+		this.specification = specification;
 	}
 
 	public CarModelSpecification getSpecification() {
 		return specification;
 	}
 
-	public void setSpecification(CarModelSpecification specification) {
-		this.specification = specification;
+	@Override
+	public String toString() {
+		return name;
 	}
-	
-	
+
+	public String getName() {
+		return name;
+	}
+
+	public CarManufacturingCompany getCarManufacturingCompany() {
+		return carManufacturingCompany;
+	}
 }
