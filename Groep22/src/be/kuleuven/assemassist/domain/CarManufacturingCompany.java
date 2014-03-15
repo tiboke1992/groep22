@@ -5,6 +5,13 @@ import java.util.List;
 
 import be.kuleuven.assemassist.domain.role.Manager;
 
+/**
+ * 
+ * This class represents the car manufacturing company. A company has a name, a
+ * manager, a production schedule and a list of car models
+ * 
+ */
+
 public class CarManufacturingCompany {
 
 	private String name;
@@ -37,8 +44,10 @@ public class CarManufacturingCompany {
 
 	public void addCarModel(CarModel model) {
 		if (!model.getCarManufacturingCompany().equals(this))
-			throw new IllegalArgumentException("Cannot add model from another manufacturer ["
-					+ model.getCarManufacturingCompany() + "] to this manufacturer [" + this + "].");
+			throw new IllegalArgumentException(
+					"Cannot add model from another manufacturer ["
+							+ model.getCarManufacturingCompany()
+							+ "] to this manufacturer [" + this + "].");
 		carModels.add(model);
 	}
 

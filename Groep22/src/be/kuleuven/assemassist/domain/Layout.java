@@ -3,7 +3,13 @@ package be.kuleuven.assemassist.domain;
 import java.util.List;
 
 import be.kuleuven.assemassist.domain.workpost.WorkStation;
-
+/**
+ * 
+ * This class represents the layout of the assembly line,
+ * it has an assembly line, a list of workstations and a coveyor belt 
+ * connecting these workstations.
+ *
+ */
 public class Layout {
 
 	// 1

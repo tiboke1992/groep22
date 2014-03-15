@@ -5,6 +5,13 @@ import java.util.List;
 
 import be.kuleuven.assemassist.domain.options.CarOption;
 
+/**
+ * 
+ * This class represents the specification of the car model. this class contains
+ * a list of options that are allowed for that model
+ * 
+ */
+
 public class CarModelSpecification {
 
 	private List<CarOption> allowedOptions;

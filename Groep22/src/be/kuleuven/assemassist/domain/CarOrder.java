@@ -7,6 +7,13 @@ import be.kuleuven.assemassist.domain.options.Gearbox;
 import be.kuleuven.assemassist.domain.options.Seats;
 import be.kuleuven.assemassist.domain.options.Wheels;
 
+/**
+ * 
+ * This class represents a car order. a car order has a unique id, a delivery
+ * time and a model specification. A car also consist of an engine, a gear box,
+ * seats and wheels
+ * 
+ */
 public class CarOrder {
 
 	private UUID id;
@@ -25,8 +32,10 @@ public class CarOrder {
 
 	public CarOrder(CarOrder order) {
 		this.id = order.getId();
-		this.modelSpecification = new CarModelSpecification(order.getModelSpecification());
-		this.deliveryTime = order.getDeliveryTime() == null ? null : new DeliveryTime(order.getDeliveryTime());
+		this.modelSpecification = new CarModelSpecification(
+				order.getModelSpecification());
+		this.deliveryTime = order.getDeliveryTime() == null ? null
+				: new DeliveryTime(order.getDeliveryTime());
 		this.engine = order.getEngine();
 		this.gearbox = order.getGearbox();
 		this.seats = order.getSeats();
