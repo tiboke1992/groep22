@@ -29,8 +29,13 @@ public class WorkStationController extends Controller {
 	public void selectWorkStation(int workStation) {
 		WorkStation workPost = getWorkStations().get(workStation);
 		carMechanic.setWorkStation(workPost);
-		getUi().showPendingAssemblyTasks(
-				workPost.getAssemblyProcess().getPendingTasks());
+		if(super.getCompany().getProductionSchedule().getPendingCarOrders().size() == 0){
+			getUi().showNoCarToWorkOn();
+		}else{
+			getUi().showPendingAssemblyTasks(
+					workPost.getAssemblyProcess().getPendingTasks());
+		}
+		
 	}
 
 	public void selectTask(int option) {

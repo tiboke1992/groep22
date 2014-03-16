@@ -68,4 +68,8 @@ public abstract class WorkStation {
 		this.assemblyProcess = assemblyProcess;
 	}
 
+	public ProductionSchedule getSchedule() {
+		return schedule;
+	}
+
 }

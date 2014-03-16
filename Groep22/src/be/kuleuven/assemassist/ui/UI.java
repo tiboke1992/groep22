@@ -76,12 +76,17 @@ public class UI {
 		System.out.println();
 		System.out.println("What do you want to do?");
 		System.out.println("1) Place a new order");
+		System.out.println("2) Log in as someting else");
 		System.out.println("*) Exit");
 		int option = scanner.nextInt();
 		if (option == 1)
 			showCarModels();
-		else
+		else if(option == 2){
+			showLoginOptions();
+		}else{
 			shutdown();
+		}
+			
 	}
 
 	private void showCarModels() {
@@ -156,5 +161,9 @@ public class UI {
 
 	public void shutdown() {
 		systemController.shutdown();
+	}
+	
+	public void showNoCarToWorkOn(){
+		System.out.println("There are no car orders to work on");
 	}
 }
