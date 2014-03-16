@@ -29,11 +29,13 @@ public class WorkStationController extends Controller {
 	public void selectWorkStation(int workStation) {
 		WorkStation workPost = getWorkStations().get(workStation);
 		carMechanic.setWorkStation(workPost);
-		getUi().showPendingAssemblyTasks(workPost.getAssemblyProcess().getPendingTasks());
+		getUi().showPendingAssemblyTasks(
+				workPost.getAssemblyProcess().getPendingTasks());
 	}
 
 	public void selectTask(int option) {
-		List<AssemblyTask> tasks = carMechanic.getWorkStation().getAssemblyProcess().getPendingTasks();
+		List<AssemblyTask> tasks = carMechanic.getWorkStation()
+				.getAssemblyProcess().getPendingTasks();
 		if (option > 0 && option <= tasks.size()) {
 			lastTask = tasks.get(option - 1);
 			getUi().showSequence(lastTask.getPendingActions());// TODO copy of
@@ -51,9 +53,24 @@ public class WorkStationController extends Controller {
 		if (lastTask == null)
 			throw new IllegalStateException();
 		lastTask.completeAction();
-		if(lastTask.getPendingActions().size() == 0){
-			System.out.println("All actions for this task are completed, we can now move the conveyor belt");
+		if (lastTask.getPendingActions().size() == 0) {
+			carMechanic.getWorkStation().getAssemblyProcess()
+					.completeTask(lastTask);
+			System.out.println("Task : " + lastTask.toString() + " Completed.");
+			if (checkAllTasksCompleted()) {
+				System.out
+						.println("All assembly tasks for this car are completed.");
+				System.out.println("We can now move the conveyor belt");
+			}
 		}
-		getUi().showPendingAssemblyTasks(carMechanic.getWorkStation().getAssemblyProcess().getPendingTasks());
+		getUi().showPendingAssemblyTasks(
+				carMechanic.getWorkStation().getAssemblyProcess()
+						.getPendingTasks());
 	}
+
+	public boolean checkAllTasksCompleted() {
+		return carMechanic.getWorkStation().getAssemblyProcess()
+				.getPendingTasks().size() == 0;
+	}
+
 }

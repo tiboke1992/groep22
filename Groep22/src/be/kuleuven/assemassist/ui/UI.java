@@ -128,12 +128,16 @@ public class UI {
 	}
 
 	public void showPendingAssemblyTasks(List<AssemblyTask> tasks) {
-		System.out.println("What task do you want to work on?");
-		for (int i = 0; i < tasks.size(); i++) {
-			System.out.println(i + 1 + ") " + tasks.get(i));
+		if(tasks.size() == 0){
+			System.out.println("Alls tasks completed succesfully");
+		}else{
+			System.out.println("What task do you want to work on?");
+			for (int i = 0; i < tasks.size(); i++) {
+				System.out.println(i + 1 + ") " + tasks.get(i));
+			}
+			int option = scanner.nextInt();
+			workStationController.selectTask(option);
 		}
-		int option = scanner.nextInt();
-		workStationController.selectTask(option);
 	}
 
 	public void showSequence(List<Action> actions) {
