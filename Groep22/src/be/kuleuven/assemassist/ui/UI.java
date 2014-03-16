@@ -49,6 +49,10 @@ public class UI {
 		System.out.println("*) Exit");
 		systemController.loginAs(scanner.nextInt());
 	}
+	
+	public void showManagerMeu(){
+		System.out.println("1) advance assembly line");
+	}
 
 	public void showGreeting(Role role) {
 		System.out.println("Successfully logged in as " + role + "!");
@@ -165,5 +169,9 @@ public class UI {
 	
 	public void showNoCarToWorkOn(){
 		System.out.println("There are no car orders to work on");
+	}
+	
+	public void showOverview(){
+		System.out.println("Overview :");
 	}
 }

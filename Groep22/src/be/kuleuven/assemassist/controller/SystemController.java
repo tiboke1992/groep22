@@ -30,6 +30,8 @@ public class SystemController extends Controller {
 			case 3:
 				role = new Manager();
 				getUi().showGreeting(role);
+				getUi().showManagerMeu();
+				getUi().showOverview();
 				break;
 			default:
 				shutdown();
