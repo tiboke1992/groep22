@@ -10,6 +10,12 @@ import be.kuleuven.assemassist.domain.workpost.AccessoriesPost;
 import be.kuleuven.assemassist.domain.workpost.DriveTrainPost;
 import be.kuleuven.assemassist.domain.workpost.WorkStation;
 
+
+/**
+ * 
+ * This class controls the workstations
+ *
+ */
 public class WorkStationController extends Controller {
 
 	private CarMechanic carMechanic;
@@ -21,6 +27,9 @@ public class WorkStationController extends Controller {
 		init();
 	}
 	
+	/**
+	 * Creation of the workstations
+	 */
 	public void init(){
 		workStations = new ArrayList<WorkStation>();
 		workStations.add(new DriveTrainPost(super.getCompany().getProductionSchedule()));
@@ -31,6 +40,11 @@ public class WorkStationController extends Controller {
 		return this.workStations;
 	}
 
+	/**
+	 * This method will select the chosen workstation and tell the gui the show the pending
+	 * assembly tasks
+	 * @param workStation represents the workstations
+	 */
 	public void selectWorkStation(int workStation) {
 		WorkStation workPost = getWorkStations().get(workStation);
 		carMechanic.setWorkStation(workPost);
@@ -43,6 +57,11 @@ public class WorkStationController extends Controller {
 		
 	}
 
+	/**
+	 * This method will select a task chosen by the user and show the sequence of actions
+	 * needed to complete this task
+	 * @param option represents the task number
+	 */
 	public void selectTask(int option) {
 		List<AssemblyTask> tasks = carMechanic.getWorkStation()
 				.getAssemblyProcess().getPendingTasks();
@@ -59,6 +78,11 @@ public class WorkStationController extends Controller {
 		this.carMechanic = carMechanic;
 	}
 
+	/**
+	 * This method will complete a single action
+	 * it then checks if all actions are completed for the assembly task,
+	 * it then tells the gui to show the remaining actions
+	 */
 	public void completeNextAction() {
 		if (lastTask == null)
 			throw new IllegalStateException();

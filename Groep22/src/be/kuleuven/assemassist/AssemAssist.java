@@ -16,7 +16,11 @@ import be.kuleuven.assemassist.domain.options.Seats;
 import be.kuleuven.assemassist.domain.options.Wheels;
 import be.kuleuven.assemassist.domain.role.Manager;
 import be.kuleuven.assemassist.ui.UI;
-
+/**
+ * 
+ * This is our main class in which the objects are initialized
+ *
+ */
 public class AssemAssist {
 
 	public static void main(String[] args) {

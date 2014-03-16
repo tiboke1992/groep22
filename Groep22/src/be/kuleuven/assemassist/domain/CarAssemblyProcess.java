@@ -8,6 +8,11 @@ import java.util.Queue;
 
 import be.kuleuven.assemassist.domain.task.AssemblyTask;
 
+/**
+ * 
+ * This class keeps track of all the assembly tasks 
+ *
+ */
 public class CarAssemblyProcess {
 
 	private Queue<AssemblyTask> tasks;

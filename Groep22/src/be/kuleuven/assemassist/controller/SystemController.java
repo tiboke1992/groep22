@@ -5,7 +5,11 @@ import be.kuleuven.assemassist.domain.role.CarMechanic;
 import be.kuleuven.assemassist.domain.role.GarageHolder;
 import be.kuleuven.assemassist.domain.role.Manager;
 import be.kuleuven.assemassist.domain.role.Role;
-
+/**
+ * 
+ * This class represents the system and handles the login
+ *
+ */
 public class SystemController extends Controller {
 
 	private Role role;
