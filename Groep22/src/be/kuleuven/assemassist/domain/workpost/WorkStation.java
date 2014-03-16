@@ -2,8 +2,8 @@ package be.kuleuven.assemassist.domain.workpost;
 
 import java.util.List;
 
-import be.kuleuven.assemassist.domain.Car;
 import be.kuleuven.assemassist.domain.CarAssemblyProcess;
+import be.kuleuven.assemassist.domain.CarOrder;
 import be.kuleuven.assemassist.domain.ConveyorBelt;
 import be.kuleuven.assemassist.domain.Tool;
 import be.kuleuven.assemassist.domain.role.CarMechanic;
@@ -22,15 +22,15 @@ public abstract class WorkStation {
 	private CarMechanic carMechanic;
 	private ConveyorBelt conveyorBelt;
 	private List<Tool> tools;
-	private Car currentCar;
+	private CarOrder currentCarOrder;
 
 	private CarAssemblyProcess assemblyProcess;
 
 	public WorkStation() {
 	}
 
-	public Car getCurrentCar() {
-		return currentCar;
+	public CarOrder getCurrentCar() {
+		return currentCarOrder;
 	}
 
 	public CarMechanic getCarMechanic() {
