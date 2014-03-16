@@ -5,6 +5,7 @@ import java.util.List;
 import be.kuleuven.assemassist.domain.CarAssemblyProcess;
 import be.kuleuven.assemassist.domain.CarOrder;
 import be.kuleuven.assemassist.domain.ConveyorBelt;
+import be.kuleuven.assemassist.domain.ProductionSchedule;
 import be.kuleuven.assemassist.domain.Tool;
 import be.kuleuven.assemassist.domain.role.CarMechanic;
 
@@ -25,8 +26,10 @@ public abstract class WorkStation {
 	private CarOrder currentCarOrder;
 
 	private CarAssemblyProcess assemblyProcess;
+	private ProductionSchedule schedule;
 
-	public WorkStation() {
+	public WorkStation(ProductionSchedule schedule) {
+		this.schedule = schedule;
 	}
 
 	public CarOrder getCurrentCar() {

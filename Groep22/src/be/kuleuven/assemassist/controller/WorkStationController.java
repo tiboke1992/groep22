@@ -21,8 +21,8 @@ public class WorkStationController extends Controller {
 
 	public List<WorkStation> getWorkStations() {
 		List<WorkStation> workStations = new ArrayList<>();
-		workStations.add(new DriveTrainPost());
-		workStations.add(new AccessoriesPost());
+		workStations.add(new DriveTrainPost(super.getCompany().getProductionSchedule()));
+		workStations.add(new AccessoriesPost(super.getCompany().getProductionSchedule()));
 		return workStations;
 	}
 
