@@ -14,16 +14,21 @@ public class WorkStationController extends Controller {
 
 	private CarMechanic carMechanic;
 	private AssemblyTask lastTask;
+	private List<WorkStation> workStations;
 
 	public WorkStationController(CarManufacturingCompany company) {
 		super(company);
+		init();
+	}
+	
+	public void init(){
+		workStations = new ArrayList<WorkStation>();
+		workStations.add(new DriveTrainPost(super.getCompany().getProductionSchedule()));
+		workStations.add(new AccessoriesPost(super.getCompany().getProductionSchedule()));
 	}
 
 	public List<WorkStation> getWorkStations() {
-		List<WorkStation> workStations = new ArrayList<>();
-		workStations.add(new DriveTrainPost(super.getCompany().getProductionSchedule()));
-		workStations.add(new AccessoriesPost(super.getCompany().getProductionSchedule()));
-		return workStations;
+		return this.workStations;
 	}
 
 	public void selectWorkStation(int workStation) {
@@ -81,10 +86,10 @@ public class WorkStationController extends Controller {
 	public String getOverview(){
 		String result = "Current State :";
 		for(WorkStation station : getWorkStations()){
-			result += "\n Workstation : " + station.toString();
-			result += "\n\nPending Tasks : \n";
+			result += "\nWorkstation : " + station.toString();
+			result += "\n\nPending Tasks : +\n";
 			for(AssemblyTask task : station.getAssemblyProcess().getPendingTasks()){
-				result += "\n" + task.toString();
+				result += task.toString() + "\n";
 			}
 		}
 		return result;
