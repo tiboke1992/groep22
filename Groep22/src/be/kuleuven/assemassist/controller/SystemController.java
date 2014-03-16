@@ -11,6 +11,11 @@ import be.kuleuven.assemassist.domain.role.Role;
 import be.kuleuven.assemassist.domain.workpost.AccessoriesPost;
 import be.kuleuven.assemassist.domain.workpost.DriveTrainPost;
 
+/**
+ * 
+ * This class represents the system and handles the login
+ * 
+ */
 public class SystemController extends Controller {
 
 	private Role role;
