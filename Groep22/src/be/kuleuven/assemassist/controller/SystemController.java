@@ -31,7 +31,6 @@ public class SystemController extends Controller {
 				role = new Manager();
 				getUi().showGreeting(role);
 				getUi().showManagerMeu();
-				getUi().showOverview();
 				break;
 			default:
 				shutdown();

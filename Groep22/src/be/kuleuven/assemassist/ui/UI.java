@@ -30,7 +30,8 @@ public class UI {
 	private WorkStationController workStationController;
 	private Scanner scanner;
 
-	public UI(SystemController systemController, OrderController orderController,
+	public UI(SystemController systemController,
+			OrderController orderController,
 			WorkStationController workStationController) {
 		this.systemController = systemController;
 		this.systemController.setUi(this);
@@ -49,9 +50,19 @@ public class UI {
 		System.out.println("*) Exit");
 		systemController.loginAs(scanner.nextInt());
 	}
-	
-	public void showManagerMeu(){
+
+	public void showManagerMeu() {
 		System.out.println("1) advance assembly line");
+		System.out.println("2) login as someone else");
+		System.out.println("*) exit");
+		int option = scanner.nextInt();
+		if (option == 1) {
+			showOverview();
+		} else if (option == 2) {
+			showLoginOptions();
+		} else {
+			shutdown();
+		}
 	}
 
 	public void showGreeting(Role role) {
@@ -66,13 +77,17 @@ public class UI {
 		System.out.println("Overview:");
 		System.out.println("Pending orders:");
 		for (CarOrder order : orderController.getPendingCarOrders()) {
-			System.out.println(order.getId() + "\t\t"
-					+ PENDING_FORMAT.format(order.getDeliveryTime().getEstimatedDeliveryTime().toDate()));
+			System.out.println(order.getId()
+					+ "\t\t"
+					+ PENDING_FORMAT.format(order.getDeliveryTime()
+							.getEstimatedDeliveryTime().toDate()));
 		}
 		System.out.println("Completed orders:");
 		for (CarOrder order : orderController.getCompletedCarOrders()) {
-			System.out.println(order.getId() + "\t\t"
-					+ COMPLETED_FORMAT.format(order.getDeliveryTime().getEstimatedDeliveryTime().toDate()));
+			System.out.println(order.getId()
+					+ "\t\t"
+					+ COMPLETED_FORMAT.format(order.getDeliveryTime()
+							.getEstimatedDeliveryTime().toDate()));
 		}
 	}
 
@@ -85,12 +100,12 @@ public class UI {
 		int option = scanner.nextInt();
 		if (option == 1)
 			showCarModels();
-		else if(option == 2){
+		else if (option == 2) {
 			showLoginOptions();
-		}else{
+		} else {
 			shutdown();
 		}
-			
+
 	}
 
 	private void showCarModels() {
@@ -107,10 +122,12 @@ public class UI {
 			shutdown();
 	}
 
-	public <T extends CarOption> T askCarOption(CarModelSpecification spec, Class<T> carOptionClass) {
+	public <T extends CarOption> T askCarOption(CarModelSpecification spec,
+			Class<T> carOptionClass) {
 		System.out.println();
 		System.out.println("Choose an " + carOptionClass.getSimpleName() + ":");
-		List<T> possibleOptions = spec.filterOutInvalidOptions(carOptionClass.getEnumConstants(), carOptionClass);
+		List<T> possibleOptions = spec.filterOutInvalidOptions(
+				carOptionClass.getEnumConstants(), carOptionClass);
 		for (int i = 0; i < possibleOptions.size(); i++)
 			System.out.println((i + 1) + ") " + possibleOptions.get(i));
 		System.out.println("*) Exit");
@@ -122,56 +139,78 @@ public class UI {
 	}
 
 	public void showDeliveryTime(DateTime time) {
-		System.out.println("Estimated delivery time: " + PENDING_FORMAT.format(time.toDate()));
+		System.out.println("Estimated delivery time: "
+				+ PENDING_FORMAT.format(time.toDate()));
 	}
 
 	public void showWorkPostMenu() {
 		System.out.println("At which workpost are you working?");
-		List<WorkStation> workStations = workStationController.getWorkStations();
+		List<WorkStation> workStations = workStationController
+				.getWorkStations();
 		for (int i = 0; i < workStations.size(); i++)
 			System.out.println(i + 1 + ") " + workStations.get(i));
+		System.out.println("0) login as someone else");
 		System.out.println("*) Exit");
 		int option = scanner.nextInt();
-
-		workStationController.selectWorkStation(option - 1);
+		if(option == 0){
+			showLoginOptions();
+		}else if(option - 1 >= 0 && option - 1 <= workStations.size()){
+			workStationController.selectWorkStation(option - 1);
+		}else{
+			shutdown();
+		}
 	}
 
 	public void showPendingAssemblyTasks(List<AssemblyTask> tasks) {
-		if(tasks.size() == 0){
+		if (tasks.size() == 0) {
 			System.out.println("Alls tasks completed succesfully");
-		}else{
+		} else {
 			System.out.println("What task do you want to work on?");
 			for (int i = 0; i < tasks.size(); i++) {
 				System.out.println(i + 1 + ") " + tasks.get(i));
 			}
+			System.out.println("0) login as someone else");
 			int option = scanner.nextInt();
-			workStationController.selectTask(option);
+			if(option == 0){
+				showLoginOptions();
+			}else{
+				workStationController.selectTask(option);
+			}
 		}
 	}
 
 	public void showSequence(List<Action> actions) {
 		for (int i = 0; i < actions.size(); i++)
 			System.out.println((i + 1) + ") " + actions.get(i));
-		if(actions.size() == 0){
+		if (actions.size() == 0) {
 			System.out.println("You have already finished this task");
-		}else{
-			System.out.println("Press 0 to exit and any other number when you have finished this action.");
+		} else {
+			System.out.println("");
+			System.out.println("Press 0 to exit");
+			System.out.println("Press 1 to finish this task");
+			System.out.println("Press 2 to login as another user");
 		}
 		int option = scanner.nextInt();
-		if (option == 0)
+		if (option == 0) {
 			shutdown();
-		workStationController.completeNextAction();
+		} else if (option == 1) {
+			workStationController.completeNextAction();
+		} else if(option == 2){
+			showLoginOptions();
+		}
+
 	}
 
 	public void shutdown() {
 		systemController.shutdown();
 	}
-	
-	public void showNoCarToWorkOn(){
+
+	public void showNoCarToWorkOn() {
 		System.out.println("There are no car orders to work on");
 	}
-	
-	public void showOverview(){
+
+	public void showOverview() {
 		System.out.println("Overview :");
+		System.out.println(workStationController.getOverview());
 	}
 }

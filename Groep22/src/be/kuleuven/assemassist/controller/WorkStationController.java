@@ -77,5 +77,17 @@ public class WorkStationController extends Controller {
 		return carMechanic.getWorkStation().getAssemblyProcess()
 				.getPendingTasks().size() == 0;
 	}
+	
+	public String getOverview(){
+		String result = "Current State :";
+		for(WorkStation station : getWorkStations()){
+			result += "\n Workstation : " + station.toString();
+			result += "\n\nPending Tasks : \n";
+			for(AssemblyTask task : station.getAssemblyProcess().getPendingTasks()){
+				result += "\n" + task.toString();
+			}
+		}
+		return result;
+	}
 
 }
