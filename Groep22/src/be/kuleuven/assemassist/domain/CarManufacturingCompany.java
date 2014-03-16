@@ -18,6 +18,7 @@ public class CarManufacturingCompany {
 	private Manager manager;
 	private ProductionSchedule productionSchedule;
 	private List<CarModel> carModels;
+	private AssemblyLine assemblyLine;
 
 	public CarManufacturingCompany(String name, Manager manager) {
 		this.name = name;
@@ -44,15 +45,21 @@ public class CarManufacturingCompany {
 
 	public void addCarModel(CarModel model) {
 		if (!model.getCarManufacturingCompany().equals(this))
-			throw new IllegalArgumentException(
-					"Cannot add model from another manufacturer ["
-							+ model.getCarManufacturingCompany()
-							+ "] to this manufacturer [" + this + "].");
+			throw new IllegalArgumentException("Cannot add model from another manufacturer ["
+					+ model.getCarManufacturingCompany() + "] to this manufacturer [" + this + "].");
 		carModels.add(model);
 	}
 
 	@Override
 	public String toString() {
 		return name;
+	}
+
+	public void setAssemblyLine(AssemblyLine assemblyLine) {
+		this.assemblyLine = assemblyLine;
+	}
+
+	public AssemblyLine getAssemblyLine() {
+		return assemblyLine;
 	}
 }

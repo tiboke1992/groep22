@@ -19,6 +19,7 @@ public class CarOrder {
 	private UUID id;
 	private DeliveryTime deliveryTime;
 	private CarModelSpecification modelSpecification;
+	private CarAssemblyProcess carAssemblyProcess;
 
 	private Engine engine;
 	private Gearbox gearbox;
@@ -32,14 +33,13 @@ public class CarOrder {
 
 	public CarOrder(CarOrder order) {
 		this.id = order.getId();
-		this.modelSpecification = new CarModelSpecification(
-				order.getModelSpecification());
-		this.deliveryTime = order.getDeliveryTime() == null ? null
-				: new DeliveryTime(order.getDeliveryTime());
+		this.modelSpecification = new CarModelSpecification(order.getModelSpecification());
+		this.deliveryTime = order.getDeliveryTime() == null ? null : new DeliveryTime(order.getDeliveryTime());
 		this.engine = order.getEngine();
 		this.gearbox = order.getGearbox();
 		this.seats = order.getSeats();
 		this.wheels = order.getWheels();
+		this.carAssemblyProcess = new CarAssemblyProcess(order.carAssemblyProcess);
 	}
 
 	public void init() {
@@ -88,5 +88,13 @@ public class CarOrder {
 
 	public CarModelSpecification getModelSpecification() {
 		return modelSpecification;
+	}
+
+	public CarAssemblyProcess getCarAssemblyProcess() {
+		return carAssemblyProcess;
+	}
+
+	public void setCarAssemblyProcess(CarAssemblyProcess carAssemblyProcess) {
+		this.carAssemblyProcess = carAssemblyProcess;
 	}
 }

@@ -12,10 +12,20 @@ public class CarAssemblyProcess {
 
 	private Queue<AssemblyTask> tasks;
 	private Map<AssemblyTask, Boolean> taskStatus;
+	private AssemblyLine assemblyLine;
 
 	public CarAssemblyProcess() {
 		tasks = new LinkedList<>();
 		taskStatus = new HashMap<>();
+	}
+
+	public CarAssemblyProcess(CarAssemblyProcess carAssemblyProcess) {
+		tasks = new LinkedList<>();
+		taskStatus = new HashMap<>();
+		for (AssemblyTask t : carAssemblyProcess.tasks)
+			tasks.add(t);
+		for (AssemblyTask t : carAssemblyProcess.taskStatus.keySet())
+			taskStatus.put(t, carAssemblyProcess.taskStatus.get(t));
 	}
 
 	public Queue<AssemblyTask> getAllTasks() {
@@ -47,5 +57,13 @@ public class CarAssemblyProcess {
 	public void addTask(AssemblyTask assemblyTask) {
 		tasks.add(assemblyTask);
 		taskStatus.put(assemblyTask, false);
+	}
+
+	public void setAssemblyLine(AssemblyLine assemblyLine) {
+		this.assemblyLine = assemblyLine;
+	}
+
+	public AssemblyLine getAssemblyLine() {
+		return assemblyLine;
 	}
 }

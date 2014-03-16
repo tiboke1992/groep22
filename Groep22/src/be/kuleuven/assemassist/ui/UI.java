@@ -30,8 +30,7 @@ public class UI {
 	private WorkStationController workStationController;
 	private Scanner scanner;
 
-	public UI(SystemController systemController,
-			OrderController orderController,
+	public UI(SystemController systemController, OrderController orderController,
 			WorkStationController workStationController) {
 		this.systemController = systemController;
 		this.systemController.setUi(this);
@@ -51,12 +50,13 @@ public class UI {
 		systemController.loginAs(scanner.nextInt());
 	}
 
-	public void showManagerMeu() {
+	public void showManagerMenu() {
 		System.out.println("1) advance assembly line");
 		System.out.println("2) login as someone else");
 		System.out.println("*) exit");
 		int option = scanner.nextInt();
 		if (option == 1) {
+
 			showOverview();
 		} else if (option == 2) {
 			showLoginOptions();
@@ -77,17 +77,13 @@ public class UI {
 		System.out.println("Overview:");
 		System.out.println("Pending orders:");
 		for (CarOrder order : orderController.getPendingCarOrders()) {
-			System.out.println(order.getId()
-					+ "\t\t"
-					+ PENDING_FORMAT.format(order.getDeliveryTime()
-							.getEstimatedDeliveryTime().toDate()));
+			System.out.println(order.getId() + "\t\t"
+					+ PENDING_FORMAT.format(order.getDeliveryTime().getEstimatedDeliveryTime().toDate()));
 		}
 		System.out.println("Completed orders:");
 		for (CarOrder order : orderController.getCompletedCarOrders()) {
-			System.out.println(order.getId()
-					+ "\t\t"
-					+ COMPLETED_FORMAT.format(order.getDeliveryTime()
-							.getEstimatedDeliveryTime().toDate()));
+			System.out.println(order.getId() + "\t\t"
+					+ COMPLETED_FORMAT.format(order.getDeliveryTime().getEstimatedDeliveryTime().toDate()));
 		}
 	}
 
@@ -122,12 +118,10 @@ public class UI {
 			shutdown();
 	}
 
-	public <T extends CarOption> T askCarOption(CarModelSpecification spec,
-			Class<T> carOptionClass) {
+	public <T extends CarOption> T askCarOption(CarModelSpecification spec, Class<T> carOptionClass) {
 		System.out.println();
 		System.out.println("Choose an " + carOptionClass.getSimpleName() + ":");
-		List<T> possibleOptions = spec.filterOutInvalidOptions(
-				carOptionClass.getEnumConstants(), carOptionClass);
+		List<T> possibleOptions = spec.filterOutInvalidOptions(carOptionClass.getEnumConstants(), carOptionClass);
 		for (int i = 0; i < possibleOptions.size(); i++)
 			System.out.println((i + 1) + ") " + possibleOptions.get(i));
 		System.out.println("*) Exit");
@@ -139,31 +133,34 @@ public class UI {
 	}
 
 	public void showDeliveryTime(DateTime time) {
-		System.out.println("Estimated delivery time: "
-				+ PENDING_FORMAT.format(time.toDate()));
+		System.out.println("Estimated delivery time: " + PENDING_FORMAT.format(time.toDate()));
 	}
 
 	public void showWorkPostMenu() {
 		System.out.println("At which workpost are you working?");
-		List<WorkStation> workStations = workStationController
-				.getWorkStations();
+		List<WorkStation> workStations = workStationController.getWorkStations();
 		for (int i = 0; i < workStations.size(); i++)
 			System.out.println(i + 1 + ") " + workStations.get(i));
 		System.out.println("0) login as someone else");
 		System.out.println("*) Exit");
 		int option = scanner.nextInt();
-		if(option == 0){
+		if (option == 0) {
 			showLoginOptions();
-		}else if(option - 1 >= 0 && option - 1 <= workStations.size()){
+		} else if (option - 1 >= 0 && option - 1 <= workStations.size()) {
 			workStationController.selectWorkStation(option - 1);
-		}else{
+		} else {
 			shutdown();
 		}
 	}
 
+	public void showTaskCompleted(AssemblyTask task) {
+		System.out.println("Task : " + task + " Completed.");
+	}
+
 	public void showPendingAssemblyTasks(List<AssemblyTask> tasks) {
-		if (tasks.size() == 0) {
-			System.out.println("Alls tasks completed succesfully");
+		if (tasks.isEmpty()) {
+			System.out.println("All tasks completed succesfully");
+			showLoginOptions();
 		} else {
 			System.out.println("0) login as someone else");
 			System.out.println("What task do you want to work on?");
@@ -171,9 +168,9 @@ public class UI {
 				System.out.println(i + 1 + ") " + tasks.get(i));
 			}
 			int option = scanner.nextInt();
-			if(option == 0){
+			if (option == 0) {
 				showLoginOptions();
-			}else{
+			} else {
 				workStationController.selectTask(option);
 			}
 		}
@@ -195,7 +192,7 @@ public class UI {
 			shutdown();
 		} else if (option == 1) {
 			workStationController.completeNextAction();
-		} else if(option == 2){
+		} else if (option == 2) {
 			showLoginOptions();
 		}
 

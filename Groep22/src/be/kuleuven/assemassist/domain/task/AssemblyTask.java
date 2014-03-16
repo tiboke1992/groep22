@@ -22,7 +22,7 @@ public abstract class AssemblyTask {
 	private Queue<Action> pendingActions;
 
 	public AssemblyTask() {
-		actions = new LinkedList<Action>();
+		actions = new LinkedList<>();
 		pendingActions = new LinkedList<>();
 	}
 

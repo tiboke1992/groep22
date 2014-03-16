@@ -1,10 +1,15 @@
 package be.kuleuven.assemassist.controller;
 
+import be.kuleuven.assemassist.domain.AssemblyLine;
 import be.kuleuven.assemassist.domain.CarManufacturingCompany;
+import be.kuleuven.assemassist.domain.ConveyorBelt;
+import be.kuleuven.assemassist.domain.Layout;
 import be.kuleuven.assemassist.domain.role.CarMechanic;
 import be.kuleuven.assemassist.domain.role.GarageHolder;
 import be.kuleuven.assemassist.domain.role.Manager;
 import be.kuleuven.assemassist.domain.role.Role;
+import be.kuleuven.assemassist.domain.workpost.AccessoriesPost;
+import be.kuleuven.assemassist.domain.workpost.DriveTrainPost;
 
 public class SystemController extends Controller {
 
@@ -12,6 +17,15 @@ public class SystemController extends Controller {
 
 	public SystemController(CarManufacturingCompany company) {
 		super(company);
+	}
+
+	public void start() {
+		ConveyorBelt conveyorBelt = new ConveyorBelt();
+		Layout layout = new Layout(conveyorBelt);
+		layout.addWorkStation(new DriveTrainPost(getCompany().getProductionSchedule()));
+		layout.addWorkStation(new AccessoriesPost(getCompany().getProductionSchedule()));
+		AssemblyLine assemblyLine = new AssemblyLine(layout);
+		getCompany().setAssemblyLine(assemblyLine);
 	}
 
 	public void loginAs(int roleId) {
@@ -30,7 +44,7 @@ public class SystemController extends Controller {
 			case 3:
 				role = new Manager();
 				getUi().showGreeting(role);
-				getUi().showManagerMeu();
+				getUi().showManagerMenu();
 				break;
 			default:
 				shutdown();

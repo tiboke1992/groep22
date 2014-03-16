@@ -112,8 +112,8 @@
       <operations public="true" package="true" protected="true" private="true"/>    
     </display>  
   </class>  
-  <class id="15" corner="BOTTOM_RIGHT" language="java" name="be.kuleuven.assemassist.domain.Action" project="TEST" 
-    file="/TEST/src/be/kuleuven/assemassist/domain/Action.java" binary="false">    
+  <class id="15" corner="BOTTOM_RIGHT" language="java" name="be.kuleuven.assemassist.domain.task.action.Action" 
+    project="TEST" file="/TEST/src/be/kuleuven/assemassist/domain/task/action/Action.java" binary="false">    
     <position height="78" width="148" x="795" y="1341"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" visibility="true">      
       <attributes public="true" package="true" protected="true" private="true"/>      
@@ -192,16 +192,16 @@
       <operations public="true" package="true" protected="true" private="true"/>    
     </display>  
   </class>  
-  <class id="25" corner="BOTTOM_RIGHT" language="java" name="be.kuleuven.assemassist.domain.DriveTrainPost" 
-    project="TEST" file="/TEST/src/be/kuleuven/assemassist/domain/DriveTrainPost.java" binary="false">    
+  <class id="25" corner="BOTTOM_RIGHT" language="java" name="be.kuleuven.assemassist.domain.workpost.DriveTrainPost" 
+    project="TEST" file="/TEST/src/be/kuleuven/assemassist/domain/workpost/DriveTrainPost.java" binary="false">    
     <position height="95" width="148" x="229" y="579"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" visibility="true">      
       <attributes public="true" package="true" protected="true" private="true"/>      
       <operations public="true" package="true" protected="true" private="true"/>    
     </display>  
   </class>  
-  <class id="26" corner="BOTTOM_RIGHT" language="java" name="be.kuleuven.assemassist.domain.AccessoriesPost" 
-    project="TEST" file="/TEST/src/be/kuleuven/assemassist/domain/AccessoriesPost.java" binary="false">    
+  <class id="26" corner="BOTTOM_RIGHT" language="java" name="be.kuleuven.assemassist.domain.workpost.AccessoriesPost" 
+    project="TEST" file="/TEST/src/be/kuleuven/assemassist/domain/workpost/AccessoriesPost.java" binary="false">    
     <position height="95" width="148" x="417" y="579"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" visibility="true">      
       <attributes public="true" package="true" protected="true" private="true"/>      
@@ -232,8 +232,8 @@
       <operations public="true" package="true" protected="true" private="true"/>    
     </display>  
   </class>  
-  <class id="30" corner="BOTTOM_RIGHT" language="java" name="be.kuleuven.assemassist.domain.WorkStation" project="TEST" 
-    file="/TEST/src/be/kuleuven/assemassist/domain/WorkStation.java" binary="false">    
+  <class id="30" corner="BOTTOM_RIGHT" language="java" name="be.kuleuven.assemassist.domain.workpost.WorkStation" 
+    project="TEST" file="/TEST/src/be/kuleuven/assemassist/domain/workpost/WorkStation.java" binary="false">    
     <position height="248" width="245" x="417" y="291"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" visibility="true">      
       <attributes public="true" package="true" protected="true" private="true"/>      
