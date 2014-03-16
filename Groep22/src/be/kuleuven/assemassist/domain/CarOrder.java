@@ -97,4 +97,17 @@ public class CarOrder {
 	public void setCarAssemblyProcess(CarAssemblyProcess carAssemblyProcess) {
 		this.carAssemblyProcess = carAssemblyProcess;
 	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (!(obj instanceof CarOrder))
+			return false;
+		CarOrder co = (CarOrder) obj;
+		return co.id.equals(id);
+	}
+
+	@Override
+	public String toString() {
+		return "CarOrder " + getId();
+	}
 }

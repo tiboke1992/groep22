@@ -62,4 +62,5 @@ public class CarManufacturingCompany {
 	public AssemblyLine getAssemblyLine() {
 		return assemblyLine;
 	}
+
 }

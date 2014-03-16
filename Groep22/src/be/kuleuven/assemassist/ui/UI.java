@@ -56,7 +56,7 @@ public class UI {
 		System.out.println("*) exit");
 		int option = scanner.nextInt();
 		if (option == 1) {
-
+			workStationController.advanceAssemblyLine();
 			showOverview();
 		} else if (option == 2) {
 			showLoginOptions();
@@ -209,5 +209,9 @@ public class UI {
 	public void showOverview() {
 		System.out.println("Overview :");
 		System.out.println(workStationController.getOverview());
+	}
+
+	public void showCanNotAdvanceError() {
+		System.out.println("The assembly line could not be advanced.");
 	}
 }

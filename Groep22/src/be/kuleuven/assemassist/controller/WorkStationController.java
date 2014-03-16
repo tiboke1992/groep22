@@ -3,7 +3,10 @@ package be.kuleuven.assemassist.controller;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.joda.time.DateTime;
+
 import be.kuleuven.assemassist.domain.CarManufacturingCompany;
+import be.kuleuven.assemassist.domain.CarOrder;
 import be.kuleuven.assemassist.domain.role.CarMechanic;
 import be.kuleuven.assemassist.domain.task.AssemblyTask;
 import be.kuleuven.assemassist.domain.task.action.Action;
@@ -86,7 +89,7 @@ public class WorkStationController extends Controller {
 	public String getOverview() {
 		String result = "Current State :";
 		for (WorkStation station : getWorkStations()) {
-			result += "\nWorkstation : " + station.toString();
+			result += "\nWorkstation : " + station + " Current order: " + station.getCurrentCarOrder();
 			result += "\n\nPending Tasks : +\n";
 			for (AssemblyTask task : station.getAssemblyProcess().getPendingTasks()) {
 				result += task.toString() + "\n";
@@ -95,4 +98,23 @@ public class WorkStationController extends Controller {
 		return result;
 	}
 
+	public void advanceAssemblyLine() {
+		if (getCompany().getAssemblyLine().canAdvance()) {
+			WorkStation lastStation = getCompany().getAssemblyLine().getLastWorkStation();
+			CarOrder last = lastStation.getCurrentCarOrder();
+			if (last != null)
+				getCompany().getProductionSchedule().completeOrder(last);
+			WorkStation first = getCompany().getAssemblyLine().getLayout().getWorkStations().get(0);
+			if (first != null) {
+				lastStation.setCurrentCarOrder(first.getCurrentCarOrder());
+				if (getCompany().getProductionSchedule().getTime()
+						.isBefore(new DateTime().withHourOfDay(20).withMinuteOfHour(0).withSecondOfMinute(0))) {
+					first.setCurrentCarOrder(getCompany().getProductionSchedule().getNextCarOrder());
+				} else {
+					first.setCurrentCarOrder(null);
+				}
+			}
+		} else
+			getUi().showCanNotAdvanceError();
+	}
 }

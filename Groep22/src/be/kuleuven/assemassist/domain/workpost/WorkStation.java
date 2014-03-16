@@ -32,8 +32,12 @@ public abstract class WorkStation {
 		this.schedule = schedule;
 	}
 
-	public CarOrder getCurrentCar() {
+	public CarOrder getCurrentCarOrder() {
 		return currentCarOrder;
+	}
+
+	public void setCurrentCarOrder(CarOrder currentCarOrder) {
+		this.currentCarOrder = currentCarOrder;
 	}
 
 	public CarMechanic getCarMechanic() {
