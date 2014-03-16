@@ -165,11 +165,11 @@ public class UI {
 		if (tasks.size() == 0) {
 			System.out.println("Alls tasks completed succesfully");
 		} else {
+			System.out.println("0) login as someone else");
 			System.out.println("What task do you want to work on?");
 			for (int i = 0; i < tasks.size(); i++) {
 				System.out.println(i + 1 + ") " + tasks.get(i));
 			}
-			System.out.println("0) login as someone else");
 			int option = scanner.nextInt();
 			if(option == 0){
 				showLoginOptions();

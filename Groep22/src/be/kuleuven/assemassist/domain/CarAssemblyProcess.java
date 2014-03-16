@@ -37,7 +37,6 @@ public class CarAssemblyProcess {
 		if (!taskStatus.keySet().contains(task))
 			throw new IllegalArgumentException("The task " + task + " does not belong to this assembly process.");
 		taskStatus.put(task, true);
-		tasks.remove(task);
 	}
 
 	public void resetProcess() {
