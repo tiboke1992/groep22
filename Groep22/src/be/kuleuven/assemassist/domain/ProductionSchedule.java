@@ -40,7 +40,6 @@ public class ProductionSchedule {
 	public void addCarOrder(CarOrder order) {
 		order.init();
 		pendingCarOrders.add(order);
-		System.out.println("add: " + order.getId());
 	}
 
 	public DateTime getTime() {
@@ -48,7 +47,6 @@ public class ProductionSchedule {
 	}
 
 	public void completeOrder(CarOrder order) {
-		System.out.println("compl: " + order.getId());
 		if (!pendingCarOrders.contains(order))
 			throw new IllegalArgumentException("Can only complete pending orders.");
 		pendingCarOrders.remove(order);

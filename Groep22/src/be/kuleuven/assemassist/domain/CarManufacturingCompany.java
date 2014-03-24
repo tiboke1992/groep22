@@ -44,6 +44,8 @@ public class CarManufacturingCompany {
 	}
 
 	public void addCarModel(CarModel model) {
+		if (model == null)
+			throw new IllegalArgumentException("Cannot add null CarModel");
 		if (!model.getCarManufacturingCompany().equals(this))
 			throw new IllegalArgumentException("Cannot add model from another manufacturer ["
 					+ model.getCarManufacturingCompany() + "] to this manufacturer [" + this + "].");
