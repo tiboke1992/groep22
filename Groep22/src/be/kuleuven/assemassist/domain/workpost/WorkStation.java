@@ -75,5 +75,7 @@ public abstract class WorkStation {
 	public ProductionSchedule getSchedule() {
 		return schedule;
 	}
+	
+	public abstract void init();
 
 }

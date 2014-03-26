@@ -56,8 +56,8 @@ public class UI {
 		System.out.println("*) exit");
 		int option = scanner.nextInt();
 		if (option == 1) {
-			workStationController.advanceAssemblyLine();
-			showOverview();
+			workStationController.advanceAssemblyLine();			
+			this.showManagerMenu();
 		} else if (option == 2) {
 			showLoginOptions();
 		} else {
@@ -175,6 +175,7 @@ public class UI {
 			}
 		}
 	}
+	
 
 	public void showSequence(List<Action> actions) {
 		for (int i = 0; i < actions.size(); i++)
@@ -203,7 +204,8 @@ public class UI {
 	}
 
 	public void showNoCarToWorkOn() {
-		System.out.println("There are no car orders to work on");
+		System.out.println("There is currently no car to work on");
+		showLoginOptions();
 	}
 
 	public void showOverview() {
@@ -213,5 +215,11 @@ public class UI {
 
 	public void showCanNotAdvanceError() {
 		System.out.println("The assembly line could not be advanced.");
+		showManagerMenu();
+	}
+	
+	public void showAssemblyLineAdvanced(){
+		System.out.println("Assembly line succesfully advanced");
+		this.showManagerMenu();
 	}
 }
