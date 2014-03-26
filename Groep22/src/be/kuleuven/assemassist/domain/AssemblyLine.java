@@ -1,5 +1,6 @@
 package be.kuleuven.assemassist.domain;
 
+
 import be.kuleuven.assemassist.domain.workpost.WorkStation;
 
 public class AssemblyLine {
@@ -14,8 +15,18 @@ public class AssemblyLine {
 		return layout;
 	}
 
+	//TODO better documentation
+	/**
+	 * We can advance when all tasks are finished on all workstations
+	 * @return
+	 */
 	public boolean canAdvance() {
-		return true;// TODO REQS
+		boolean result = false;
+		for(int i = 0 ; i < layout.getWorkStations().size() && !result ;i++){
+			WorkStation workstation = layout.getWorkStations().get(i);
+			result = workstation.getAssemblyProcess().getPendingTasks().size() == 0;
+		}
+		return result;
 	}
 
 	public WorkStation getLastWorkStation() {
