@@ -47,20 +47,28 @@ public class UI {
 		System.out.println("2) Car mechanic");
 		System.out.println("3) Manager");
 		System.out.println("*) Exit");
-		systemController.loginAs(scanner.nextInt());
+		try {
+			systemController.loginAs(scanner.nextInt());
+		} catch (Throwable t) {
+			shutdown();
+		}
 	}
 
 	public void showManagerMenu() {
 		System.out.println("1) advance assembly line");
 		System.out.println("2) login as someone else");
 		System.out.println("*) exit");
-		int option = scanner.nextInt();
-		if (option == 1) {
-			workStationController.advanceAssemblyLine();			
-			this.showManagerMenu();
-		} else if (option == 2) {
-			showLoginOptions();
-		} else {
+		try {
+			int option = scanner.nextInt();
+			if (option == 1) {
+				workStationController.advanceAssemblyLine();
+				this.showManagerMenu();
+			} else if (option == 2) {
+				showLoginOptions();
+			} else {
+				shutdown();
+			}
+		} catch (Throwable t) {
 			shutdown();
 		}
 	}
@@ -93,15 +101,18 @@ public class UI {
 		System.out.println("1) Place a new order");
 		System.out.println("2) Log in as someting else");
 		System.out.println("*) Exit");
-		int option = scanner.nextInt();
-		if (option == 1)
-			showCarModels();
-		else if (option == 2) {
-			showLoginOptions();
-		} else {
+		try {
+			int option = scanner.nextInt();
+			if (option == 1)
+				showCarModels();
+			else if (option == 2) {
+				showLoginOptions();
+			} else {
+				shutdown();
+			}
+		} catch (Throwable t) {
 			shutdown();
 		}
-
 	}
 
 	private void showCarModels() {
@@ -111,11 +122,15 @@ public class UI {
 			System.out.println((i + 1) + ") " + carModels.get(i));
 		}
 		System.out.println("*) Exit");
-		int option = scanner.nextInt();
-		if (option > 0 && option <= carModels.size())
-			orderController.makeOrder(option - 1);
-		else
+		try {
+			int option = scanner.nextInt();
+			if (option > 0 && option <= carModels.size())
+				orderController.makeOrder(option - 1);
+			else
+				shutdown();
+		} catch (Throwable t) {
 			shutdown();
+		}
 	}
 
 	public <T extends CarOption> T askCarOption(CarModelSpecification spec, Class<T> carOptionClass) {
@@ -125,10 +140,14 @@ public class UI {
 		for (int i = 0; i < possibleOptions.size(); i++)
 			System.out.println((i + 1) + ") " + possibleOptions.get(i));
 		System.out.println("*) Exit");
-		int option = scanner.nextInt();
-		if (option > 0 && option <= possibleOptions.size())
-			return possibleOptions.get(option - 1);
-		shutdown();
+		try {
+			int option = scanner.nextInt();
+			if (option > 0 && option <= possibleOptions.size())
+				return possibleOptions.get(option - 1);
+			shutdown();
+		} catch (Throwable t) {
+			shutdown();
+		}
 		return null;
 	}
 
@@ -143,12 +162,16 @@ public class UI {
 			System.out.println(i + 1 + ") " + workStations.get(i));
 		System.out.println("0) login as someone else");
 		System.out.println("*) Exit");
-		int option = scanner.nextInt();
-		if (option == 0) {
-			showLoginOptions();
-		} else if (option - 1 >= 0 && option - 1 <= workStations.size()) {
-			workStationController.selectWorkStation(option - 1);
-		} else {
+		try {
+			int option = scanner.nextInt();
+			if (option == 0) {
+				showLoginOptions();
+			} else if (option - 1 >= 0 && option - 1 <= workStations.size()) {
+				workStationController.selectWorkStation(option - 1);
+			} else {
+				shutdown();
+			}
+		} catch (Throwable t) {
 			shutdown();
 		}
 	}
@@ -167,15 +190,18 @@ public class UI {
 			for (int i = 0; i < tasks.size(); i++) {
 				System.out.println(i + 1 + ") " + tasks.get(i));
 			}
-			int option = scanner.nextInt();
-			if (option == 0) {
-				showLoginOptions();
-			} else {
-				workStationController.selectTask(option);
+			try {
+				int option = scanner.nextInt();
+				if (option == 0) {
+					showLoginOptions();
+				} else {
+					workStationController.selectTask(option);
+				}
+			} catch (Throwable t) {
+				shutdown();
 			}
 		}
 	}
-	
 
 	public void showSequence(List<Action> actions) {
 		for (int i = 0; i < actions.size(); i++)
@@ -188,15 +214,18 @@ public class UI {
 			System.out.println("Press 1 to finish this task");
 			System.out.println("Press 2 to login as another user");
 		}
-		int option = scanner.nextInt();
-		if (option == 0) {
+		try {
+			int option = scanner.nextInt();
+			if (option == 0) {
+				shutdown();
+			} else if (option == 1) {
+				workStationController.completeNextAction();
+			} else if (option == 2) {
+				showLoginOptions();
+			}
+		} catch (Throwable t) {
 			shutdown();
-		} else if (option == 1) {
-			workStationController.completeNextAction();
-		} else if (option == 2) {
-			showLoginOptions();
 		}
-
 	}
 
 	public void shutdown() {
@@ -208,18 +237,23 @@ public class UI {
 		showLoginOptions();
 	}
 
-	public void showOverview() {
+	public void showOverview(String overview) {
 		System.out.println("Overview :");
-		System.out.println(workStationController.getOverview());
+		System.out.println(overview);
 	}
 
 	public void showCanNotAdvanceError() {
 		System.out.println("The assembly line could not be advanced.");
 		showManagerMenu();
 	}
-	
-	public void showAssemblyLineAdvanced(){
+
+	public void showAssemblyLineAdvanced() {
 		System.out.println("Assembly line succesfully advanced");
 		this.showManagerMenu();
+	}
+
+	public void showError(Throwable t) {
+		System.out.println("Something went wrong: " + t.getMessage());
+		System.out.println("Logging out..");
 	}
 }

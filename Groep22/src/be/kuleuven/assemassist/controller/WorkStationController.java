@@ -38,14 +38,18 @@ public class WorkStationController extends Controller {
 	 *            represents the workstations
 	 */
 	public void selectWorkStation(int workStation) {
-		WorkStation workPost = getWorkStations().get(workStation);
-		carMechanic.setWorkStation(workPost);
-		if (workPost.getCurrentCarOrder() == null) {
-			getUi().showNoCarToWorkOn();
-		} else {
-			getUi().showPendingAssemblyTasks(workPost.getAssemblyProcess().getPendingTasks());
+		try {
+			WorkStation workPost = getWorkStations().get(workStation);
+			carMechanic.setWorkStation(workPost);
+			if (workPost.getCurrentCarOrder() == null) {
+				getUi().showNoCarToWorkOn();
+			} else {
+				getUi().showPendingAssemblyTasks(workPost.getAssemblyProcess().getPendingTasks());
+			}
+		} catch (Throwable t) {
+			getUi().showError(t);
+			getUi().showLoginOptions();
 		}
-
 	}
 
 	/**
@@ -56,13 +60,18 @@ public class WorkStationController extends Controller {
 	 *            represents the task number
 	 */
 	public void selectTask(int option) {
-		List<AssemblyTask> tasks = carMechanic.getWorkStation().getAssemblyProcess().getPendingTasks();
-		if (option > 0 && option <= tasks.size()) {
-			lastTask = tasks.get(option - 1);
-			List<Action> actions = new ArrayList<>();
-			for (Action a : lastTask.getPendingActions())
-				actions.add(a);
-			getUi().showSequence(actions);
+		try {
+			List<AssemblyTask> tasks = carMechanic.getWorkStation().getAssemblyProcess().getPendingTasks();
+			if (option > 0 && option <= tasks.size()) {
+				lastTask = tasks.get(option - 1);
+				List<Action> actions = new ArrayList<>();
+				for (Action a : lastTask.getPendingActions())
+					actions.add(a);
+				getUi().showSequence(actions);
+			}
+		} catch (Throwable t) {
+			getUi().showError(t);
+			getUi().showLoginOptions();
 		}
 	}
 
@@ -78,15 +87,20 @@ public class WorkStationController extends Controller {
 	public void completeNextAction() {
 		if (lastTask == null)
 			throw new IllegalStateException();
-		lastTask.completeAction();
-		if (lastTask.getPendingActions().isEmpty()) {
-			carMechanic.getWorkStation().getAssemblyProcess().completeTask(lastTask);
-			getUi().showTaskCompleted(lastTask);
+		try {
+			lastTask.completeAction();
+			if (lastTask.getPendingActions().isEmpty()) {
+				carMechanic.getWorkStation().getAssemblyProcess().completeTask(lastTask);
+				getUi().showTaskCompleted(lastTask);
+			}
+			getUi().showPendingAssemblyTasks(carMechanic.getWorkStation().getAssemblyProcess().getPendingTasks());
+		} catch (Throwable t) {
+			getUi().showError(t);
+			getUi().showLoginOptions();
 		}
-		getUi().showPendingAssemblyTasks(carMechanic.getWorkStation().getAssemblyProcess().getPendingTasks());
 	}
 
-	public String getOverview() {
+	private String getOverview() {
 		String result = "Current State :";
 		for (WorkStation station : getWorkStations()) {
 			result += "\nWorkstation : " + station + " Current order: " + station.getCurrentCarOrder();
@@ -111,29 +125,34 @@ public class WorkStationController extends Controller {
 	}
 
 	public void advanceAssemblyLine() {
-		if (!getNonePendingAllEmpty() && getCompany().getAssemblyLine().canAdvance()) {
-			WorkStation lastStation = getCompany().getAssemblyLine().getLastWorkStation();
-			CarOrder last = lastStation.getCurrentCarOrder();
-			if (last != null) {
-				getCompany().getProductionSchedule().completeOrder(last);
-				lastStation.init();
-			}
-
-			WorkStation first = getCompany().getAssemblyLine().getLayout().getWorkStations().get(0);
-			if (first != null) {
-				lastStation.setCurrentCarOrder(first.getCurrentCarOrder());
-				if (getCompany().getProductionSchedule().getTime()
-						.isBefore(new DateTime().withHourOfDay(20).withMinuteOfHour(0).withSecondOfMinute(0))
-						&& !getCompany().getProductionSchedule().getPendingCarOrders().isEmpty()) {
-					first.setCurrentCarOrder(getCompany().getProductionSchedule().getNextWorkCarOrder());
-				} else {
-					first.setCurrentCarOrder(null);
+		try {
+			if (!getNonePendingAllEmpty() && getCompany().getAssemblyLine().canAdvance()) {
+				WorkStation lastStation = getCompany().getAssemblyLine().getLastWorkStation();
+				CarOrder last = lastStation.getCurrentCarOrder();
+				if (last != null) {
+					getCompany().getProductionSchedule().completeOrder(last);
+					lastStation.init();
 				}
-				first.init();
-				getUi().showOverview();
-				getUi().showAssemblyLineAdvanced();
-			}
-		} else
-			getUi().showCanNotAdvanceError();
+
+				WorkStation first = getCompany().getAssemblyLine().getLayout().getWorkStations().get(0);
+				if (first != null) {
+					lastStation.setCurrentCarOrder(first.getCurrentCarOrder());
+					if (getCompany().getProductionSchedule().getTime()
+							.isBefore(new DateTime().withHourOfDay(20).withMinuteOfHour(0).withSecondOfMinute(0))
+							&& !getCompany().getProductionSchedule().getPendingCarOrders().isEmpty()) {
+						first.setCurrentCarOrder(getCompany().getProductionSchedule().getNextWorkCarOrder());
+					} else {
+						first.setCurrentCarOrder(null);
+					}
+					first.init();
+					getUi().showOverview(getOverview());
+					getUi().showAssemblyLineAdvanced();
+				}
+			} else
+				getUi().showCanNotAdvanceError();
+		} catch (Throwable t) {
+			getUi().showError(t);
+			getUi().showLoginOptions();
+		}
 	}
 }

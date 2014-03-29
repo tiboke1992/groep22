@@ -17,7 +17,7 @@ import be.kuleuven.assemassist.domain.options.Wheels;
 /**
  * 
  * This class controls the car orders
- *
+ * 
  */
 public class OrderController extends Controller {
 
@@ -26,7 +26,9 @@ public class OrderController extends Controller {
 	}
 
 	/**
-	 * This method creates a copy of the current pending car orders and returns it
+	 * This method creates a copy of the current pending car orders and returns
+	 * it
+	 * 
 	 * @return A collection of pending car orders
 	 */
 	public Collection<CarOrder> getPendingCarOrders() {
@@ -38,7 +40,9 @@ public class OrderController extends Controller {
 	}
 
 	/**
-	 * This method creates a copy of the current completed car orders and returns it
+	 * This method creates a copy of the current completed car orders and
+	 * returns it
+	 * 
 	 * @return A collection of completed car orders
 	 */
 	public Collection<CarOrder> getCompletedCarOrders() {
@@ -48,28 +52,35 @@ public class OrderController extends Controller {
 			ordersCopy.add(carOrder);
 		return ordersCopy;
 	}
-	
-	
-/**
- * This method creates a new car order and shows the results on the gui
- * @param modelOption representing the car model
- */
+
+	/**
+	 * This method creates a new car order and shows the results on the gui
+	 * 
+	 * @param modelOption
+	 *            representing the car model
+	 */
 	public void makeOrder(int modelOption) {
-		CarModel model = getCompany().getAvailableCarModels().get(modelOption);
-		CarModelSpecification spec = model.getSpecification();
-		CarOrder order = new CarOrder(spec);
-		order.setEngine(getUi().askCarOption(spec, Engine.class));
-		order.setGearbox(getUi().askCarOption(spec, Gearbox.class));
-		order.setWheels(getUi().askCarOption(spec, Wheels.class));
-		order.setSeats(getUi().askCarOption(spec, Seats.class));
-		getCompany().getProductionSchedule().addCarOrder(order);
-		getUi().showDeliveryTime(order.getDeliveryTime().getEstimatedDeliveryTime());
-		getUi().showOrders();
-		getUi().showMenu();
+		try {
+			CarModel model = getCompany().getAvailableCarModels().get(modelOption);
+			CarModelSpecification spec = model.getSpecification();
+			CarOrder order = new CarOrder(spec);
+			order.setEngine(getUi().askCarOption(spec, Engine.class));
+			order.setGearbox(getUi().askCarOption(spec, Gearbox.class));
+			order.setWheels(getUi().askCarOption(spec, Wheels.class));
+			order.setSeats(getUi().askCarOption(spec, Seats.class));
+			getCompany().getProductionSchedule().addCarOrder(order);
+			getUi().showDeliveryTime(order.getDeliveryTime().getEstimatedDeliveryTime());
+			getUi().showOrders();
+			getUi().showMenu();
+		} catch (Throwable t) {
+			getUi().showError(t);
+			getUi().showLoginOptions();
+		}
 	}
 
 	/**
 	 * This method returns a list of the available car models
+	 * 
 	 * @return A list of the available car models
 	 */
 	public List<CarModel> getAvailableCarModels() {
