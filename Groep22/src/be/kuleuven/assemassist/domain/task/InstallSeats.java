@@ -9,9 +9,9 @@ import be.kuleuven.assemassist.domain.task.action.DummyAction;
  */
 public class InstallSeats extends AssemblyTask {
 	public InstallSeats(){
-		add(new DummyAction("Take the seats"));
-		add(new DummyAction("Place seats in car"));
-		add(new DummyAction("Test if the are confy"));
+		addAction(new DummyAction("Take the seats"));
+		addAction(new DummyAction("Place seats in car"));
+		addAction(new DummyAction("Test if the are confy"));
 	}
 
 	@Override

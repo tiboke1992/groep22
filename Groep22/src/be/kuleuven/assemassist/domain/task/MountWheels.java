@@ -10,9 +10,9 @@ import be.kuleuven.assemassist.domain.task.action.DummyAction;
 public class MountWheels extends AssemblyTask {
 
 	public MountWheels(){
-		add(new DummyAction("Take wheels"));
-		add(new DummyAction("Put wheels on car"));
-		add(new DummyAction("Tighten the bolts"));
+		addAction(new DummyAction("Take wheels"));
+		addAction(new DummyAction("Put wheels on car"));
+		addAction(new DummyAction("Tighten the bolts"));
 	}
 	@Override
 	public String toString() {

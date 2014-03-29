@@ -69,7 +69,7 @@ public abstract class AssemblyTask {
 	 * @param action
 	 *            The action to add to the list
 	 */
-	public void add(Action action) {
+	public void addAction(Action action) {
 		if (action == null)
 			throw new IllegalArgumentException("Null action not allowed");
 		actions.add(action);

@@ -10,8 +10,8 @@ import be.kuleuven.assemassist.domain.task.action.DummyAction;
 public class InsertGearBox extends AssemblyTask {
 
 	public InsertGearBox(){
-		add(new DummyAction("Take gear box"));
-		add(new DummyAction("Put gear box in car"));
+		addAction(new DummyAction("Take gear box"));
+		addAction(new DummyAction("Put gear box in car"));
 	}
 	
 	@Override
