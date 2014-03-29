@@ -32,7 +32,7 @@ public class AssemblyLine {
 		return result;
 	}
 
-	public boolean iscarLeftAtAWorkStation() {
+	public boolean isCarLeftAtAWorkStation() {
 		boolean result = false;
 		for (int i = 0; i < layout.getWorkStations().size() && !result; i++) {
 			WorkStation workstation = layout.getWorkStations().get(i);
