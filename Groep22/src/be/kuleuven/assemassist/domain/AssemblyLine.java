@@ -19,6 +19,8 @@ public class AssemblyLine {
 	}
 
 	public WorkStation getLastWorkStation() {
+		if (layout.getWorkStations().isEmpty())
+			return null;
 		return layout.getWorkStations().get(layout.getWorkStations().size() - 1);
 	}
 }
