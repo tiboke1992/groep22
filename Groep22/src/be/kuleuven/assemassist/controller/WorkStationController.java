@@ -97,8 +97,8 @@ public class WorkStationController extends Controller {
 		}
 		return result;
 	}
-	
-	public boolean getNonePendingAllEmpty(){
+
+	public boolean getNonePendingAllEmpty() {
 		return noPendingCarOrders() && allWorkstationsEmpty();
 	}
 
@@ -107,23 +107,24 @@ public class WorkStationController extends Controller {
 	}
 
 	private boolean allWorkstationsEmpty() {
-		return !getCompany().getAssemblyLine().iscarLeftAtAWorkStation();
+		return !getCompany().getAssemblyLine().isCarLeftAtAWorkStation();
 	}
 
 	public void advanceAssemblyLine() {
 		if (!getNonePendingAllEmpty() && getCompany().getAssemblyLine().canAdvance()) {
 			WorkStation lastStation = getCompany().getAssemblyLine().getLastWorkStation();
 			CarOrder last = lastStation.getCurrentCarOrder();
-			if (last != null){
+			if (last != null) {
 				getCompany().getProductionSchedule().completeOrder(last);
 				lastStation.init();
 			}
-				
+
 			WorkStation first = getCompany().getAssemblyLine().getLayout().getWorkStations().get(0);
 			if (first != null) {
 				lastStation.setCurrentCarOrder(first.getCurrentCarOrder());
 				if (getCompany().getProductionSchedule().getTime()
-						.isBefore(new DateTime().withHourOfDay(20).withMinuteOfHour(0).withSecondOfMinute(0)) && !getCompany().getProductionSchedule().getPendingCarOrders().isEmpty()) {
+						.isBefore(new DateTime().withHourOfDay(20).withMinuteOfHour(0).withSecondOfMinute(0))
+						&& !getCompany().getProductionSchedule().getPendingCarOrders().isEmpty()) {
 					first.setCurrentCarOrder(getCompany().getProductionSchedule().getNextWorkCarOrder());
 				} else {
 					first.setCurrentCarOrder(null);
