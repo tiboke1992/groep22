@@ -16,15 +16,20 @@ public class DriveTrainPost extends WorkStation {
 	 */
 	public DriveTrainPost(ProductionSchedule schedule) {
 		super(schedule);
-		CarAssemblyProcess assemblyProcess = new CarAssemblyProcess();
-		assemblyProcess.addTask(new InsertEngine());
-		assemblyProcess.addTask(new InsertGearBox());
-		setAssemblyProcess(assemblyProcess);
+		init();
 	}
 
 	@Override
 	public String toString() {
 		return "DriveTrainPost";
+	}
+
+	@Override
+	public void init() {
+		CarAssemblyProcess assemblyProcess = new CarAssemblyProcess();
+		assemblyProcess.addTask(new InsertEngine());
+		assemblyProcess.addTask(new InsertGearBox());
+		setAssemblyProcess(assemblyProcess);
 	}
 
 }

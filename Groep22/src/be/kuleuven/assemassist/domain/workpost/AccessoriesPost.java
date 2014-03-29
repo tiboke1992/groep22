@@ -17,15 +17,20 @@ public class AccessoriesPost extends WorkStation {
 	 */
 	public AccessoriesPost(ProductionSchedule schedule) {
 		super(schedule);
-		CarAssemblyProcess assemblyProcess = new CarAssemblyProcess();
-		assemblyProcess.addTask(new InstallSeats());
-		assemblyProcess.addTask(new MountWheels());
-		setAssemblyProcess(assemblyProcess);
+		init();
 	}
 
 	@Override
 	public String toString() {
 		return "AccessoriesPost";
+	}
+
+	@Override
+	public void init() {
+		CarAssemblyProcess assemblyProcess = new CarAssemblyProcess();
+		assemblyProcess.addTask(new InstallSeats());
+		assemblyProcess.addTask(new MountWheels());
+		setAssemblyProcess(assemblyProcess);
 	}
 
 }

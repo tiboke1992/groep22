@@ -14,8 +14,31 @@ public class AssemblyLine {
 		return layout;
 	}
 
+	// TODO better documentation
+	/**
+	 * We can advance when all tasks are finished on all workstations
+	 * 
+	 * @return
+	 */
 	public boolean canAdvance() {
-		return true;// TODO REQS
+		boolean result = true;
+		for (int i = 0; i < layout.getWorkStations().size() && result; i++) {
+			WorkStation workStation = layout.getWorkStations().get(i);
+			if (workStation.getCurrentCarOrder() != null
+					&& !workStation.getAssemblyProcess().getPendingTasks().isEmpty()) {
+				result = false;
+			}
+		}
+		return result;
+	}
+
+	public boolean iscarLeftAtAWorkStation() {
+		boolean result = false;
+		for (int i = 0; i < layout.getWorkStations().size() && !result; i++) {
+			WorkStation workstation = layout.getWorkStations().get(i);
+			result = workstation.getCurrentCarOrder() != null;
+		}
+		return result;
 	}
 
 	public WorkStation getLastWorkStation() {

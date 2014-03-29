@@ -16,18 +16,27 @@ import org.joda.time.DateTime;
 public class ProductionSchedule {
 
 	private Queue<CarOrder> pendingCarOrders;
+	private Queue<CarOrder> workingCarOrders;
 	private List<CarOrder> completedCarOrders;
 	private DateTime time;
 
 	public ProductionSchedule() {
 		pendingCarOrders = new ArrayDeque<>();
+		workingCarOrders = new ArrayDeque<>();
 		completedCarOrders = new ArrayList<>();
-		time = new DateTime().withHourOfDay(6).withMinuteOfHour(0).withSecondOfMinute(0);
+		time = new DateTime().withHourOfDay(6).withMinuteOfHour(0)
+				.withSecondOfMinute(0);
 	}
 
 	public CarOrder getNextCarOrder() {
 		return pendingCarOrders.peek();
 	}
+	
+	public CarOrder getNextWorkCarOrder(){
+		return workingCarOrders.poll();
+	}
+	
+
 
 	public Queue<CarOrder> getPendingCarOrders() {
 		return pendingCarOrders;
@@ -40,6 +49,7 @@ public class ProductionSchedule {
 	public void addCarOrder(CarOrder order) {
 		order.init();
 		pendingCarOrders.add(order);
+		workingCarOrders.add(order);
 	}
 
 	public DateTime getTime() {
@@ -47,9 +57,7 @@ public class ProductionSchedule {
 	}
 
 	public void completeOrder(CarOrder order) {
-		if (!pendingCarOrders.contains(order))
-			throw new IllegalArgumentException("Can only complete pending orders.");
-		pendingCarOrders.remove(order);
 		completedCarOrders.add(order);
+		pendingCarOrders.remove(order);
 	}
 }
