@@ -97,7 +97,7 @@ public class ScenarioTest {
 	}
 
 	@Test
-	public void testGarageHolderMakesCarOrderAndManagerAdvancesAssemblyLineMechanicPerformsOnlySomeTasksManagerTriesToAdvanceButFails() {
+	public void testGarageHolderMakesCarOrder_ManagerAdvancesAssemblyLine_MechanicPerformsOnlySomeTasks_ManagerTriesToAdvanceButFails() {
 		new TestUI(systemController, orderController, workStationController) {
 			@SuppressWarnings("unchecked")
 			@Override
@@ -159,6 +159,79 @@ public class ScenarioTest {
 		workStationController.advanceAssemblyLine();
 		if (!pass3.get())
 			fail("Assembly line advanced while it shouldn't");
+	}
+
+	@Test
+	public void testCarOrderCreated_Advanced_AllTasksCompleted_CreateCarOrder_Advanced() {
+		new TestUI(systemController, orderController, workStationController) {
+			@SuppressWarnings("unchecked")
+			@Override
+			public <T extends CarOption> T askCarOption(CarModelSpecification spec, Class<T> carOptionClass) {
+				if (carOptionClass == Engine.class)
+					return (T) Engine.PERFORMANCE;
+				else if (carOptionClass == Gearbox.class)
+					return (T) Gearbox.MANUAL;
+				else if (carOptionClass == Wheels.class)
+					return (T) Wheels.SPORTS;
+				else if (carOptionClass == Seats.class)
+					return (T) Seats.VINYL_GREY;
+				else {
+					fail("Unexpected car option type: " + carOptionClass.getName());
+					return null;
+				}
+			}
+
+			@Override
+			public void showDeliveryTime(DateTime time) {
+				pass(pass);
+			}
+
+			@Override
+			public void showAssemblyLineAdvanced() {
+				pass(pass2);
+			}
+
+			@Override
+			public void showTaskCompleted(AssemblyTask task) {
+				pass(pass);
+			}
+
+			@Override
+			public void showCanNotAdvanceError() {
+				fail();
+			}
+		};
+		systemController.start();
+		systemController.loginAs(GARAGE_HOLDER);
+		assertTrue(carManufacturingCompany.getProductionSchedule().getPendingCarOrders().isEmpty());
+		orderController.makeOrder(0);
+		assertFalse(carManufacturingCompany.getProductionSchedule().getPendingCarOrders().isEmpty());
+		if (!pass.get())
+			fail("Did not show delivery time.");
+		pass.set(false);
+		systemController.loginAs(MANAGER);
+		workStationController.advanceAssemblyLine();
+		if (!pass2.get())
+			fail("Assembly line not advanced.");
+		pass2.set(false);
+		systemController.loginAs(CAR_MECHANIC);
+		workStationController.setCarMechanic(new CarMechanic());
+		workStationController.selectWorkStation(0);
+		while (!workStationController.getWorkStations().get(0).getAssemblyProcess().getPendingTasks().isEmpty()) {
+			workStationController.selectTask(1);
+			while (!pass.get())
+				workStationController.completeNextAction();
+			pass.set(false);
+		}
+		systemController.loginAs(GARAGE_HOLDER);
+		orderController.makeOrder(0);
+		if (!pass.get())
+			fail("Did not show delivery time.");
+		pass.set(false);
+		systemController.loginAs(MANAGER);
+		workStationController.advanceAssemblyLine();
+		if (!pass2.get())
+			fail("Assembly line not advanced.");
 	}
 
 	private void pass(AtomicBoolean b) {
