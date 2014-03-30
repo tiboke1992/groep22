@@ -72,7 +72,7 @@ public class OrderController extends Controller {
 			getUi().showDeliveryTime(order.getDeliveryTime().getEstimatedDeliveryTime());
 			getUi().showOrders();
 			getUi().showMenu();
-		} catch (Throwable t) {
+		} catch (Exception t) {
 			getUi().showError(t);
 			getUi().showLoginOptions();
 		}
