@@ -44,7 +44,8 @@ public class WorkStationController extends Controller {
 			if (workPost.getCurrentCarOrder() == null) {
 				getUi().showNoCarToWorkOn();
 			} else {
-				getUi().showPendingAssemblyTasks(workPost.getAssemblyProcess().getPendingTasks());
+				getUi().showPendingAssemblyTasks(
+						workPost.getAssemblyProcess().getPendingTasks());
 			}
 		} catch (Throwable t) {
 			getUi().showError(t);
@@ -61,7 +62,8 @@ public class WorkStationController extends Controller {
 	 */
 	public void selectTask(int option) {
 		try {
-			List<AssemblyTask> tasks = carMechanic.getWorkStation().getAssemblyProcess().getPendingTasks();
+			List<AssemblyTask> tasks = carMechanic.getWorkStation()
+					.getAssemblyProcess().getPendingTasks();
 			if (option > 0 && option <= tasks.size()) {
 				lastTask = tasks.get(option - 1);
 				List<Action> actions = new ArrayList<>();
@@ -90,10 +92,13 @@ public class WorkStationController extends Controller {
 		try {
 			lastTask.completeAction();
 			if (lastTask.getPendingActions().isEmpty()) {
-				carMechanic.getWorkStation().getAssemblyProcess().completeTask(lastTask);
+				carMechanic.getWorkStation().getAssemblyProcess()
+						.completeTask(lastTask);
 				getUi().showTaskCompleted(lastTask);
 			}
-			getUi().showPendingAssemblyTasks(carMechanic.getWorkStation().getAssemblyProcess().getPendingTasks());
+			getUi().showPendingAssemblyTasks(
+					carMechanic.getWorkStation().getAssemblyProcess()
+							.getPendingTasks());
 		} catch (Throwable t) {
 			getUi().showError(t);
 			getUi().showLoginOptions();
@@ -103,9 +108,24 @@ public class WorkStationController extends Controller {
 	private String getOverview() {
 		String result = "Current State :";
 		for (WorkStation station : getWorkStations()) {
-			result += "\nWorkstation : " + station + " Current order: " + station.getCurrentCarOrder();
-			result += "\n\nPending Tasks : +\n";
-			for (AssemblyTask task : station.getAssemblyProcess().getPendingTasks()) {
+			String current = (station.getCurrentCarOrder() == null) ? "There is currently no car at this workstation"
+					: station.getCurrentCarOrder().toString();
+			result += "\nWorkstation : " + station + "\nCurrent order: "
+					+ current;
+			result += "\n\nPending Tasks : \n";
+			result += getPendingTasksText(station);
+		
+		}
+		return result;
+	}
+
+	private String getPendingTasksText(WorkStation station) {
+		String result = "";
+		if(station.getAssemblyProcess().getPendingTasks().isEmpty()){
+			result += "No pending tasks.";
+		}else{
+			for (AssemblyTask task : station.getAssemblyProcess()
+					.getPendingTasks()) {
 				result += task.toString() + "\n";
 			}
 		}
@@ -117,7 +137,8 @@ public class WorkStationController extends Controller {
 	}
 
 	private boolean noPendingCarOrders() {
-		return this.getCompany().getProductionSchedule().getPendingCarOrders().isEmpty();
+		return this.getCompany().getProductionSchedule().getPendingCarOrders()
+				.isEmpty();
 	}
 
 	private boolean allWorkstationsEmpty() {
@@ -126,21 +147,31 @@ public class WorkStationController extends Controller {
 
 	public void advanceAssemblyLine() {
 		try {
-			if (!getNonePendingAllEmpty() && getCompany().getAssemblyLine().canAdvance()) {
-				WorkStation lastStation = getCompany().getAssemblyLine().getLastWorkStation();
+			if (!getNonePendingAllEmpty()
+					&& getCompany().getAssemblyLine().canAdvance()) {
+				WorkStation lastStation = getCompany().getAssemblyLine()
+						.getLastWorkStation();
 				CarOrder last = lastStation.getCurrentCarOrder();
 				if (last != null) {
 					getCompany().getProductionSchedule().completeOrder(last);
 					lastStation.init();
 				}
 
-				WorkStation first = getCompany().getAssemblyLine().getLayout().getWorkStations().get(0);
+				WorkStation first = getCompany().getAssemblyLine().getLayout()
+						.getWorkStations().get(0);
 				if (first != null) {
 					lastStation.setCurrentCarOrder(first.getCurrentCarOrder());
-					if (getCompany().getProductionSchedule().getTime()
-							.isBefore(new DateTime().withHourOfDay(20).withMinuteOfHour(0).withSecondOfMinute(0))
-							&& !getCompany().getProductionSchedule().getPendingCarOrders().isEmpty()) {
-						first.setCurrentCarOrder(getCompany().getProductionSchedule().getNextWorkCarOrder());
+					if (getCompany()
+							.getProductionSchedule()
+							.getTime()
+							.isBefore(
+									new DateTime().withHourOfDay(20)
+											.withMinuteOfHour(0)
+											.withSecondOfMinute(0))
+							&& !getCompany().getProductionSchedule()
+									.getPendingCarOrders().isEmpty()) {
+						first.setCurrentCarOrder(getCompany()
+								.getProductionSchedule().getNextWorkCarOrder());
 					} else {
 						first.setCurrentCarOrder(null);
 					}
