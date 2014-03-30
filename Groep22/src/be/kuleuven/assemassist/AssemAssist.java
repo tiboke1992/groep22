@@ -33,6 +33,7 @@ public class AssemAssist {
 		UI ui = new UI(assemblyController, orderController, workStationController);
 		assemblyController.start();
 		ui.showLoginOptions();
+		//test?
 	}
 
 	private static void addCarModels(CarManufacturingCompany carManufacturingCompany) {
