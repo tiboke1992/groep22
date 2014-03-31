@@ -34,6 +34,7 @@ public class AssemAssist {
 		assemblyController.start();
 		ui.showLoginOptions();
 		//TODO test
+		//TODO magookweg
 	}
 
 	private static void addCarModels(CarManufacturingCompany carManufacturingCompany) {
