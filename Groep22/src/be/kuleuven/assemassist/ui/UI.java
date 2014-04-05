@@ -7,38 +7,45 @@ import java.util.Scanner;
 
 import org.joda.time.DateTime;
 
+import be.kuleuven.assemassist.controller.Controller;
 import be.kuleuven.assemassist.controller.OrderController;
-import be.kuleuven.assemassist.controller.SystemController;
 import be.kuleuven.assemassist.controller.WorkStationController;
 import be.kuleuven.assemassist.domain.CarModel;
 import be.kuleuven.assemassist.domain.CarModelSpecification;
 import be.kuleuven.assemassist.domain.CarOrder;
 import be.kuleuven.assemassist.domain.options.CarOption;
-import be.kuleuven.assemassist.domain.role.CarMechanic;
-import be.kuleuven.assemassist.domain.role.Role;
 import be.kuleuven.assemassist.domain.task.AssemblyTask;
 import be.kuleuven.assemassist.domain.task.action.Action;
 import be.kuleuven.assemassist.domain.workpost.WorkStation;
+import be.kuleuven.assemassist.event.AssemblyAdvanceEvent;
+import be.kuleuven.assemassist.event.CompleteActionEvent;
+import be.kuleuven.assemassist.event.LoginEvent;
+import be.kuleuven.assemassist.event.OrderEvent;
+import be.kuleuven.assemassist.event.SelectTaskEvent;
+import be.kuleuven.assemassist.event.ShutdownEvent;
+import be.kuleuven.assemassist.event.WorkStationSelectionEvent;
 
-public class UI {
+public class UI extends AbstractUI {
 
 	private static final DateFormat COMPLETED_FORMAT = new SimpleDateFormat();// TODO
 	private static final DateFormat PENDING_FORMAT = new SimpleDateFormat();// TODO
 
-	private SystemController systemController;
 	private OrderController orderController;
 	private WorkStationController workStationController;
 	private Scanner scanner;
 
-	public UI(SystemController systemController, OrderController orderController,
-			WorkStationController workStationController) {
-		this.systemController = systemController;
-		this.systemController.setUi(this);
+	public UI(OrderController orderController, WorkStationController workStationController) {
 		this.orderController = orderController;
-		this.orderController.setUi(this);
+		addController(orderController);
 		this.workStationController = workStationController;
-		this.workStationController.setUi(this);
+		addController(workStationController);
 		this.scanner = new Scanner(System.in);
+	}
+
+	@Override
+	public void addController(Controller c) {
+		super.addController(c);
+		c.setUi(this);
 	}
 
 	public void showLoginOptions() {
@@ -48,7 +55,7 @@ public class UI {
 		System.out.println("3) Manager");
 		System.out.println("*) Exit");
 		try {
-			systemController.loginAs(scanner.nextInt());
+			pushEvent(new LoginEvent(scanner.nextInt()));
 		} catch (Throwable t) {
 			shutdown();
 		}
@@ -61,8 +68,7 @@ public class UI {
 		try {
 			int option = scanner.nextInt();
 			if (option == 1) {
-				workStationController.advanceAssemblyLine();
-				this.showManagerMenu();
+				pushEvent(new AssemblyAdvanceEvent());
 			} else if (option == 2) {
 				showLoginOptions();
 			} else {
@@ -73,11 +79,9 @@ public class UI {
 		}
 	}
 
-	public void showGreeting(Role role) {
+	public void showGreeting(String role) {
 		System.out.println("Successfully logged in as " + role + "!");
 		System.out.println();
-		if (role instanceof CarMechanic)
-			workStationController.setCarMechanic((CarMechanic) role);
 	}
 
 	public void showOrders() {
@@ -125,7 +129,7 @@ public class UI {
 		try {
 			int option = scanner.nextInt();
 			if (option > 0 && option <= carModels.size())
-				orderController.makeOrder(option - 1);
+				pushEvent(new OrderEvent(carModels.get(option - 1)));
 			else
 				shutdown();
 		} catch (Throwable t) {
@@ -167,7 +171,7 @@ public class UI {
 			if (option == 0) {
 				showLoginOptions();
 			} else if (option - 1 >= 0 && option - 1 <= workStations.size()) {
-				workStationController.selectWorkStation(option - 1);
+				pushEvent(new WorkStationSelectionEvent(option - 1));
 			} else {
 				shutdown();
 			}
@@ -195,7 +199,7 @@ public class UI {
 				if (option == 0) {
 					showLoginOptions();
 				} else {
-					workStationController.selectTask(option);
+					pushEvent(new SelectTaskEvent(option));
 				}
 			} catch (Throwable t) {
 				shutdown();
@@ -219,7 +223,7 @@ public class UI {
 			if (option == 0) {
 				shutdown();
 			} else if (option == 1) {
-				workStationController.completeNextAction();
+				pushEvent(new CompleteActionEvent());
 			} else if (option == 2) {
 				showLoginOptions();
 			}
@@ -229,7 +233,7 @@ public class UI {
 	}
 
 	public void shutdown() {
-		systemController.shutdown();
+		pushEvent(new ShutdownEvent());
 	}
 
 	public void showNoCarToWorkOn() {

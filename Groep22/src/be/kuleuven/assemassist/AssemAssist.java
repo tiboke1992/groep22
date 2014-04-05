@@ -30,12 +30,13 @@ public class AssemAssist {
 		SystemController assemblyController = new SystemController(carManufacturingCompany);
 		OrderController orderController = new OrderController(carManufacturingCompany);
 		WorkStationController workStationController = new WorkStationController(carManufacturingCompany);
-		UI ui = new UI(assemblyController, orderController, workStationController);
+		UI ui = new UI(orderController, workStationController);
+		ui.addController(assemblyController);
 		assemblyController.start();
 		ui.showLoginOptions();
-		//TODO test
-		//TODO magookweg
-		//okeee
+		// TODO test
+		// TODO magookweg
+		// okeee
 	}
 
 	private static void addCarModels(CarManufacturingCompany carManufacturingCompany) {

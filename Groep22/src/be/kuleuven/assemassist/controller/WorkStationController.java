@@ -11,6 +11,12 @@ import be.kuleuven.assemassist.domain.role.CarMechanic;
 import be.kuleuven.assemassist.domain.task.AssemblyTask;
 import be.kuleuven.assemassist.domain.task.action.Action;
 import be.kuleuven.assemassist.domain.workpost.WorkStation;
+import be.kuleuven.assemassist.event.AssemblyAdvanceEvent;
+import be.kuleuven.assemassist.event.CompleteActionEvent;
+import be.kuleuven.assemassist.event.Event;
+import be.kuleuven.assemassist.event.LoginEvent;
+import be.kuleuven.assemassist.event.SelectTaskEvent;
+import be.kuleuven.assemassist.event.WorkStationSelectionEvent;
 
 /**
  * 
@@ -165,9 +171,25 @@ public class WorkStationController extends Controller {
 				}
 			} else
 				getUi().showCanNotAdvanceError();
+			getUi().showManagerMenu();
 		} catch (Exception t) {
 			getUi().showError(t);
 			getUi().showLoginOptions();
 		}
+	}
+
+	@Override
+	public void handleEvent(Event event) {
+		if (event instanceof AssemblyAdvanceEvent)
+			advanceAssemblyLine();
+		else if (event instanceof LoginEvent) {
+			if (((LoginEvent) event).getRoleId() == 2)
+				setCarMechanic(new CarMechanic());
+		} else if (event instanceof WorkStationSelectionEvent) {
+			selectWorkStation(((WorkStationSelectionEvent) event).getWorkStationId());
+		} else if (event instanceof SelectTaskEvent) {
+			selectTask(((SelectTaskEvent) event).getTaskId());
+		} else if (event instanceof CompleteActionEvent)
+			completeNextAction();
 	}
 }

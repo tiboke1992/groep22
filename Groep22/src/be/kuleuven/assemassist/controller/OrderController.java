@@ -13,6 +13,8 @@ import be.kuleuven.assemassist.domain.options.Engine;
 import be.kuleuven.assemassist.domain.options.Gearbox;
 import be.kuleuven.assemassist.domain.options.Seats;
 import be.kuleuven.assemassist.domain.options.Wheels;
+import be.kuleuven.assemassist.event.Event;
+import be.kuleuven.assemassist.event.OrderEvent;
 
 /**
  * 
@@ -59,9 +61,8 @@ public class OrderController extends Controller {
 	 * @param modelOption
 	 *            representing the car model
 	 */
-	public void makeOrder(int modelOption) {
+	public void makeOrder(CarModel model) {
 		try {
-			CarModel model = getCompany().getAvailableCarModels().get(modelOption);
 			CarModelSpecification spec = model.getSpecification();
 			CarOrder order = new CarOrder(spec);
 			order.setEngine(getUi().askCarOption(spec, Engine.class));
@@ -89,5 +90,12 @@ public class OrderController extends Controller {
 		for (CarModel model : models)
 			modelsCopy.add(model);
 		return modelsCopy;
+	}
+
+	@Override
+	public void handleEvent(Event event) {
+		if (event instanceof OrderEvent) {
+			makeOrder(((OrderEvent) event).getModel());
+		}
 	}
 }

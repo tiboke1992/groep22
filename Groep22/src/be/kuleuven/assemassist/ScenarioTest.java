@@ -139,7 +139,7 @@ public class ScenarioTest {
 		systemController.start();
 		systemController.loginAs(GARAGE_HOLDER);
 		assertTrue(carManufacturingCompany.getProductionSchedule().getPendingCarOrders().isEmpty());
-		orderController.makeOrder(0);
+		orderController.makeOrder(carManufacturingCompany.getAvailableCarModels().get(0));
 		assertFalse(carManufacturingCompany.getProductionSchedule().getPendingCarOrders().isEmpty());
 		if (!pass.get())
 			fail("Did not show delivery time.");
@@ -204,7 +204,7 @@ public class ScenarioTest {
 		systemController.start();
 		systemController.loginAs(GARAGE_HOLDER);
 		assertTrue(carManufacturingCompany.getProductionSchedule().getPendingCarOrders().isEmpty());
-		orderController.makeOrder(0);
+		orderController.makeOrder(carManufacturingCompany.getAvailableCarModels().get(0));
 		assertFalse(carManufacturingCompany.getProductionSchedule().getPendingCarOrders().isEmpty());
 		if (!pass.get())
 			fail("Did not show delivery time.");
@@ -224,7 +224,7 @@ public class ScenarioTest {
 			pass.set(false);
 		}
 		systemController.loginAs(GARAGE_HOLDER);
-		orderController.makeOrder(0);
+		orderController.makeOrder(carManufacturingCompany.getAvailableCarModels().get(0));
 		if (!pass.get())
 			fail("Did not show delivery time.");
 		pass.set(false);

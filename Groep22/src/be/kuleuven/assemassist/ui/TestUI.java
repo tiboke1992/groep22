@@ -11,7 +11,6 @@ import be.kuleuven.assemassist.controller.SystemController;
 import be.kuleuven.assemassist.controller.WorkStationController;
 import be.kuleuven.assemassist.domain.CarModelSpecification;
 import be.kuleuven.assemassist.domain.options.CarOption;
-import be.kuleuven.assemassist.domain.role.Role;
 import be.kuleuven.assemassist.domain.task.AssemblyTask;
 import be.kuleuven.assemassist.domain.task.action.Action;
 
@@ -19,7 +18,8 @@ public class TestUI extends UI {
 
 	public TestUI(SystemController systemController, OrderController orderController,
 			WorkStationController workStationController) {
-		super(systemController, orderController, workStationController);
+		super(orderController, workStationController);
+		addController(systemController);
 	}
 
 	@Override
@@ -46,7 +46,7 @@ public class TestUI extends UI {
 	}
 
 	@Override
-	public void showGreeting(Role role) {
+	public void showGreeting(String role) {
 	}
 
 	@Override

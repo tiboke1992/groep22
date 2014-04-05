@@ -6,10 +6,12 @@ import be.kuleuven.assemassist.domain.ConveyorBelt;
 import be.kuleuven.assemassist.domain.Layout;
 import be.kuleuven.assemassist.domain.role.CarMechanic;
 import be.kuleuven.assemassist.domain.role.GarageHolder;
-import be.kuleuven.assemassist.domain.role.Manager;
 import be.kuleuven.assemassist.domain.role.Role;
 import be.kuleuven.assemassist.domain.workpost.AccessoriesPost;
 import be.kuleuven.assemassist.domain.workpost.DriveTrainPost;
+import be.kuleuven.assemassist.event.Event;
+import be.kuleuven.assemassist.event.LoginEvent;
+import be.kuleuven.assemassist.event.ShutdownEvent;
 
 /**
  * 
@@ -17,8 +19,6 @@ import be.kuleuven.assemassist.domain.workpost.DriveTrainPost;
  * 
  */
 public class SystemController extends Controller {
-
-	private Role role;
 
 	public SystemController(CarManufacturingCompany company) {
 		super(company);
@@ -34,21 +34,22 @@ public class SystemController extends Controller {
 	}
 
 	public void loginAs(int roleId) {
+		Role role;
 		switch (roleId) {
 			case 1:
 				role = new GarageHolder();
-				getUi().showGreeting(role);
+				getUi().showGreeting(role.toString());
 				getUi().showOrders();
 				getUi().showMenu();
 				break;
 			case 2:
 				role = new CarMechanic();
-				getUi().showGreeting(role);
+				getUi().showGreeting(role.toString());
 				getUi().showWorkPostMenu();
 				break;
 			case 3:
-				role = new Manager();
-				getUi().showGreeting(role);
+				role = getCompany().getManager();
+				getUi().showGreeting(role.toString());
 				getUi().showManagerMenu();
 				break;
 			default:
@@ -59,6 +60,14 @@ public class SystemController extends Controller {
 	public void shutdown() {
 		System.out.println("Thanks for using AssemAssist.");
 		System.exit(0);
+	}
+
+	@Override
+	public void handleEvent(Event event) {
+		if (event instanceof LoginEvent) {
+			loginAs(((LoginEvent) event).getRoleId());
+		}else if(event instanceof ShutdownEvent)
+			shutdown();
 	}
 
 }
