@@ -1,9 +1,8 @@
 package be.kuleuven.assemassist.controller;
 
-import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
-import java.util.Queue;
 
 import be.kuleuven.assemassist.domain.CarManufacturingCompany;
 import be.kuleuven.assemassist.domain.CarModel;
@@ -34,11 +33,8 @@ public class OrderController extends Controller {
 	 * @return A collection of pending car orders
 	 */
 	public Collection<CarOrder> getPendingCarOrders() {
-		Queue<CarOrder> orders = getCompany().getProductionSchedule().getPendingCarOrders();
-		List<CarOrder> ordersCopy = new ArrayList<>();
-		for (CarOrder carOrder : orders)
-			ordersCopy.add(carOrder);
-		return ordersCopy;
+		return Collections.unmodifiableCollection(getCompany()
+				.getProductionSchedule().getPendingCarOrders());
 	}
 
 	/**
@@ -48,11 +44,8 @@ public class OrderController extends Controller {
 	 * @return A collection of completed car orders
 	 */
 	public Collection<CarOrder> getCompletedCarOrders() {
-		List<CarOrder> orders = getCompany().getProductionSchedule().getCompletedCarOrders();
-		List<CarOrder> ordersCopy = new ArrayList<>();
-		for (CarOrder carOrder : orders)
-			ordersCopy.add(carOrder);
-		return ordersCopy;
+		return Collections.unmodifiableCollection(getCompany()
+				.getProductionSchedule().getCompletedCarOrders());
 	}
 
 	/**
@@ -70,7 +63,8 @@ public class OrderController extends Controller {
 			order.setWheels(getUi().askCarOption(spec, Wheels.class));
 			order.setSeats(getUi().askCarOption(spec, Seats.class));
 			getCompany().getProductionSchedule().addCarOrder(order);
-			getUi().showDeliveryTime(order.getDeliveryTime().getEstimatedDeliveryTime());
+			getUi().showDeliveryTime(
+					order.getDeliveryTime().getEstimatedDeliveryTime());
 			getUi().showOrders();
 			getUi().showMenu();
 		} catch (Exception t) {
@@ -85,11 +79,8 @@ public class OrderController extends Controller {
 	 * @return A list of the available car models
 	 */
 	public List<CarModel> getAvailableCarModels() {
-		List<CarModel> models = getCompany().getAvailableCarModels();
-		List<CarModel> modelsCopy = new ArrayList<>(models.size());
-		for (CarModel model : models)
-			modelsCopy.add(model);
-		return modelsCopy;
+		return Collections.unmodifiableList(getCompany()
+				.getAvailableCarModels());
 	}
 
 	@Override

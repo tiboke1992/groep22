@@ -1,6 +1,7 @@
 package be.kuleuven.assemassist.controller;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import org.joda.time.DateTime;
@@ -33,7 +34,7 @@ public class WorkStationController extends Controller {
 	}
 
 	public List<WorkStation> getWorkStations() {
-		return getCompany().getAssemblyLine().getLayout().getWorkStations();
+		return Collections.unmodifiableList(getCompany().getAssemblyLine().getLayout().getWorkStations());
 	}
 
 	/**

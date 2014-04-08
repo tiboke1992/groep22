@@ -12,8 +12,6 @@ public class InsertEngine extends AssemblyTask {
 
 	public InsertEngine() {
 		addAction(new DummyAction("Take engine"));
-		addAction(new DummyAction("Put engine in car"));
-		addAction(new DummyAction("Tighten the engine bolts"));
 	}
 
 	@Override

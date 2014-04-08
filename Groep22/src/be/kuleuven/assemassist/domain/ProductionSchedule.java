@@ -2,10 +2,14 @@ package be.kuleuven.assemassist.domain;
 
 import java.util.ArrayDeque;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
 
 import org.joda.time.DateTime;
+
+import be.kuleuven.assemassist.domain.task.action.Action;
 
 /**
  * 
@@ -36,14 +40,26 @@ public class ProductionSchedule {
 		return workingCarOrders.poll();
 	}
 	
-
-
+	/**
+	 * 
+	 * @return
+	 */
 	public Queue<CarOrder> getPendingCarOrders() {
-		return pendingCarOrders;
+		Queue<CarOrder> copy = new LinkedList<>();
+		for(CarOrder order : pendingCarOrders)
+			copy.add(order);
+		return copy;
 	}
 
+	/**
+	 * 
+	 * @return
+	 */
 	public List<CarOrder> getCompletedCarOrders() {
-		return completedCarOrders;
+		List<CarOrder> copy = new LinkedList<>();
+		for(CarOrder order: completedCarOrders)
+			copy.add(order);
+		return copy;
 	}
 
 	public void addCarOrder(CarOrder order) {
