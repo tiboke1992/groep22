@@ -6,6 +6,7 @@ import be.kuleuven.assemassist.domain.carmodel.CarModelSpecification;
 import be.kuleuven.assemassist.domain.options.Engine;
 import be.kuleuven.assemassist.domain.options.Gearbox;
 import be.kuleuven.assemassist.domain.options.Seats;
+import be.kuleuven.assemassist.domain.options.Spoiler;
 import be.kuleuven.assemassist.domain.options.Wheels;
 
 /**
@@ -26,6 +27,7 @@ public class CarOrder {
 	private Gearbox gearbox;
 	private Seats seats;
 	private Wheels wheels;
+	private Spoiler spoiler;
 
 	public CarOrder(CarModelSpecification modelSpecification) {
 		this.id = UUID.randomUUID();
@@ -40,6 +42,7 @@ public class CarOrder {
 		this.gearbox = order.getGearbox();
 		this.seats = order.getSeats();
 		this.wheels = order.getWheels();
+		this.spoiler = order.getSpoiler();
 		this.carAssemblyProcess = new CarAssemblyProcess(order.carAssemblyProcess);
 	}
 
@@ -110,5 +113,13 @@ public class CarOrder {
 	@Override
 	public String toString() {
 		return "CarOrder " + getId();
+	}
+
+	public Spoiler getSpoiler() {
+		return spoiler;
+	}
+
+	public void setSpoiler(Spoiler spoiler) {
+		this.spoiler = spoiler;
 	}
 }

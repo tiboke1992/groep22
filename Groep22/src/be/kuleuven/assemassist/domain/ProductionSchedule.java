@@ -1,9 +1,7 @@
 package be.kuleuven.assemassist.domain;
 
-import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Queue;
 
 import org.joda.time.DateTime;
 
@@ -15,31 +13,31 @@ import org.joda.time.DateTime;
  */
 public class ProductionSchedule {
 
-	private Queue<CarOrder> pendingCarOrders;
-	private Queue<CarOrder> workingCarOrders;
+	private List<CarOrder> pendingCarOrders;
+	private List<CarOrder> workingCarOrders;
 	private List<CarOrder> completedCarOrders;
 	private DateTime time;
 
 	public ProductionSchedule() {
-		pendingCarOrders = new ArrayDeque<>();
-		workingCarOrders = new ArrayDeque<>();
+		pendingCarOrders = new ArrayList<>();
+		workingCarOrders = new ArrayList<>();
 		completedCarOrders = new ArrayList<>();
 		time = new DateTime().withHourOfDay(6).withMinuteOfHour(0).withSecondOfMinute(0);
 	}
 
 	public CarOrder getNextCarOrder() {
-		return pendingCarOrders.peek();
+		return pendingCarOrders.get(0);
 	}
 
 	public CarOrder getNextWorkCarOrder() {
-		return workingCarOrders.poll();
+		return workingCarOrders.remove(0);
 	}
 
 	/**
 	 * 
 	 * @return
 	 */
-	public Queue<CarOrder> getPendingCarOrders() {
+	public List<CarOrder> getPendingCarOrders() {
 		return pendingCarOrders;
 	}
 

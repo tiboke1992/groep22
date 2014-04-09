@@ -13,6 +13,7 @@ import be.kuleuven.assemassist.domain.CarOrder;
 import be.kuleuven.assemassist.domain.carmodel.CarModel;
 import be.kuleuven.assemassist.domain.carmodel.CarModelSpecification;
 import be.kuleuven.assemassist.domain.options.CarOption;
+import be.kuleuven.assemassist.domain.options.Spoiler;
 import be.kuleuven.assemassist.domain.task.AssemblyTask;
 import be.kuleuven.assemassist.domain.task.action.Action;
 import be.kuleuven.assemassist.domain.workpost.WorkStation;
@@ -22,6 +23,7 @@ import be.kuleuven.assemassist.event.LoginEvent;
 import be.kuleuven.assemassist.event.OrderEvent;
 import be.kuleuven.assemassist.event.SelectTaskEvent;
 import be.kuleuven.assemassist.event.ShowCarModelsEvent;
+import be.kuleuven.assemassist.event.ShowOrderDetailsEvent;
 import be.kuleuven.assemassist.event.ShowOrdersEvent;
 import be.kuleuven.assemassist.event.ShutdownEvent;
 import be.kuleuven.assemassist.event.WorkStationSelectionEvent;
@@ -109,7 +111,7 @@ public class UI extends AbstractUI {
 			else if (option == 2)
 				showLoginOptions();
 			else if (option == 3)
-				showOrderDetails();
+				pushEvent(new ShowOrderDetailsEvent());
 			else
 				shutdown();
 		} catch (Throwable t) {
@@ -117,9 +119,48 @@ public class UI extends AbstractUI {
 		}
 	}
 
-	private void showOrderDetails() {
+	public void showOrderDetails(List<CarOrder> pending, List<CarOrder> completed) {
 		int i = 0;
-		// TODO
+		System.out.println();
+		System.out.println("Pending orders:");
+		for (CarOrder order : pending) {
+			System.out.println(i++ + ") " + order);
+		}
+		System.out.println("Completed orders:");
+		for (CarOrder order : completed) {
+			System.out.println(i++ + ") " + order);
+		}
+		System.out.println("*) Back to menu");
+		try {
+			int option = scanner.nextInt();
+			if (option >= 0 && option < pending.size()) {
+				showOrderDetail(pending.get(option));
+			} else if ((option - pending.size()) < completed.size()) {
+				showOrderDetail(completed.get(option - pending.size()));
+			} else
+				showGarageHolderMenu();
+		} catch (Throwable t) {
+			showGarageHolderMenu();
+		}
+	}
+
+	private void showOrderDetail(CarOrder order) {
+		System.out.println("Order " + order.getId());
+		System.out.println("\tEstimated delivery time: " + order.getDeliveryTime().getEstimatedDeliveryTime().toDate());
+		System.out.println("\tOptions:");
+		System.out.println("\t\tEngine: " + order.getEngine());
+		System.out.println("\t\tGearbox: " + order.getGearbox());
+		System.out.println("\t\tSeats: " + order.getSeats());
+		System.out.println("\t\tWheels: " + order.getWheels());
+		if (order.getSpoiler() != Spoiler.NONE)
+			System.out.println("\t\tSpoiler: " + order.getSpoiler());
+		System.out.println();
+		System.out.println("Enter any key to return to menu");
+		try {
+			scanner.nextInt();
+		} catch (Throwable t) {
+		}
+		showGarageHolderMenu();
 	}
 
 	public void showCarModels(List<CarModel> carModels) {

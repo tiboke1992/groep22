@@ -1,6 +1,5 @@
 package be.kuleuven.assemassist.controller;
 
-import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
@@ -11,10 +10,12 @@ import be.kuleuven.assemassist.domain.carmodel.CarModelSpecification;
 import be.kuleuven.assemassist.domain.options.Engine;
 import be.kuleuven.assemassist.domain.options.Gearbox;
 import be.kuleuven.assemassist.domain.options.Seats;
+import be.kuleuven.assemassist.domain.options.Spoiler;
 import be.kuleuven.assemassist.domain.options.Wheels;
 import be.kuleuven.assemassist.event.Event;
 import be.kuleuven.assemassist.event.OrderEvent;
 import be.kuleuven.assemassist.event.ShowCarModelsEvent;
+import be.kuleuven.assemassist.event.ShowOrderDetailsEvent;
 import be.kuleuven.assemassist.event.ShowOrdersEvent;
 
 /**
@@ -34,8 +35,8 @@ public class OrderController extends Controller {
 	 * 
 	 * @return A collection of pending car orders
 	 */
-	public Collection<CarOrder> getPendingCarOrders() {
-		return Collections.unmodifiableCollection(getCompany().getProductionSchedule().getPendingCarOrders());
+	public List<CarOrder> getPendingCarOrders() {
+		return Collections.unmodifiableList(getCompany().getProductionSchedule().getPendingCarOrders());
 	}
 
 	/**
@@ -44,8 +45,8 @@ public class OrderController extends Controller {
 	 * 
 	 * @return A collection of completed car orders
 	 */
-	public Collection<CarOrder> getCompletedCarOrders() {
-		return Collections.unmodifiableCollection(getCompany().getProductionSchedule().getCompletedCarOrders());
+	public List<CarOrder> getCompletedCarOrders() {
+		return Collections.unmodifiableList(getCompany().getProductionSchedule().getCompletedCarOrders());
 	}
 
 	/**
@@ -62,6 +63,7 @@ public class OrderController extends Controller {
 			order.setGearbox(getUi().askCarOption(spec, Gearbox.class));
 			order.setWheels(getUi().askCarOption(spec, Wheels.class));
 			order.setSeats(getUi().askCarOption(spec, Seats.class));
+			order.setSpoiler(getUi().askCarOption(spec, Spoiler.class));
 			getCompany().getProductionSchedule().addCarOrder(order);
 			getUi().showDeliveryTime(order.getDeliveryTime().getEstimatedDeliveryTime());
 			getUi().showGarageHolderMenu();
@@ -88,6 +90,7 @@ public class OrderController extends Controller {
 			getUi().showOrders(getPendingCarOrders(), getCompletedCarOrders());
 		} else if (event instanceof ShowCarModelsEvent) {
 			getUi().showCarModels(getAvailableCarModels());
-		}
+		} else if (event instanceof ShowOrderDetailsEvent)
+			getUi().showOrderDetails(getPendingCarOrders(), getCompletedCarOrders());
 	}
 }
