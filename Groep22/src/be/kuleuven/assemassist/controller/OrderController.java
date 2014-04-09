@@ -5,9 +5,9 @@ import java.util.Collections;
 import java.util.List;
 
 import be.kuleuven.assemassist.domain.CarManufacturingCompany;
-import be.kuleuven.assemassist.domain.CarModel;
-import be.kuleuven.assemassist.domain.CarModelSpecification;
 import be.kuleuven.assemassist.domain.CarOrder;
+import be.kuleuven.assemassist.domain.carmodel.CarModel;
+import be.kuleuven.assemassist.domain.carmodel.CarModelSpecification;
 import be.kuleuven.assemassist.domain.options.Engine;
 import be.kuleuven.assemassist.domain.options.Gearbox;
 import be.kuleuven.assemassist.domain.options.Seats;

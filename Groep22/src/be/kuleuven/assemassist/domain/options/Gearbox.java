@@ -1,7 +1,5 @@
 package be.kuleuven.assemassist.domain.options;
 
-import static be.kuleuven.assemassist.util.Util.capitalizeFirstCharacter;
-
 /**
  * 
  * This enum represents the different kind of gear boxes on a car
@@ -9,7 +7,7 @@ import static be.kuleuven.assemassist.util.Util.capitalizeFirstCharacter;
  */
 public enum Gearbox implements CarOption {
 
-	MANUAL(6), AUTOMATIC(5);
+	MANUAL_6(6), AUTOMATIC_5(5), MANUAL_5(5);
 
 	private int amount;
 
@@ -23,6 +21,8 @@ public enum Gearbox implements CarOption {
 
 	@Override
 	public String toString() {
-		return amount + " speed " + capitalizeFirstCharacter(name());
+		String name = name().toLowerCase();
+		int idx = name.indexOf('_');
+		return amount + " speed " + name.substring(0, idx);
 	}
 }

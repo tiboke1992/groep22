@@ -10,6 +10,7 @@ import java.util.ArrayList;
 
 import org.junit.Test;
 
+import be.kuleuven.assemassist.domain.carmodel.CarModelSpecification;
 import be.kuleuven.assemassist.domain.options.CarOption;
 
 public class ProductionScheduleTest {

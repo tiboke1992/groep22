@@ -5,12 +5,12 @@ import static be.kuleuven.assemassist.util.Util.capitalizeFirstCharacter;
 /**
  * 
  * This enum represents the different kind of engines on a car
- *
+ * 
  */
 
 public enum Engine implements CarOption {
 
-	STANDARD(21, 4), PERFORMANCE(2.51, 6);
+	STANDARD(2, 4), PERFORMANCE(2.5, 6), ULTRA(3, 8);
 
 	private double size;
 	private int cilinderCount;
@@ -30,6 +30,6 @@ public enum Engine implements CarOption {
 
 	@Override
 	public String toString() {
-		return capitalizeFirstCharacter(name()) + " " + size + " " + cilinderCount + " cilinders";
+		return capitalizeFirstCharacter(name()) + " " + size + "l v" + cilinderCount;
 	}
 }

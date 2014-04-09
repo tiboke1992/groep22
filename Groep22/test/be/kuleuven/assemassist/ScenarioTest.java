@@ -16,8 +16,8 @@ import be.kuleuven.assemassist.controller.OrderController;
 import be.kuleuven.assemassist.controller.SystemController;
 import be.kuleuven.assemassist.controller.WorkStationController;
 import be.kuleuven.assemassist.domain.CarManufacturingCompany;
-import be.kuleuven.assemassist.domain.CarModel;
-import be.kuleuven.assemassist.domain.CarModelSpecification;
+import be.kuleuven.assemassist.domain.carmodel.CarModel;
+import be.kuleuven.assemassist.domain.carmodel.CarModelSpecification;
 import be.kuleuven.assemassist.domain.options.CarOption;
 import be.kuleuven.assemassist.domain.options.Engine;
 import be.kuleuven.assemassist.domain.options.Gearbox;
@@ -26,7 +26,6 @@ import be.kuleuven.assemassist.domain.options.Wheels;
 import be.kuleuven.assemassist.domain.role.CarMechanic;
 import be.kuleuven.assemassist.domain.role.Manager;
 import be.kuleuven.assemassist.domain.task.AssemblyTask;
-import be.kuleuven.assemassist.ui.TestUI;
 
 public class ScenarioTest {
 
@@ -52,8 +51,8 @@ public class ScenarioTest {
 		carManufacturingCompany = new CarManufacturingCompany("Volkswagen Group", new Manager());
 		List<CarOption> allowedOptions = new ArrayList<>();
 		allowedOptions.add(Engine.PERFORMANCE);
-		allowedOptions.add(Gearbox.MANUAL);
-		allowedOptions.add(Gearbox.AUTOMATIC);
+		allowedOptions.add(Gearbox.MANUAL_5);
+		allowedOptions.add(Gearbox.AUTOMATIC_5);
 		allowedOptions.add(Seats.LEATHER_BLACK);
 		allowedOptions.add(Seats.VINYL_GREY);
 		allowedOptions.add(Wheels.SPORTS);
@@ -105,7 +104,7 @@ public class ScenarioTest {
 				if (carOptionClass == Engine.class)
 					return (T) Engine.PERFORMANCE;
 				else if (carOptionClass == Gearbox.class)
-					return (T) Gearbox.MANUAL;
+					return (T) Gearbox.MANUAL_5;
 				else if (carOptionClass == Wheels.class)
 					return (T) Wheels.SPORTS;
 				else if (carOptionClass == Seats.class)
@@ -170,7 +169,7 @@ public class ScenarioTest {
 				if (carOptionClass == Engine.class)
 					return (T) Engine.PERFORMANCE;
 				else if (carOptionClass == Gearbox.class)
-					return (T) Gearbox.MANUAL;
+					return (T) Gearbox.MANUAL_5;
 				else if (carOptionClass == Wheels.class)
 					return (T) Wheels.SPORTS;
 				else if (carOptionClass == Seats.class)

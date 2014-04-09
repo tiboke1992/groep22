@@ -10,7 +10,7 @@ import static be.kuleuven.assemassist.util.Util.capitalizeFirstCharacter;
 
 public enum Wheels implements CarOption {
 
-	COMFORT, SPORTS;
+	COMFORT, SPORTS, WINTER;
 
 	@Override
 	public String toString() {

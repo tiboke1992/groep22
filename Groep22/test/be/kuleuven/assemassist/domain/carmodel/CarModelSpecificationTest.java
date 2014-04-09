@@ -1,4 +1,4 @@
-package be.kuleuven.assemassist.domain;
+package be.kuleuven.assemassist.domain.carmodel;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
@@ -8,6 +8,7 @@ import java.util.List;
 
 import org.junit.Test;
 
+import be.kuleuven.assemassist.domain.carmodel.CarModelSpecification;
 import be.kuleuven.assemassist.domain.options.CarOption;
 import be.kuleuven.assemassist.domain.options.Engine;
 import be.kuleuven.assemassist.domain.options.Wheels;

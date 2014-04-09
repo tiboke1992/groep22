@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import be.kuleuven.assemassist.domain.carmodel.CarModel;
 import be.kuleuven.assemassist.domain.role.Manager;
 
 /**
@@ -43,12 +44,10 @@ public class CarManufacturingCompany {
 	public List<CarModel> getAvailableCarModels() {
 		return Collections.unmodifiableList(this.getCarmodels());
 	}
-	
-	private List<CarModel> getCarmodels(){
+
+	private List<CarModel> getCarmodels() {
 		return this.carModels;
 	}
-	
-	
 
 	public void addCarModel(CarModel model) {
 		if (model == null)

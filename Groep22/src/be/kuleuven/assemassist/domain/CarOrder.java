@@ -2,6 +2,7 @@ package be.kuleuven.assemassist.domain;
 
 import java.util.UUID;
 
+import be.kuleuven.assemassist.domain.carmodel.CarModelSpecification;
 import be.kuleuven.assemassist.domain.options.Engine;
 import be.kuleuven.assemassist.domain.options.Gearbox;
 import be.kuleuven.assemassist.domain.options.Seats;

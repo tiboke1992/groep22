@@ -1,6 +1,6 @@
 package be.kuleuven.assemassist.event;
 
-import be.kuleuven.assemassist.domain.CarModel;
+import be.kuleuven.assemassist.domain.carmodel.CarModel;
 
 public class OrderEvent implements Event {
 
