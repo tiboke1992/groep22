@@ -2,14 +2,10 @@ package be.kuleuven.assemassist.domain;
 
 import java.util.ArrayDeque;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
-
 import org.joda.time.DateTime;
-
-import be.kuleuven.assemassist.domain.task.action.Action;
 
 /**
  * 
