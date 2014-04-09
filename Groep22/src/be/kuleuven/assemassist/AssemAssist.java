@@ -25,8 +25,10 @@ public class AssemAssist {
 		SystemController assemblyController = new SystemController(carManufacturingCompany);
 		OrderController orderController = new OrderController(carManufacturingCompany);
 		WorkStationController workStationController = new WorkStationController(carManufacturingCompany);
-		UI ui = new UI(orderController, workStationController);
+		UI ui = new UI();
 		ui.addController(assemblyController);
+		ui.addController(orderController);
+		ui.addController(workStationController);
 		assemblyController.start();
 		ui.showLoginOptions();
 	}

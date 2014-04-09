@@ -11,6 +11,7 @@ import be.kuleuven.assemassist.domain.workpost.AccessoriesPost;
 import be.kuleuven.assemassist.domain.workpost.DriveTrainPost;
 import be.kuleuven.assemassist.event.Event;
 import be.kuleuven.assemassist.event.LoginEvent;
+import be.kuleuven.assemassist.event.ShowWorkPostsMenuEvent;
 import be.kuleuven.assemassist.event.ShutdownEvent;
 
 /**
@@ -39,13 +40,12 @@ public class SystemController extends Controller {
 			case 1:
 				role = new GarageHolder();
 				getUi().showGreeting(role.toString());
-				getUi().showOrders();
-				getUi().showMenu();
+				getUi().showGarageHolderMenu();
 				break;
 			case 2:
 				role = new CarMechanic();
 				getUi().showGreeting(role.toString());
-				getUi().showWorkPostMenu();
+				getUi().pushEvent(new ShowWorkPostsMenuEvent());
 				break;
 			case 3:
 				role = getCompany().getManager();
@@ -66,7 +66,7 @@ public class SystemController extends Controller {
 	public void handleEvent(Event event) {
 		if (event instanceof LoginEvent) {
 			loginAs(((LoginEvent) event).getRoleId());
-		}else if(event instanceof ShutdownEvent)
+		} else if (event instanceof ShutdownEvent)
 			shutdown();
 	}
 

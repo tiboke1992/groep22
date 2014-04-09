@@ -13,13 +13,15 @@ import be.kuleuven.assemassist.domain.carmodel.CarModelSpecification;
 import be.kuleuven.assemassist.domain.options.CarOption;
 import be.kuleuven.assemassist.domain.task.AssemblyTask;
 import be.kuleuven.assemassist.domain.task.action.Action;
+import be.kuleuven.assemassist.domain.workpost.WorkStation;
 
 public class TestUI extends UI {
 
 	public TestUI(SystemController systemController, OrderController orderController,
 			WorkStationController workStationController) {
-		super(orderController, workStationController);
 		addController(systemController);
+		addController(orderController);
+		addController(workStationController);
 	}
 
 	@Override
@@ -58,11 +60,7 @@ public class TestUI extends UI {
 	}
 
 	@Override
-	public void showMenu() {
-	}
-
-	@Override
-	public void showOrders() {
+	public void showGarageHolderMenu() {
 	}
 
 	@Override
@@ -90,6 +88,6 @@ public class TestUI extends UI {
 	}
 
 	@Override
-	public void showWorkPostMenu() {
+	public void showWorkPostMenu(List<WorkStation> l) {
 	}
 }

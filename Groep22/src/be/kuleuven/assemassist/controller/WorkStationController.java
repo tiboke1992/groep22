@@ -17,6 +17,7 @@ import be.kuleuven.assemassist.event.CompleteActionEvent;
 import be.kuleuven.assemassist.event.Event;
 import be.kuleuven.assemassist.event.LoginEvent;
 import be.kuleuven.assemassist.event.SelectTaskEvent;
+import be.kuleuven.assemassist.event.ShowWorkPostsMenuEvent;
 import be.kuleuven.assemassist.event.WorkStationSelectionEvent;
 
 /**
@@ -192,5 +193,7 @@ public class WorkStationController extends Controller {
 			selectTask(((SelectTaskEvent) event).getTaskId());
 		} else if (event instanceof CompleteActionEvent)
 			completeNextAction();
+		else if (event instanceof ShowWorkPostsMenuEvent)
+			getUi().showWorkPostMenu(getWorkStations());
 	}
 }

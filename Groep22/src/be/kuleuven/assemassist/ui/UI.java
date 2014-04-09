@@ -2,14 +2,13 @@ package be.kuleuven.assemassist.ui;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.Collection;
 import java.util.List;
 import java.util.Scanner;
 
 import org.joda.time.DateTime;
 
 import be.kuleuven.assemassist.controller.Controller;
-import be.kuleuven.assemassist.controller.OrderController;
-import be.kuleuven.assemassist.controller.WorkStationController;
 import be.kuleuven.assemassist.domain.CarOrder;
 import be.kuleuven.assemassist.domain.carmodel.CarModel;
 import be.kuleuven.assemassist.domain.carmodel.CarModelSpecification;
@@ -22,6 +21,8 @@ import be.kuleuven.assemassist.event.CompleteActionEvent;
 import be.kuleuven.assemassist.event.LoginEvent;
 import be.kuleuven.assemassist.event.OrderEvent;
 import be.kuleuven.assemassist.event.SelectTaskEvent;
+import be.kuleuven.assemassist.event.ShowCarModelsEvent;
+import be.kuleuven.assemassist.event.ShowOrdersEvent;
 import be.kuleuven.assemassist.event.ShutdownEvent;
 import be.kuleuven.assemassist.event.WorkStationSelectionEvent;
 
@@ -30,15 +31,9 @@ public class UI extends AbstractUI {
 	private static final DateFormat COMPLETED_FORMAT = new SimpleDateFormat();// TODO
 	private static final DateFormat PENDING_FORMAT = new SimpleDateFormat();// TODO
 
-	private OrderController orderController;
-	private WorkStationController workStationController;
 	private Scanner scanner;
 
-	public UI(OrderController orderController, WorkStationController workStationController) {
-		this.orderController = orderController;
-		addController(orderController);
-		this.workStationController = workStationController;
-		addController(workStationController);
+	public UI() {
 		this.scanner = new Scanner(System.in);
 	}
 
@@ -84,44 +79,51 @@ public class UI extends AbstractUI {
 		System.out.println();
 	}
 
-	public void showOrders() {
+	public void showOrders(Collection<CarOrder> pending, Collection<CarOrder> completed) {
 		System.out.println();
 		System.out.println("Overview:");
 		System.out.println("Pending orders:");
-		for (CarOrder order : orderController.getPendingCarOrders()) {
+		for (CarOrder order : pending) {
 			System.out.println(order.getId() + "\t\t"
 					+ PENDING_FORMAT.format(order.getDeliveryTime().getEstimatedDeliveryTime().toDate()));
 		}
 		System.out.println("Completed orders:");
-		for (CarOrder order : orderController.getCompletedCarOrders()) {
+		for (CarOrder order : completed) {
 			System.out.println(order.getId() + "\t\t"
 					+ COMPLETED_FORMAT.format(order.getDeliveryTime().getEstimatedDeliveryTime().toDate()));
 		}
 	}
 
-	public void showMenu() {
+	public void showGarageHolderMenu() {
+		pushEvent(new ShowOrdersEvent());
 		System.out.println();
 		System.out.println("What do you want to do?");
 		System.out.println("1) Place a new order");
 		System.out.println("2) Log in as someting else");
+		System.out.println("3) View order details");
 		System.out.println("*) Exit");
 		try {
 			int option = scanner.nextInt();
 			if (option == 1)
-				showCarModels();
-			else if (option == 2) {
+				pushEvent(new ShowCarModelsEvent());
+			else if (option == 2)
 				showLoginOptions();
-			} else {
+			else if (option == 3)
+				showOrderDetails();
+			else
 				shutdown();
-			}
 		} catch (Throwable t) {
 			shutdown();
 		}
 	}
 
-	private void showCarModels() {
+	private void showOrderDetails() {
+		int i = 0;
+		// TODO
+	}
+
+	public void showCarModels(List<CarModel> carModels) {
 		System.out.println("Available car models:");
-		List<CarModel> carModels = orderController.getAvailableCarModels();
 		for (int i = 0; i < carModels.size(); i++) {
 			System.out.println((i + 1) + ") " + carModels.get(i));
 		}
@@ -159,9 +161,8 @@ public class UI extends AbstractUI {
 		System.out.println("Estimated delivery time: " + PENDING_FORMAT.format(time.toDate()));
 	}
 
-	public void showWorkPostMenu() {
+	public void showWorkPostMenu(List<WorkStation> workStations) {
 		System.out.println("At which workpost are you working?");
-		List<WorkStation> workStations = workStationController.getWorkStations();
 		for (int i = 0; i < workStations.size(); i++)
 			System.out.println(i + 1 + ") " + workStations.get(i));
 		System.out.println("0) login as someone else");

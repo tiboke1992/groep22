@@ -14,6 +14,8 @@ import be.kuleuven.assemassist.domain.options.Seats;
 import be.kuleuven.assemassist.domain.options.Wheels;
 import be.kuleuven.assemassist.event.Event;
 import be.kuleuven.assemassist.event.OrderEvent;
+import be.kuleuven.assemassist.event.ShowCarModelsEvent;
+import be.kuleuven.assemassist.event.ShowOrdersEvent;
 
 /**
  * 
@@ -33,8 +35,7 @@ public class OrderController extends Controller {
 	 * @return A collection of pending car orders
 	 */
 	public Collection<CarOrder> getPendingCarOrders() {
-		return Collections.unmodifiableCollection(getCompany()
-				.getProductionSchedule().getPendingCarOrders());
+		return Collections.unmodifiableCollection(getCompany().getProductionSchedule().getPendingCarOrders());
 	}
 
 	/**
@@ -44,8 +45,7 @@ public class OrderController extends Controller {
 	 * @return A collection of completed car orders
 	 */
 	public Collection<CarOrder> getCompletedCarOrders() {
-		return Collections.unmodifiableCollection(getCompany()
-				.getProductionSchedule().getCompletedCarOrders());
+		return Collections.unmodifiableCollection(getCompany().getProductionSchedule().getCompletedCarOrders());
 	}
 
 	/**
@@ -63,10 +63,8 @@ public class OrderController extends Controller {
 			order.setWheels(getUi().askCarOption(spec, Wheels.class));
 			order.setSeats(getUi().askCarOption(spec, Seats.class));
 			getCompany().getProductionSchedule().addCarOrder(order);
-			getUi().showDeliveryTime(
-					order.getDeliveryTime().getEstimatedDeliveryTime());
-			getUi().showOrders();
-			getUi().showMenu();
+			getUi().showDeliveryTime(order.getDeliveryTime().getEstimatedDeliveryTime());
+			getUi().showGarageHolderMenu();
 		} catch (Exception t) {
 			getUi().showError(t);
 			getUi().showLoginOptions();
@@ -79,14 +77,17 @@ public class OrderController extends Controller {
 	 * @return A list of the available car models
 	 */
 	public List<CarModel> getAvailableCarModels() {
-		return Collections.unmodifiableList(getCompany()
-				.getAvailableCarModels());
+		return Collections.unmodifiableList(getCompany().getAvailableCarModels());
 	}
 
 	@Override
 	public void handleEvent(Event event) {
 		if (event instanceof OrderEvent) {
 			makeOrder(((OrderEvent) event).getModel());
+		} else if (event instanceof ShowOrdersEvent) {
+			getUi().showOrders(getPendingCarOrders(), getCompletedCarOrders());
+		} else if (event instanceof ShowCarModelsEvent) {
+			getUi().showCarModels(getAvailableCarModels());
 		}
 	}
 }

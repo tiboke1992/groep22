@@ -2,9 +2,9 @@ package be.kuleuven.assemassist.domain;
 
 import java.util.ArrayDeque;
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
+
 import org.joda.time.DateTime;
 
 /**
@@ -24,27 +24,23 @@ public class ProductionSchedule {
 		pendingCarOrders = new ArrayDeque<>();
 		workingCarOrders = new ArrayDeque<>();
 		completedCarOrders = new ArrayList<>();
-		time = new DateTime().withHourOfDay(6).withMinuteOfHour(0)
-				.withSecondOfMinute(0);
+		time = new DateTime().withHourOfDay(6).withMinuteOfHour(0).withSecondOfMinute(0);
 	}
 
 	public CarOrder getNextCarOrder() {
 		return pendingCarOrders.peek();
 	}
-	
-	public CarOrder getNextWorkCarOrder(){
+
+	public CarOrder getNextWorkCarOrder() {
 		return workingCarOrders.poll();
 	}
-	
+
 	/**
 	 * 
 	 * @return
 	 */
 	public Queue<CarOrder> getPendingCarOrders() {
-		Queue<CarOrder> copy = new LinkedList<>();
-		for(CarOrder order : pendingCarOrders)
-			copy.add(order);
-		return copy;
+		return pendingCarOrders;
 	}
 
 	/**
@@ -52,10 +48,7 @@ public class ProductionSchedule {
 	 * @return
 	 */
 	public List<CarOrder> getCompletedCarOrders() {
-		List<CarOrder> copy = new LinkedList<>();
-		for(CarOrder order: completedCarOrders)
-			copy.add(order);
-		return copy;
+		return completedCarOrders;
 	}
 
 	public void addCarOrder(CarOrder order) {
