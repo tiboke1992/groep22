@@ -11,8 +11,6 @@ public class MountWheels extends AssemblyTask {
 
 	public MountWheels(){
 		addAction(new DummyAction("Take wheels"));
-		addAction(new DummyAction("Put wheels on car"));
-		addAction(new DummyAction("Tighten the bolts"));
 	}
 	@Override
 	public String toString() {

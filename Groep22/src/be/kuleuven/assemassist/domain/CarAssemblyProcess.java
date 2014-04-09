@@ -1,5 +1,6 @@
 package be.kuleuven.assemassist.domain;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -34,10 +35,11 @@ public class CarAssemblyProcess {
 	}
 
 	public Queue<AssemblyTask> getAllTasks() {
-		Queue<AssemblyTask> copy = new LinkedList<>();
-		for (AssemblyTask task : tasks)
-			copy.add(task);
-		return copy;
+		return (Queue<AssemblyTask>) Collections.unmodifiableCollection(getTasks());
+	}
+	
+	private Queue<AssemblyTask> getTasks(){
+		return this.tasks;
 	}
 
 	public List<AssemblyTask> getPendingTasks() {

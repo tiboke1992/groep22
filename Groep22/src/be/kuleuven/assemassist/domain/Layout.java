@@ -1,6 +1,7 @@
 package be.kuleuven.assemassist.domain;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import be.kuleuven.assemassist.domain.workpost.WorkStation;
@@ -26,6 +27,6 @@ public class Layout {
 	}
 
 	public List<WorkStation> getWorkStations() {
-		return workStations;
+		return Collections.unmodifiableList(this.workStations);
 	}
 }

@@ -29,6 +29,7 @@ public abstract class AssemblyTask {
 	/**
 	 * Returns a copy of the actions list
 	 * 
+	 * 
 	 * @return A LinkedList of all actions
 	 */
 	public Queue<Action> getAllActions() {

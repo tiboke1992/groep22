@@ -11,7 +11,6 @@ public class InsertGearBox extends AssemblyTask {
 
 	public InsertGearBox(){
 		addAction(new DummyAction("Take gear box"));
-		addAction(new DummyAction("Put gear box in car"));
 	}
 	
 	@Override
