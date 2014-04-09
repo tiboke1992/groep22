@@ -26,6 +26,7 @@ import be.kuleuven.assemassist.domain.options.Wheels;
 import be.kuleuven.assemassist.domain.role.CarMechanic;
 import be.kuleuven.assemassist.domain.role.Manager;
 import be.kuleuven.assemassist.domain.task.AssemblyTask;
+import be.kuleuven.assemassist.ui.TestUI;
 
 public class ScenarioTest {
 
