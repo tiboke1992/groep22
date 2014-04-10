@@ -93,12 +93,12 @@ public class WorkStationController extends Controller {
 		WorkStation workStation = carMechanic.getWorkStation();
 		CarAssemblyProcess assemblyProcess = workStation.getAssemblyProcess();
 		assemblyProcess.completeTask(lastTask, time);
-		// example, a workstation has 3 tasks, time at the station normally
-		// takes 60min we assume each task lasts as long as the other so one
-		// task takes 60/3=20 min, if we complete a task in e.g. 10 minutes we
-		// are 20-10=10 minutes faster done
-		workStation.getCurrentCarOrder().getDeliveryTime()
-				.setTimeSpentOnTaskAtWorkpost(workStation.getClass(), 60 / assemblyProcess.getTasks().size() - time);
+		workStation
+				.getCurrentCarOrder()
+				.getDeliveryTime()
+				.setEstimatedTime(
+						workStation.getCurrentCarOrder().getDeliveryTime().getEstimatedTime()
+								- (workStation.getEstimatedTaskTimeCost() - time));
 		getUi().showTaskCompleted(lastTask);
 		if (assemblyProcess.getPendingTasks().isEmpty()) {
 			getUi().showAllTasksCompleted();

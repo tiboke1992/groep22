@@ -29,6 +29,7 @@ public class AccessoriesPost extends WorkStation {
 		CarAssemblyProcess assemblyProcess = new CarAssemblyProcess();
 		assemblyProcess.addTask(AssemblyTask.INSTALL_SEATS);
 		assemblyProcess.addTask(AssemblyTask.MOUNT_WHEELS);
+		assemblyProcess.addTask(AssemblyTask.INSTALL_SPOILER);
 		setAssemblyProcess(assemblyProcess);
 	}
 

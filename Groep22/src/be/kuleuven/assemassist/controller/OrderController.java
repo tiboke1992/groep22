@@ -14,6 +14,7 @@ import be.kuleuven.assemassist.domain.options.Gearbox;
 import be.kuleuven.assemassist.domain.options.Seats;
 import be.kuleuven.assemassist.domain.options.Spoiler;
 import be.kuleuven.assemassist.domain.options.Wheels;
+import be.kuleuven.assemassist.domain.workpost.WorkStation;
 import be.kuleuven.assemassist.event.Event;
 import be.kuleuven.assemassist.event.OrderEvent;
 import be.kuleuven.assemassist.event.ShowCarModelsEvent;
@@ -60,13 +61,17 @@ public class OrderController extends Controller {
 	public void makeOrder(CarModel model) {
 		try {
 			CarModelSpecification spec = model.getSpecification();
-			CarOrder order = new CarOrder(spec);
+			CarOrder order = new CarOrder(model);
 			order.setEngine(getUi().askCarOption(spec, Engine.class));
 			order.setGearbox(getUi().askCarOption(spec, Gearbox.class));
 			order.setWheels(getUi().askCarOption(spec, Wheels.class));
 			order.setSeats(getUi().askCarOption(spec, Seats.class));
 			order.setSpoiler(getUi().askCarOption(spec, Spoiler.class));
-			order.init(getTimeManager().getTime());
+			int totalEstimatedTimeCost = 0;
+			for (WorkStation w : getCompany().getAssemblyLine().getLayout().getWorkStations()) {
+				totalEstimatedTimeCost += w.getTaskSize() * model.getTaskTimeCost();
+			}
+			order.init(getTimeManager().getTime(), totalEstimatedTimeCost);
 			getCompany().getProductionSchedule().addCarOrder(order);
 			getUi().showDeliveryTime(getCompany().getProductionSchedule().calculateExpectedDeliveryTime(order));
 			getUi().showGarageHolderMenu();

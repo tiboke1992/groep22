@@ -4,6 +4,7 @@ import java.util.UUID;
 
 import org.joda.time.DateTime;
 
+import be.kuleuven.assemassist.domain.carmodel.CarModel;
 import be.kuleuven.assemassist.domain.carmodel.CarModelSpecification;
 import be.kuleuven.assemassist.domain.options.Engine;
 import be.kuleuven.assemassist.domain.options.Gearbox;
@@ -22,7 +23,7 @@ public class CarOrder {
 
 	private UUID id;
 	private DeliveryTime deliveryTime;
-	private CarModelSpecification modelSpecification;
+	private CarModel carModel;
 	private CarAssemblyProcess carAssemblyProcess;
 
 	private Engine engine;
@@ -31,15 +32,14 @@ public class CarOrder {
 	private Wheels wheels;
 	private Spoiler spoiler;
 
-	public CarOrder(CarModelSpecification modelSpecification) {
+	public CarOrder(CarModel model) {
 		this.id = UUID.randomUUID();
-		this.modelSpecification = modelSpecification;
+		this.carModel = model;
 	}
 
-	public CarOrder(CarModelSpecification modelSpecification, Engine engine, Gearbox gearbox, Seats seats,
-			Wheels wheels, Spoiler spoiler) {
+	public CarOrder(CarModel carModel, Engine engine, Gearbox gearbox, Seats seats, Wheels wheels, Spoiler spoiler) {
 		this.id = UUID.randomUUID();
-		this.modelSpecification = modelSpecification;
+		this.carModel = carModel;
 		setEngine(engine);
 		setGearbox(gearbox);
 		setSeats(seats);
@@ -49,7 +49,8 @@ public class CarOrder {
 
 	public CarOrder(CarOrder order) {
 		this.id = order.getId();
-		this.modelSpecification = new CarModelSpecification(order.getModelSpecification());
+		this.carModel = new CarModel(order.carModel.getCarManufacturingCompany(), order.carModel.getName(),
+				order.carModel.getTaskTimeCost(), new CarModelSpecification(order.carModel.getSpecification()));
 		this.deliveryTime = order.getDeliveryTime() == null ? null : new DeliveryTime(order.getDeliveryTime());
 		this.engine = order.getEngine();
 		this.gearbox = order.getGearbox();
@@ -59,8 +60,9 @@ public class CarOrder {
 		this.carAssemblyProcess = new CarAssemblyProcess(order.carAssemblyProcess);
 	}
 
-	public void init(DateTime time) {
+	public void init(DateTime time, int totalEstimatedTimeCost) {
 		deliveryTime = new DeliveryTime(time);
+		deliveryTime.setEstimatedTime(totalEstimatedTimeCost);
 	}
 
 	public UUID getId() {
@@ -103,8 +105,8 @@ public class CarOrder {
 		this.wheels = wheels;
 	}
 
-	public CarModelSpecification getModelSpecification() {
-		return modelSpecification;
+	public CarModel getCarModel() {
+		return carModel;
 	}
 
 	public CarAssemblyProcess getCarAssemblyProcess() {

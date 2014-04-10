@@ -28,7 +28,7 @@ public class TextCarModelReader implements CarModelReader {
 		while ((line = reader.readLine()) != null) {
 			String[] parts = line.split(";");
 			List<CarOption> allowedOptions = new ArrayList<>();
-			for (int i = 1; i < parts.length; i++) {
+			for (int i = 2; i < parts.length; i++) {
 				String[] options = parts[i].split("\\|");
 				for (int j = 1; j < options.length; j++) {
 					try {
@@ -43,7 +43,8 @@ public class TextCarModelReader implements CarModelReader {
 					}
 				}
 			}
-			models.add(new CarModel(company, parts[0], new CarModelSpecification(allowedOptions)));
+			models.add(new CarModel(company, parts[0], Integer.parseInt(parts[1]), new CarModelSpecification(
+					allowedOptions)));
 		}
 		return models;
 	}

@@ -37,7 +37,7 @@ public class ProductionSchedule {
 			throw new IllegalArgumentException("Order " + order + " is not on the production schedule.");
 		int time = 0;
 		for (int i = 0; i <= idx; i++) {
-			time += pendingCarOrders.get(i).getDeliveryTime().getTotalTimeSpentAtWorkposts();
+			time += pendingCarOrders.get(i).getDeliveryTime().getEstimatedTime();
 		}
 		return order.getDeliveryTime().getStartTime().plusMinutes(time);
 	}

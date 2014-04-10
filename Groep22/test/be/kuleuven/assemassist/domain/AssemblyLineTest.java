@@ -10,8 +10,10 @@ import java.util.ArrayList;
 import org.junit.Before;
 import org.junit.Test;
 
+import be.kuleuven.assemassist.domain.carmodel.CarModel;
 import be.kuleuven.assemassist.domain.carmodel.CarModelSpecification;
 import be.kuleuven.assemassist.domain.options.CarOption;
+import be.kuleuven.assemassist.domain.role.Manager;
 import be.kuleuven.assemassist.domain.workpost.AccessoriesPost;
 import be.kuleuven.assemassist.domain.workpost.DriveTrainPost;
 import be.kuleuven.assemassist.domain.workpost.WorkStation;
@@ -40,7 +42,8 @@ public class AssemblyLineTest {
 	@Test
 	public void testIsCarLeftAtWorkStation_CarOnWorkStation_ReturnsTrue() {
 		WorkStation ws = new DriveTrainPost(new ProductionSchedule());
-		ws.setCurrentCarOrder(new CarOrder(new CarModelSpecification(new ArrayList<CarOption>())));
+		ws.setCurrentCarOrder(new CarOrder(new CarModel(new CarManufacturingCompany("bla", new Manager()), "bla", 50,
+				new CarModelSpecification(new ArrayList<CarOption>()))));
 		assemblyLine.getLayout().addWorkStation(ws);
 		assertTrue(assemblyLine.isCarLeftAtAWorkStation());
 	}
@@ -67,7 +70,8 @@ public class AssemblyLineTest {
 		ProductionSchedule schedule = new ProductionSchedule();
 		WorkStation driveTrain = new DriveTrainPost(schedule);
 		WorkStation accessories = new AccessoriesPost(schedule);
-		driveTrain.setCurrentCarOrder(new CarOrder(new CarModelSpecification(new ArrayList<CarOption>())));
+		driveTrain.setCurrentCarOrder(new CarOrder(new CarModel(new CarManufacturingCompany("bla", new Manager()),
+				"bla", 50, new CarModelSpecification(new ArrayList<CarOption>()))));
 		assemblyLine.getLayout().addWorkStation(driveTrain);
 		assemblyLine.getLayout().addWorkStation(accessories);
 		assertFalse(assemblyLine.canAdvance());
@@ -78,7 +82,8 @@ public class AssemblyLineTest {
 		ProductionSchedule schedule = new ProductionSchedule();
 		WorkStation driveTrain = new DriveTrainPost(schedule);
 		WorkStation accessories = new AccessoriesPost(schedule);
-		driveTrain.setCurrentCarOrder(new CarOrder(new CarModelSpecification(new ArrayList<CarOption>())));
+		driveTrain.setCurrentCarOrder(new CarOrder(new CarModel(new CarManufacturingCompany("bla", new Manager()),
+				"bla", 50, new CarModelSpecification(new ArrayList<CarOption>()))));
 		assemblyLine.getLayout().addWorkStation(driveTrain);
 		assemblyLine.getLayout().addWorkStation(accessories);
 		for (AssemblyTask task : driveTrain.getAssemblyProcess().getPendingTasks())

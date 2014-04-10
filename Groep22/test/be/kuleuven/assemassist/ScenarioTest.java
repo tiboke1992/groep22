@@ -59,7 +59,7 @@ public class ScenarioTest {
 		allowedOptions.add(Seats.VINYL_GREY);
 		allowedOptions.add(Wheels.SPORTS);
 		allowedOptions.add(Wheels.COMFORT);
-		audiA6 = new CarModel(carManufacturingCompany, "Audi A6", new CarModelSpecification(allowedOptions));
+		audiA6 = new CarModel(carManufacturingCompany, "Audi A6", 50, new CarModelSpecification(allowedOptions));
 		carManufacturingCompany.addCarModel(audiA6);
 		systemController = new SystemController(carManufacturingCompany);
 		orderController = new OrderController(carManufacturingCompany);

@@ -22,7 +22,7 @@ public class CarManufacturingCompanyTest {
 	@Test(expected = IllegalArgumentException.class)
 	public void testAddCarModel_ModelFromOtherCompany_ThrowsIllegalArgumentException() {
 		CarManufacturingCompany company = new CarManufacturingCompany("test", new Manager());
-		CarModel model = new CarModel(new CarManufacturingCompany("test2", new Manager()), "bla",
+		CarModel model = new CarModel(new CarManufacturingCompany("test2", new Manager()), "bla", 50,
 				new CarModelSpecification(new ArrayList<CarOption>()));
 		company.addCarModel(model);
 	}
@@ -30,7 +30,7 @@ public class CarManufacturingCompanyTest {
 	@Test
 	public void testAddCarModel_addsCarModel() {
 		CarManufacturingCompany company = new CarManufacturingCompany("test", new Manager());
-		CarModel model = new CarModel(company, "bla", new CarModelSpecification(new ArrayList<CarOption>()));
+		CarModel model = new CarModel(company, "bla", 50, new CarModelSpecification(new ArrayList<CarOption>()));
 		company.addCarModel(model);
 		assertTrue(company.getAvailableCarModels().contains(model));
 	}
