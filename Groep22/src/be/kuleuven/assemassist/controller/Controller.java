@@ -4,12 +4,6 @@ import be.kuleuven.assemassist.domain.CarManufacturingCompany;
 import be.kuleuven.assemassist.event.Event;
 import be.kuleuven.assemassist.ui.UI;
 
-/**
- * 
- * This class forms a superclass for all the controllers
- * 
- */
-
 public abstract class Controller {
 
 	private CarManufacturingCompany company;
