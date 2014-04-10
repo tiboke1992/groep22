@@ -33,6 +33,16 @@ public class CarOrder {
 		this.id = UUID.randomUUID();
 		this.modelSpecification = modelSpecification;
 	}
+	
+	public CarOrder(CarModelSpecification modelSpecification, Engine engine, Gearbox gearbox, Seats seats, Wheels wheels, Spoiler spoiler){
+		this.id = UUID.randomUUID();
+		this.modelSpecification = modelSpecification;
+		setEngine(engine);
+		setGearbox(gearbox);
+		setSeats(seats);
+		setWheels(wheels);
+		setSpoiler(spoiler);
+	}
 
 	public CarOrder(CarOrder order) {
 		this.id = order.getId();

@@ -30,6 +30,7 @@ public enum Engine implements CarOption {
 
 	@Override
 	public String toString() {
-		return capitalizeFirstCharacter(name()) + " " + size + "l v" + cilinderCount;
+		return capitalizeFirstCharacter(name()) + " " + size + "l v"
+				+ cilinderCount;
 	}
 }
