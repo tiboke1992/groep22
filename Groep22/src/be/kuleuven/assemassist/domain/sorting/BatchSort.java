@@ -38,21 +38,43 @@ public class BatchSort extends SortingAlgorithm {
 		front.addAll(super.getPending());
 		return front;
 	}
-	
 
 	public List<List<CarOption>> getPermutations() {
 		List<List<CarOption>> result = new ArrayList<>();
-
+		boolean bln = false;
+		List<CarOption> temp = new ArrayList<CarOption>();
 		for (Engine engine : Engine.values()) {
+			temp = Arrays.asList((CarOption) engine);
+			bln = this.countSuitableCarOrders(temp) >= 3;
+			if (!result.contains(temp) && bln)
+				result.add(temp);
+
 			for (Gearbox gearbox : Gearbox.values()) {
+				temp = Arrays.asList((CarOption) engine, (CarOption) gearbox);
+				bln = this.countSuitableCarOrders(temp) >= 3;
+				if (!result.contains(temp) && bln)
+					result.add(temp);
+
 				for (Seats seats : Seats.values()) {
+					temp = Arrays.asList((CarOption) engine,
+							(CarOption) gearbox, (CarOption) seats);
+					bln = this.countSuitableCarOrders(temp) >= 3;
+					if (!result.contains(temp) && bln)
+						result.add(temp);
+
 					for (Spoiler spoiler : Spoiler.values()) {
+						temp = Arrays.asList((CarOption) engine,
+								(CarOption) gearbox, (CarOption) seats,
+								(CarOption) spoiler);
+						bln = this.countSuitableCarOrders(temp) >= 3;
+						if (!result.contains(temp) && bln)
+							result.add(temp);
+
 						for (Wheels wheels : Wheels.values()) {
-							List<CarOption> temp = Arrays.asList(
-									(CarOption) engine, (CarOption) gearbox,
-									(CarOption) seats, (CarOption) spoiler,
-									(CarOption) wheels);
-							boolean bln = this.countSuitableCarOrders(temp) >= 3;
+							temp = Arrays.asList((CarOption) engine,
+									(CarOption) gearbox, (CarOption) seats,
+									(CarOption) spoiler, (CarOption) wheels);
+							bln = this.countSuitableCarOrders(temp) >= 3;
 							if (!result.contains(temp) && bln)
 								result.add(temp);
 						}
