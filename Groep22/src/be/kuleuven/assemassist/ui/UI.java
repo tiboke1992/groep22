@@ -9,22 +9,25 @@ import java.util.Scanner;
 import org.joda.time.DateTime;
 
 import be.kuleuven.assemassist.controller.Controller;
+import be.kuleuven.assemassist.domain.AssemblyTask;
 import be.kuleuven.assemassist.domain.CarOrder;
+import be.kuleuven.assemassist.domain.ProductionSchedule;
 import be.kuleuven.assemassist.domain.carmodel.CarModel;
 import be.kuleuven.assemassist.domain.carmodel.CarModelSpecification;
 import be.kuleuven.assemassist.domain.options.CarOption;
 import be.kuleuven.assemassist.domain.options.Spoiler;
-import be.kuleuven.assemassist.domain.task.AssemblyTask;
-import be.kuleuven.assemassist.domain.task.action.Action;
+import be.kuleuven.assemassist.domain.role.CarMechanic;
 import be.kuleuven.assemassist.domain.workpost.WorkStation;
 import be.kuleuven.assemassist.event.AssemblyAdvanceEvent;
-import be.kuleuven.assemassist.event.CompleteActionEvent;
+import be.kuleuven.assemassist.event.CarOrderCompletedEvent;
+import be.kuleuven.assemassist.event.CompleteTaskEvent;
 import be.kuleuven.assemassist.event.LoginEvent;
 import be.kuleuven.assemassist.event.OrderEvent;
 import be.kuleuven.assemassist.event.SelectTaskEvent;
 import be.kuleuven.assemassist.event.ShowCarModelsEvent;
 import be.kuleuven.assemassist.event.ShowOrderDetailsEvent;
 import be.kuleuven.assemassist.event.ShowOrdersEvent;
+import be.kuleuven.assemassist.event.ShowWorkPostsMenuEvent;
 import be.kuleuven.assemassist.event.ShutdownEvent;
 import be.kuleuven.assemassist.event.WorkStationSelectionEvent;
 
@@ -81,18 +84,18 @@ public class UI extends AbstractUI {
 		System.out.println();
 	}
 
-	public void showOrders(Collection<CarOrder> pending, Collection<CarOrder> completed) {
+	public void showOrders(Collection<CarOrder> pending, Collection<CarOrder> completed, ProductionSchedule schedule) {
 		System.out.println();
 		System.out.println("Overview:");
 		System.out.println("Pending orders:");
 		for (CarOrder order : pending) {
 			System.out.println(order.getId() + "\t\t"
-					+ PENDING_FORMAT.format(order.getDeliveryTime().getEstimatedDeliveryTime().toDate()));
+					+ PENDING_FORMAT.format(schedule.calculateExpectedDeliveryTime(order).toDate()));
 		}
 		System.out.println("Completed orders:");
 		for (CarOrder order : completed) {
 			System.out.println(order.getId() + "\t\t"
-					+ COMPLETED_FORMAT.format(order.getDeliveryTime().getEstimatedDeliveryTime().toDate()));
+					+ COMPLETED_FORMAT.format(order.getDeliveryTime().getCompletionTime().toDate()));
 		}
 	}
 
@@ -119,7 +122,7 @@ public class UI extends AbstractUI {
 		}
 	}
 
-	public void showOrderDetails(List<CarOrder> pending, List<CarOrder> completed) {
+	public void showOrderDetails(List<CarOrder> pending, List<CarOrder> completed, ProductionSchedule schedule) {
 		int i = 0;
 		System.out.println();
 		System.out.println("Pending orders:");
@@ -134,9 +137,9 @@ public class UI extends AbstractUI {
 		try {
 			int option = scanner.nextInt();
 			if (option >= 0 && option < pending.size()) {
-				showOrderDetail(pending.get(option));
+				showOrderDetail(pending.get(option), schedule);
 			} else if ((option - pending.size()) < completed.size()) {
-				showOrderDetail(completed.get(option - pending.size()));
+				showOrderDetail(completed.get(option - pending.size()), schedule);
 			} else
 				showGarageHolderMenu();
 		} catch (Throwable t) {
@@ -144,9 +147,13 @@ public class UI extends AbstractUI {
 		}
 	}
 
-	private void showOrderDetail(CarOrder order) {
+	private void showOrderDetail(CarOrder order, ProductionSchedule productionSchedule) {
 		System.out.println("Order " + order.getId());
-		System.out.println("\tEstimated delivery time: " + order.getDeliveryTime().getEstimatedDeliveryTime().toDate());
+		if (order.getDeliveryTime().getCompletionTime() == null)
+			System.out.println("\tEstimated delivery time: "
+					+ productionSchedule.calculateExpectedDeliveryTime(order).toDate());
+		else
+			System.out.println("\tDelivery time: " + order.getDeliveryTime().getCompletionTime());
 		System.out.println("\tOptions:");
 		System.out.println("\t\tEngine: " + order.getEngine());
 		System.out.println("\t\tGearbox: " + order.getGearbox());
@@ -226,51 +233,43 @@ public class UI extends AbstractUI {
 		System.out.println("Task : " + task + " Completed.");
 	}
 
-	public void showPendingAssemblyTasks(List<AssemblyTask> tasks) {
-		if (tasks.isEmpty()) {
-			System.out.println("All tasks completed succesfully");
-			showLoginOptions();
-		} else {
-			System.out.println("0) login as someone else");
-			System.out.println("What task do you want to work on?");
-			for (int i = 0; i < tasks.size(); i++) {
-				System.out.println(i + 1 + ") " + tasks.get(i));
-			}
-			try {
-				int option = scanner.nextInt();
-				if (option == 0) {
-					showLoginOptions();
-				} else {
-					pushEvent(new SelectTaskEvent(option));
-				}
-			} catch (Throwable t) {
-				shutdown();
-			}
-		}
+	public void showAllTasksCompleted() {
+		System.out.println("All tasks completed succesfully");
+		showLoginOptions();
 	}
 
-	public void showSequence(List<Action> actions) {
-		for (int i = 0; i < actions.size(); i++)
-			System.out.println((i + 1) + ") " + actions.get(i));
-		if (actions.size() == 0) {
-			System.out.println("You have already finished this task");
-		} else {
-			System.out.println("");
-			System.out.println("Press 0 to exit");
-			System.out.println("Press 1 to finish this task");
-			System.out.println("Press 2 to login as another user");
+	public void showPendingAssemblyTasks(List<AssemblyTask> tasks) {
+		System.out.println();
+		System.out.println("What task do you want to work on?");
+		System.out.println("0) login as someone else");
+		for (int i = 0; i < tasks.size(); i++) {
+			System.out.println(i + 1 + ") " + tasks.get(i));
 		}
 		try {
 			int option = scanner.nextInt();
 			if (option == 0) {
-				shutdown();
-			} else if (option == 1) {
-				pushEvent(new CompleteActionEvent());
-			} else if (option == 2) {
 				showLoginOptions();
+			} else {
+				pushEvent(new SelectTaskEvent(option));
 			}
 		} catch (Throwable t) {
 			shutdown();
+		}
+	}
+
+	public void showHandleTask(CarMechanic mechanic) {
+		System.out.println("");
+		System.out.println("1) finish this task");
+		System.out.println("*) return to menu");
+		try {
+			int option = scanner.nextInt();
+			if (option == 1) {
+				System.out.println("Enter the time it took to complete this task.");
+				pushEvent(new CompleteTaskEvent(scanner.nextInt()));
+			} else
+				pushEvent(new ShowWorkPostsMenuEvent(mechanic));
+		} catch (Throwable t) {
+			pushEvent(new ShowWorkPostsMenuEvent(mechanic));
 		}
 	}
 
@@ -298,8 +297,9 @@ public class UI extends AbstractUI {
 		this.showManagerMenu();
 	}
 
-	public void showError(Throwable t) {
-		System.out.println("Something went wrong: " + t.getMessage());
-		System.out.println("Logging out..");
+	public void showWorkOrderCompleted(CarOrder order) {
+		System.out.println("Order " + order + " has been completed.");
+		pushEvent(new CarOrderCompletedEvent(order));
 	}
+
 }

@@ -2,6 +2,8 @@ package be.kuleuven.assemassist.domain;
 
 import java.util.UUID;
 
+import org.joda.time.DateTime;
+
 import be.kuleuven.assemassist.domain.carmodel.CarModelSpecification;
 import be.kuleuven.assemassist.domain.options.Engine;
 import be.kuleuven.assemassist.domain.options.Gearbox;
@@ -33,8 +35,9 @@ public class CarOrder {
 		this.id = UUID.randomUUID();
 		this.modelSpecification = modelSpecification;
 	}
-	
-	public CarOrder(CarModelSpecification modelSpecification, Engine engine, Gearbox gearbox, Seats seats, Wheels wheels, Spoiler spoiler){
+
+	public CarOrder(CarModelSpecification modelSpecification, Engine engine, Gearbox gearbox, Seats seats,
+			Wheels wheels, Spoiler spoiler) {
 		this.id = UUID.randomUUID();
 		this.modelSpecification = modelSpecification;
 		setEngine(engine);
@@ -56,8 +59,8 @@ public class CarOrder {
 		this.carAssemblyProcess = new CarAssemblyProcess(order.carAssemblyProcess);
 	}
 
-	public void init() {
-		deliveryTime = new DeliveryTime();
+	public void init(DateTime time) {
+		deliveryTime = new DeliveryTime(time);
 	}
 
 	public UUID getId() {

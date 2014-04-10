@@ -1,5 +1,6 @@
 package be.kuleuven.assemassist.controller;
 
+import be.kuleuven.assemassist.AssemAssist;
 import be.kuleuven.assemassist.domain.AssemblyLine;
 import be.kuleuven.assemassist.domain.CarManufacturingCompany;
 import be.kuleuven.assemassist.domain.ConveyorBelt;
@@ -9,6 +10,8 @@ import be.kuleuven.assemassist.domain.role.GarageHolder;
 import be.kuleuven.assemassist.domain.role.Role;
 import be.kuleuven.assemassist.domain.workpost.AccessoriesPost;
 import be.kuleuven.assemassist.domain.workpost.DriveTrainPost;
+import be.kuleuven.assemassist.event.CarOrderCompletedEvent;
+import be.kuleuven.assemassist.event.CompleteTaskEvent;
 import be.kuleuven.assemassist.event.Event;
 import be.kuleuven.assemassist.event.LoginEvent;
 import be.kuleuven.assemassist.event.ShowWorkPostsMenuEvent;
@@ -45,7 +48,7 @@ public class SystemController extends Controller {
 			case 2:
 				role = new CarMechanic();
 				getUi().showGreeting(role.toString());
-				getUi().pushEvent(new ShowWorkPostsMenuEvent());
+				getUi().pushEvent(new ShowWorkPostsMenuEvent((CarMechanic) role));
 				break;
 			case 3:
 				role = getCompany().getManager();
@@ -68,6 +71,12 @@ public class SystemController extends Controller {
 			loginAs(((LoginEvent) event).getRoleId());
 		} else if (event instanceof ShutdownEvent)
 			shutdown();
+		else if (event instanceof CompleteTaskEvent) {
+			CompleteTaskEvent e = (CompleteTaskEvent) event;
+			AssemAssist.getTimeManager().addMinutes(e.getTimeToComplete());
+		} else if (event instanceof CarOrderCompletedEvent) {
+			CarOrderCompletedEvent e = (CarOrderCompletedEvent) event;
+			e.getOrder().getDeliveryTime().setCompletionTime(AssemAssist.getTimeManager().getTime());
+		}
 	}
-
 }

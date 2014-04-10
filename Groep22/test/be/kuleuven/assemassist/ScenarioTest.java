@@ -15,6 +15,7 @@ import org.junit.Test;
 import be.kuleuven.assemassist.controller.OrderController;
 import be.kuleuven.assemassist.controller.SystemController;
 import be.kuleuven.assemassist.controller.WorkStationController;
+import be.kuleuven.assemassist.domain.AssemblyTask;
 import be.kuleuven.assemassist.domain.CarManufacturingCompany;
 import be.kuleuven.assemassist.domain.carmodel.CarModel;
 import be.kuleuven.assemassist.domain.carmodel.CarModelSpecification;
@@ -22,10 +23,10 @@ import be.kuleuven.assemassist.domain.options.CarOption;
 import be.kuleuven.assemassist.domain.options.Engine;
 import be.kuleuven.assemassist.domain.options.Gearbox;
 import be.kuleuven.assemassist.domain.options.Seats;
+import be.kuleuven.assemassist.domain.options.Spoiler;
 import be.kuleuven.assemassist.domain.options.Wheels;
 import be.kuleuven.assemassist.domain.role.CarMechanic;
 import be.kuleuven.assemassist.domain.role.Manager;
-import be.kuleuven.assemassist.domain.task.AssemblyTask;
 import be.kuleuven.assemassist.ui.TestUI;
 
 public class ScenarioTest {
@@ -110,6 +111,8 @@ public class ScenarioTest {
 					return (T) Wheels.SPORTS;
 				else if (carOptionClass == Seats.class)
 					return (T) Seats.VINYL_GREY;
+				else if (carOptionClass == Spoiler.class)
+					return (T) Spoiler.NONE;
 				else {
 					fail("Unexpected car option type: " + carOptionClass.getName());
 					return null;
@@ -153,7 +156,7 @@ public class ScenarioTest {
 		workStationController.selectWorkStation(1);
 		workStationController.selectTask(1);
 		while (!pass.get())
-			workStationController.completeNextAction();
+			workStationController.completeTask(60);
 		pass.set(false);
 		systemController.loginAs(MANAGER);
 		workStationController.advanceAssemblyLine();
@@ -175,6 +178,8 @@ public class ScenarioTest {
 					return (T) Wheels.SPORTS;
 				else if (carOptionClass == Seats.class)
 					return (T) Seats.VINYL_GREY;
+				else if (carOptionClass == Spoiler.class)
+					return (T) Spoiler.NONE;
 				else {
 					fail("Unexpected car option type: " + carOptionClass.getName());
 					return null;
@@ -220,7 +225,7 @@ public class ScenarioTest {
 		while (!workStationController.getWorkStations().get(0).getAssemblyProcess().getPendingTasks().isEmpty()) {
 			workStationController.selectTask(1);
 			while (!pass.get())
-				workStationController.completeNextAction();
+				workStationController.completeTask(60);
 			pass.set(false);
 		}
 		systemController.loginAs(GARAGE_HOLDER);

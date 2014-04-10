@@ -1,9 +1,8 @@
 package be.kuleuven.assemassist.domain.workpost;
 
+import be.kuleuven.assemassist.domain.AssemblyTask;
 import be.kuleuven.assemassist.domain.CarAssemblyProcess;
 import be.kuleuven.assemassist.domain.ProductionSchedule;
-import be.kuleuven.assemassist.domain.task.InsertEngine;
-import be.kuleuven.assemassist.domain.task.InsertGearBox;
 
 /**
  * This class is the Drivetrain Post of the assembly Process
@@ -27,8 +26,8 @@ public class DriveTrainPost extends WorkStation {
 	@Override
 	public void init() {
 		CarAssemblyProcess assemblyProcess = new CarAssemblyProcess();
-		assemblyProcess.addTask(new InsertEngine());
-		assemblyProcess.addTask(new InsertGearBox());
+		assemblyProcess.addTask(AssemblyTask.INSERT_ENGINE);
+		assemblyProcess.addTask(AssemblyTask.INSERT_GEARBOX);
 		setAssemblyProcess(assemblyProcess);
 	}
 

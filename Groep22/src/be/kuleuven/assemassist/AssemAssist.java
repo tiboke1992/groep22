@@ -19,6 +19,8 @@ import be.kuleuven.assemassist.ui.UI;
  */
 public class AssemAssist {
 
+	private static final TimeManager timeManager = new TimeManager();
+
 	public static void main(String[] args) {
 		CarManufacturingCompany carManufacturingCompany = new CarManufacturingCompany("Volkswagen Group", new Manager());
 		addCarModels(carManufacturingCompany);
@@ -26,9 +28,9 @@ public class AssemAssist {
 		OrderController orderController = new OrderController(carManufacturingCompany);
 		WorkStationController workStationController = new WorkStationController(carManufacturingCompany);
 		UI ui = new UI();
+		ui.addController(workStationController);
 		ui.addController(assemblyController);
 		ui.addController(orderController);
-		ui.addController(workStationController);
 		assemblyController.start();
 		ui.showLoginOptions();
 	}
@@ -43,5 +45,9 @@ public class AssemAssist {
 			throw new RuntimeException("Could not load car models: " + e.getMessage());
 		}
 
+	}
+
+	public static TimeManager getTimeManager() {
+		return timeManager;
 	}
 }

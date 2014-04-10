@@ -16,47 +16,43 @@ public class ProductionSchedule {
 	private List<CarOrder> pendingCarOrders;
 	private List<CarOrder> workingCarOrders;
 	private List<CarOrder> completedCarOrders;
-	private DateTime time;
 
 	public ProductionSchedule() {
 		pendingCarOrders = new ArrayList<>();
 		workingCarOrders = new ArrayList<>();
 		completedCarOrders = new ArrayList<>();
-		time = new DateTime().withHourOfDay(6).withMinuteOfHour(0).withSecondOfMinute(0);
-	}
-
-	public CarOrder getNextCarOrder() {
-		return pendingCarOrders.get(0);
 	}
 
 	public CarOrder getNextWorkCarOrder() {
+		if (workingCarOrders.isEmpty())
+			return null;
 		return workingCarOrders.remove(0);
 	}
 
-	/**
-	 * 
-	 * @return
-	 */
+	public DateTime calculateExpectedDeliveryTime(CarOrder order) {
+		if (completedCarOrders.contains(order))
+			return order.getDeliveryTime().getCompletionTime();
+		int idx = pendingCarOrders.indexOf(order);
+		if (idx == -1)
+			throw new IllegalArgumentException("Order " + order + " is not on the production schedule.");
+		int time = 0;
+		for (int i = 0; i <= idx; i++) {
+			time += pendingCarOrders.get(i).getDeliveryTime().getTotalTimeSpentAtWorkposts();
+		}
+		return order.getDeliveryTime().getStartTime().plusMinutes(time);
+	}
+
 	public List<CarOrder> getPendingCarOrders() {
 		return pendingCarOrders;
 	}
 
-	/**
-	 * 
-	 * @return
-	 */
 	public List<CarOrder> getCompletedCarOrders() {
 		return completedCarOrders;
 	}
 
 	public void addCarOrder(CarOrder order) {
-		order.init();
 		pendingCarOrders.add(order);
 		workingCarOrders.add(order);
-	}
-
-	public DateTime getTime() {
-		return time;
 	}
 
 	public void completeOrder(CarOrder order) {

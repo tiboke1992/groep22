@@ -1,5 +1,7 @@
 package be.kuleuven.assemassist.controller;
 
+import static be.kuleuven.assemassist.AssemAssist.getTimeManager;
+
 import java.util.Collections;
 import java.util.List;
 
@@ -64,8 +66,9 @@ public class OrderController extends Controller {
 			order.setWheels(getUi().askCarOption(spec, Wheels.class));
 			order.setSeats(getUi().askCarOption(spec, Seats.class));
 			order.setSpoiler(getUi().askCarOption(spec, Spoiler.class));
+			order.init(getTimeManager().getTime());
 			getCompany().getProductionSchedule().addCarOrder(order);
-			getUi().showDeliveryTime(order.getDeliveryTime().getEstimatedDeliveryTime());
+			getUi().showDeliveryTime(getCompany().getProductionSchedule().calculateExpectedDeliveryTime(order));
 			getUi().showGarageHolderMenu();
 		} catch (Exception t) {
 			getUi().showError(t);
@@ -87,10 +90,11 @@ public class OrderController extends Controller {
 		if (event instanceof OrderEvent) {
 			makeOrder(((OrderEvent) event).getModel());
 		} else if (event instanceof ShowOrdersEvent) {
-			getUi().showOrders(getPendingCarOrders(), getCompletedCarOrders());
+			getUi().showOrders(getPendingCarOrders(), getCompletedCarOrders(), getCompany().getProductionSchedule());
 		} else if (event instanceof ShowCarModelsEvent) {
 			getUi().showCarModels(getAvailableCarModels());
 		} else if (event instanceof ShowOrderDetailsEvent)
-			getUi().showOrderDetails(getPendingCarOrders(), getCompletedCarOrders());
+			getUi().showOrderDetails(getPendingCarOrders(), getCompletedCarOrders(),
+					getCompany().getProductionSchedule());
 	}
 }
