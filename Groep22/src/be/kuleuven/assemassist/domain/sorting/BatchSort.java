@@ -1,6 +1,7 @@
 package be.kuleuven.assemassist.domain.sorting;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import be.kuleuven.assemassist.domain.CarOrder;
@@ -37,6 +38,54 @@ public class BatchSort extends SortingAlgorithm {
 		front.addAll(super.getPending());
 		return front;
 	}
+	
+
+	public List<List<CarOption>> getPermutations() {
+		List<List<CarOption>> result = new ArrayList<>();
+
+		for (Engine engine : Engine.values()) {
+			for (Gearbox gearbox : Gearbox.values()) {
+				for (Seats seats : Seats.values()) {
+					for (Spoiler spoiler : Spoiler.values()) {
+						for (Wheels wheels : Wheels.values()) {
+							List<CarOption> temp = Arrays.asList(
+									(CarOption) engine, (CarOption) gearbox,
+									(CarOption) seats, (CarOption) spoiler,
+									(CarOption) wheels);
+							boolean bln = this.countSuitableCarOrders(temp) >= 3;
+							if (!result.contains(temp) && bln)
+								result.add(temp);
+						}
+					}
+				}
+			}
+		}
+		return result;
+	}
+
+	private int countSuitableCarOrders(List<CarOption> checkOptions) {
+		int result = 0;
+		for (CarOrder order : super.getPending()) {
+			boolean hasAllOptions = true;
+			for (int i = 0; i < checkOptions.size() && hasAllOptions; i++) {
+				CarOption option = checkOptions.get(i);
+				if (option instanceof Engine)
+					hasAllOptions = order.getEngine() == option;
+				else if (option instanceof Gearbox)
+					hasAllOptions = order.getGearbox() == option;
+				else if (option instanceof Seats)
+					hasAllOptions = order.getSeats() == option;
+				else if (option instanceof Spoiler)
+					hasAllOptions = order.getSpoiler() == option;
+				else if (option instanceof Wheels)
+					hasAllOptions = order.getWheels() == option;
+			}
+			if (hasAllOptions) {
+				result++;
+			}
+		}
+		return result;
+	}
 
 	private List<CarOrder> getSuitableCarOrders() {
 		List<CarOrder> front = new ArrayList<CarOrder>();
@@ -68,7 +117,7 @@ public class BatchSort extends SortingAlgorithm {
 		return options;
 	}
 
-	private void setOptions(List<CarOption> options) {
+	public void setOptions(List<CarOption> options) {
 		this.options = options;
 	}
 
