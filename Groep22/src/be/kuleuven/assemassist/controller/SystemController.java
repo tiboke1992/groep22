@@ -1,7 +1,6 @@
 package be.kuleuven.assemassist.controller;
 
-import org.joda.time.DateTime;
-
+import be.kuleuven.assemassist.AssemAssist;
 import be.kuleuven.assemassist.domain.AssemblyLine;
 import be.kuleuven.assemassist.domain.CarManufacturingCompany;
 import be.kuleuven.assemassist.domain.ConveyorBelt;
@@ -11,6 +10,7 @@ import be.kuleuven.assemassist.domain.role.GarageHolder;
 import be.kuleuven.assemassist.domain.role.Role;
 import be.kuleuven.assemassist.domain.workpost.AccessoriesPost;
 import be.kuleuven.assemassist.domain.workpost.DriveTrainPost;
+import be.kuleuven.assemassist.event.CarOrderCompletedEvent;
 import be.kuleuven.assemassist.event.CompleteTaskEvent;
 import be.kuleuven.assemassist.event.Event;
 import be.kuleuven.assemassist.event.LoginEvent;
@@ -24,11 +24,8 @@ import be.kuleuven.assemassist.event.ShutdownEvent;
  */
 public class SystemController extends Controller {
 
-	private DateTime time;
-
 	public SystemController(CarManufacturingCompany company) {
 		super(company);
-		time = new DateTime().withHourOfDay(6).withMinuteOfHour(0).withSecondOfMinute(0);
 	}
 
 	public void start() {
@@ -76,11 +73,10 @@ public class SystemController extends Controller {
 			shutdown();
 		else if (event instanceof CompleteTaskEvent) {
 			CompleteTaskEvent e = (CompleteTaskEvent) event;
-			time = time.plusMinutes(e.getTimeToComplete());
+			AssemAssist.getTimeManager().addMinutes(e.getTimeToComplete());
+		} else if (event instanceof CarOrderCompletedEvent) {
+			CarOrderCompletedEvent e = (CarOrderCompletedEvent) event;
+			e.getOrder().getDeliveryTime().setCompletionTime(AssemAssist.getTimeManager().getTime());
 		}
-	}
-
-	public DateTime getTime() {
-		return time;
 	}
 }

@@ -5,6 +5,8 @@ import java.util.Map;
 
 import org.joda.time.DateTime;
 
+import be.kuleuven.assemassist.domain.workpost.AccessoriesPost;
+import be.kuleuven.assemassist.domain.workpost.DriveTrainPost;
 import be.kuleuven.assemassist.domain.workpost.WorkStation;
 
 /**
@@ -18,11 +20,6 @@ public class DeliveryTime {
 	private DateTime completionTime;
 	private Map<Class<? extends WorkStation>, Integer> timeSpentAtWorkposts;
 
-	public DeliveryTime() {
-		startTime = new DateTime();
-		timeSpentAtWorkposts = new HashMap<>();
-	}
-
 	public DeliveryTime(DeliveryTime deliveryTime) {
 		this.startTime = deliveryTime.startTime;
 		this.completionTime = deliveryTime.completionTime;
@@ -32,9 +29,15 @@ public class DeliveryTime {
 		}
 	}
 
+	public DeliveryTime(DateTime time) {
+		startTime = time;
+		timeSpentAtWorkposts = new HashMap<>();
+		timeSpentAtWorkposts.put(DriveTrainPost.class, 60);
+		timeSpentAtWorkposts.put(AccessoriesPost.class, 60);
+	}
+
 	public int getTimeSpentAtWorkpost(Class<? extends WorkStation> workStation) {
-		Integer i = timeSpentAtWorkposts.get(workStation);
-		return i == null ? 60 : i;
+		return timeSpentAtWorkposts.get(workStation);
 	}
 
 	public void setCompletionTime(DateTime completionTime) {
@@ -50,37 +53,13 @@ public class DeliveryTime {
 		for (Integer i : timeSpentAtWorkposts.values()) {
 			total += i;
 		}
-		for (int i = 0; i < 2 - timeSpentAtWorkposts.values().size(); i++)
-			total += 60;
 		return total;
 	}
 
-	public void completeTask(Class<? extends WorkStation> workStation, int timeInMinutes) {
-		timeSpentAtWorkposts.put(workStation, timeInMinutes);
+	public void setTimeSpentOnTaskAtWorkpost(Class<? extends WorkStation> workStation, int timeInMinutes) {
+		int time = timeSpentAtWorkposts.get(workStation);
+		timeSpentAtWorkposts.put(workStation, time - timeInMinutes);
 	}
-
-	/**
-	 * 
-	 * @return The estimated delivery time
-	 */
-	// public DateTime getEstimatedDeliveryTime() {
-	// // TODO kijken of er nog andere orders zijn dus lijst bijhouden van
-	// // orders en kijken wat er nog op den band staat
-	//
-	// int minutesToAdd;
-	// Integer driveTrainTime = timeSpentAtWorkposts.get(DriveTrainPost.class);
-	// if (driveTrainTime != null) {
-	// minutesToAdd = driveTrainTime.intValue();
-	// Integer accessoriesTime =
-	// timeSpentAtWorkposts.get(AccessoriesPost.class);
-	// if (accessoriesTime != null)
-	// minutesToAdd += accessoriesTime.intValue();
-	// else
-	// minutesToAdd += 60;
-	// } else
-	// minutesToAdd = 120;
-	// return startTime.plusMinutes(minutesToAdd);
-	// }
 
 	public DateTime getStartTime() {
 		return startTime;

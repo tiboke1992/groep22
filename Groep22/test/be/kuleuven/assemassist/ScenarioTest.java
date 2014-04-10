@@ -23,6 +23,7 @@ import be.kuleuven.assemassist.domain.options.CarOption;
 import be.kuleuven.assemassist.domain.options.Engine;
 import be.kuleuven.assemassist.domain.options.Gearbox;
 import be.kuleuven.assemassist.domain.options.Seats;
+import be.kuleuven.assemassist.domain.options.Spoiler;
 import be.kuleuven.assemassist.domain.options.Wheels;
 import be.kuleuven.assemassist.domain.role.CarMechanic;
 import be.kuleuven.assemassist.domain.role.Manager;
@@ -110,6 +111,8 @@ public class ScenarioTest {
 					return (T) Wheels.SPORTS;
 				else if (carOptionClass == Seats.class)
 					return (T) Seats.VINYL_GREY;
+				else if (carOptionClass == Spoiler.class)
+					return (T) Spoiler.NONE;
 				else {
 					fail("Unexpected car option type: " + carOptionClass.getName());
 					return null;
@@ -175,6 +178,8 @@ public class ScenarioTest {
 					return (T) Wheels.SPORTS;
 				else if (carOptionClass == Seats.class)
 					return (T) Seats.VINYL_GREY;
+				else if (carOptionClass == Spoiler.class)
+					return (T) Spoiler.NONE;
 				else {
 					fail("Unexpected car option type: " + carOptionClass.getName());
 					return null;

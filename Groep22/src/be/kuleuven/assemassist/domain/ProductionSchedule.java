@@ -32,12 +32,12 @@ public class ProductionSchedule {
 	public DateTime calculateExpectedDeliveryTime(CarOrder order) {
 		if (completedCarOrders.contains(order))
 			return order.getDeliveryTime().getCompletionTime();
-		int idx = workingCarOrders.indexOf(order);
+		int idx = pendingCarOrders.indexOf(order);
 		if (idx == -1)
 			throw new IllegalArgumentException("Order " + order + " is not on the production schedule.");
 		int time = 0;
 		for (int i = 0; i <= idx; i++) {
-			time += workingCarOrders.get(i).getDeliveryTime().getTotalTimeSpentAtWorkposts();
+			time += pendingCarOrders.get(i).getDeliveryTime().getTotalTimeSpentAtWorkposts();
 		}
 		return order.getDeliveryTime().getStartTime().plusMinutes(time);
 	}
@@ -51,13 +51,11 @@ public class ProductionSchedule {
 	}
 
 	public void addCarOrder(CarOrder order) {
-		order.init();
 		pendingCarOrders.add(order);
 		workingCarOrders.add(order);
 	}
 
 	public void completeOrder(CarOrder order) {
-		order.getDeliveryTime().setCompletionTime(order.getDeliveryTime().getTotalTimeSpentAtWorkposts());
 		completedCarOrders.add(order);
 		pendingCarOrders.remove(order);
 	}

@@ -25,8 +25,13 @@ public abstract class AbstractUI {
 			for (Controller c : controllers)
 				c.handleEvent(e);
 		} catch (Exception ex) {
-			System.out.println("Exception with handling event!");
-			ex.printStackTrace();
+			showError(ex);
 		}
+	}
+
+	public void showError(Throwable t) {
+		t.printStackTrace();
+		System.out.println("Something went wrong: " + t.getMessage());
+		System.out.println("Logging out..");
 	}
 }

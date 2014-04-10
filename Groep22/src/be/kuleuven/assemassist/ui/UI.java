@@ -19,6 +19,7 @@ import be.kuleuven.assemassist.domain.options.Spoiler;
 import be.kuleuven.assemassist.domain.role.CarMechanic;
 import be.kuleuven.assemassist.domain.workpost.WorkStation;
 import be.kuleuven.assemassist.event.AssemblyAdvanceEvent;
+import be.kuleuven.assemassist.event.CarOrderCompletedEvent;
 import be.kuleuven.assemassist.event.CompleteTaskEvent;
 import be.kuleuven.assemassist.event.LoginEvent;
 import be.kuleuven.assemassist.event.OrderEvent;
@@ -296,9 +297,9 @@ public class UI extends AbstractUI {
 		this.showManagerMenu();
 	}
 
-	public void showError(Throwable t) {
-		t.printStackTrace();
-		System.out.println("Something went wrong: " + t.getMessage());
-		System.out.println("Logging out..");
+	public void showWorkOrderCompleted(CarOrder order) {
+		System.out.println("Order " + order + " has been completed.");
+		pushEvent(new CarOrderCompletedEvent(order));
 	}
+
 }

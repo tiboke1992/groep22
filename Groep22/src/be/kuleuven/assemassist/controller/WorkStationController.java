@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.joda.time.DateTime;
 
+import be.kuleuven.assemassist.AssemAssist;
 import be.kuleuven.assemassist.domain.AssemblyTask;
 import be.kuleuven.assemassist.domain.CarAssemblyProcess;
 import be.kuleuven.assemassist.domain.CarManufacturingCompany;
@@ -89,12 +90,19 @@ public class WorkStationController extends Controller {
 	 * @param time
 	 */
 	public void completeTask(int time) {
-		CarAssemblyProcess assemblyProcess = carMechanic.getWorkStation().getAssemblyProcess();
+		WorkStation workStation = carMechanic.getWorkStation();
+		CarAssemblyProcess assemblyProcess = workStation.getAssemblyProcess();
 		assemblyProcess.completeTask(lastTask, time);
+		// example, a workstation has 3 tasks, time at the station normally
+		// takes 60min we assume each task lasts as long as the other so one
+		// task takes 60/3=20 min, if we complete a task in e.g. 10 minutes we
+		// are 20-10=10 minutes faster done
+		workStation.getCurrentCarOrder().getDeliveryTime()
+				.setTimeSpentOnTaskAtWorkpost(workStation.getClass(), 60 / assemblyProcess.getTasks().size() - time);
 		getUi().showTaskCompleted(lastTask);
-		if (assemblyProcess.getPendingTasks().isEmpty())
+		if (assemblyProcess.getPendingTasks().isEmpty()) {
 			getUi().showAllTasksCompleted();
-		else
+		} else
 			getUi().showPendingAssemblyTasks(assemblyProcess.getPendingTasks());
 	}
 
@@ -143,12 +151,13 @@ public class WorkStationController extends Controller {
 				if (last != null) {
 					getCompany().getProductionSchedule().completeOrder(last);
 					lastStation.init();
+					getUi().showWorkOrderCompleted(last);
 				}
 
 				WorkStation first = getCompany().getAssemblyLine().getLayout().getWorkStations().get(0);
 				if (first != null) {
 					lastStation.setCurrentCarOrder(first.getCurrentCarOrder());
-					if (getCompany().getProductionSchedule().getTime()
+					if (AssemAssist.getTimeManager().getTime()
 							.isBefore(new DateTime().withHourOfDay(20).withMinuteOfHour(0).withSecondOfMinute(0))
 							&& !getCompany().getProductionSchedule().getPendingCarOrders().isEmpty()) {
 						first.setCurrentCarOrder(getCompany().getProductionSchedule().getNextWorkCarOrder());

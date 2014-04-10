@@ -14,7 +14,6 @@ public class AssemblyLine {
 		return layout;
 	}
 
-	// TODO better documentation
 	/**
 	 * We can advance when all tasks are finished on all workstations
 	 * 

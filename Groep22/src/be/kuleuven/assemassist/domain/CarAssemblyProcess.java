@@ -1,6 +1,5 @@
 package be.kuleuven.assemassist.domain;
 
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -32,11 +31,11 @@ public class CarAssemblyProcess {
 			taskStatus.put(t, carAssemblyProcess.taskStatus.get(t));
 	}
 
-	public Queue<AssemblyTask> getAllTasks() {
-		return (Queue<AssemblyTask>) Collections.unmodifiableCollection(getTasks());
-	}
+	// public Queue<AssemblyTask> getAllTasks() {
+	// return Collections.unmodifiableCollection(getTasks());
+	// }
 
-	private Queue<AssemblyTask> getTasks() {
+	public Queue<AssemblyTask> getTasks() {
 		return this.tasks;
 	}
 
@@ -54,6 +53,14 @@ public class CarAssemblyProcess {
 		if (time <= 0)
 			throw new IllegalArgumentException("Invalid time in minutes for task completion: " + time);
 		taskStatus.put(task, time);
+	}
+
+	public int getTotalTimeSpentOnTasks() {
+		int total = 0;
+		for (Integer i : taskStatus.values()) {
+			total += i;
+		}
+		return total;
 	}
 
 	public void resetProcess() {
