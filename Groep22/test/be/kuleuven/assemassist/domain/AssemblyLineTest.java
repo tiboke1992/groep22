@@ -12,7 +12,6 @@ import org.junit.Test;
 
 import be.kuleuven.assemassist.domain.carmodel.CarModelSpecification;
 import be.kuleuven.assemassist.domain.options.CarOption;
-import be.kuleuven.assemassist.domain.task.AssemblyTask;
 import be.kuleuven.assemassist.domain.workpost.AccessoriesPost;
 import be.kuleuven.assemassist.domain.workpost.DriveTrainPost;
 import be.kuleuven.assemassist.domain.workpost.WorkStation;
@@ -83,7 +82,7 @@ public class AssemblyLineTest {
 		assemblyLine.getLayout().addWorkStation(driveTrain);
 		assemblyLine.getLayout().addWorkStation(accessories);
 		for (AssemblyTask task : driveTrain.getAssemblyProcess().getPendingTasks())
-			driveTrain.getAssemblyProcess().completeTask(task);
+			driveTrain.getAssemblyProcess().completeTask(task, 60);
 		assertTrue(assemblyLine.canAdvance());
 	}
 }

@@ -14,8 +14,6 @@ public enum Spoiler implements CarOption {
 
 	@Override
 	public String toString() {
-		if (this == NONE)
-			return "";
 		return capitalizeFirstCharacter(name());
 	}
 }

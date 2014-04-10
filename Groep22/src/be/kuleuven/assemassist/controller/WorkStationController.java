@@ -1,19 +1,18 @@
 package be.kuleuven.assemassist.controller;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
 import org.joda.time.DateTime;
 
+import be.kuleuven.assemassist.domain.AssemblyTask;
+import be.kuleuven.assemassist.domain.CarAssemblyProcess;
 import be.kuleuven.assemassist.domain.CarManufacturingCompany;
 import be.kuleuven.assemassist.domain.CarOrder;
 import be.kuleuven.assemassist.domain.role.CarMechanic;
-import be.kuleuven.assemassist.domain.task.AssemblyTask;
-import be.kuleuven.assemassist.domain.task.action.Action;
 import be.kuleuven.assemassist.domain.workpost.WorkStation;
 import be.kuleuven.assemassist.event.AssemblyAdvanceEvent;
-import be.kuleuven.assemassist.event.CompleteActionEvent;
+import be.kuleuven.assemassist.event.CompleteTaskEvent;
 import be.kuleuven.assemassist.event.Event;
 import be.kuleuven.assemassist.event.LoginEvent;
 import be.kuleuven.assemassist.event.SelectTaskEvent;
@@ -70,15 +69,8 @@ public class WorkStationController extends Controller {
 	public void selectTask(int option) {
 		try {
 			List<AssemblyTask> tasks = carMechanic.getWorkStation().getAssemblyProcess().getPendingTasks();
-			// if (option > 0 && option <= tasks.size()) { //commented out
-			// because if not in range it should throw an error since this
-			// should never happen
 			lastTask = tasks.get(option - 1);
-			List<Action> actions = new ArrayList<>();
-			for (Action a : lastTask.getPendingActions())
-				actions.add(a);
-			getUi().showSequence(actions);
-			// }
+			getUi().showHandleTask(carMechanic);
 		} catch (Exception t) {
 			getUi().showError(t);
 			getUi().showLoginOptions();
@@ -93,21 +85,17 @@ public class WorkStationController extends Controller {
 	 * This method will complete a single action it then checks if all actions
 	 * are completed for the assembly task, it then tells the gui to show the
 	 * remaining actions
+	 * 
+	 * @param time
 	 */
-	public void completeNextAction() {
-		if (lastTask == null)
-			throw new IllegalStateException();
-		try {
-			lastTask.completeAction();
-			if (lastTask.getPendingActions().isEmpty()) {
-				carMechanic.getWorkStation().getAssemblyProcess().completeTask(lastTask);
-				getUi().showTaskCompleted(lastTask);
-			}
-			getUi().showPendingAssemblyTasks(carMechanic.getWorkStation().getAssemblyProcess().getPendingTasks());
-		} catch (Exception t) {
-			getUi().showError(t);
-			getUi().showLoginOptions();
-		}
+	public void completeTask(int time) {
+		CarAssemblyProcess assemblyProcess = carMechanic.getWorkStation().getAssemblyProcess();
+		assemblyProcess.completeTask(lastTask, time);
+		getUi().showTaskCompleted(lastTask);
+		if (assemblyProcess.getPendingTasks().isEmpty())
+			getUi().showAllTasksCompleted();
+		else
+			getUi().showPendingAssemblyTasks(assemblyProcess.getPendingTasks());
 	}
 
 	private String getOverview() {
@@ -191,9 +179,12 @@ public class WorkStationController extends Controller {
 			selectWorkStation(((WorkStationSelectionEvent) event).getWorkStationId());
 		} else if (event instanceof SelectTaskEvent) {
 			selectTask(((SelectTaskEvent) event).getTaskId());
-		} else if (event instanceof CompleteActionEvent)
-			completeNextAction();
-		else if (event instanceof ShowWorkPostsMenuEvent)
+		} else if (event instanceof CompleteTaskEvent)
+			completeTask(((CompleteTaskEvent) event).getTimeToComplete());
+		else if (event instanceof ShowWorkPostsMenuEvent) {
+			ShowWorkPostsMenuEvent e = (ShowWorkPostsMenuEvent) event;
+			setCarMechanic(e.getCarMechanic());
 			getUi().showWorkPostMenu(getWorkStations());
+		}
 	}
 }

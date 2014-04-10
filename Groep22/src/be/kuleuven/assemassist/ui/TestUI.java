@@ -9,10 +9,10 @@ import org.joda.time.DateTime;
 import be.kuleuven.assemassist.controller.OrderController;
 import be.kuleuven.assemassist.controller.SystemController;
 import be.kuleuven.assemassist.controller.WorkStationController;
+import be.kuleuven.assemassist.domain.AssemblyTask;
 import be.kuleuven.assemassist.domain.carmodel.CarModelSpecification;
 import be.kuleuven.assemassist.domain.options.CarOption;
-import be.kuleuven.assemassist.domain.task.AssemblyTask;
-import be.kuleuven.assemassist.domain.task.action.Action;
+import be.kuleuven.assemassist.domain.role.CarMechanic;
 import be.kuleuven.assemassist.domain.workpost.WorkStation;
 
 public class TestUI extends UI {
@@ -80,7 +80,7 @@ public class TestUI extends UI {
 	}
 
 	@Override
-	public void showSequence(List<Action> actions) {
+	public void showHandleTask(CarMechanic mec) {
 	}
 
 	@Override

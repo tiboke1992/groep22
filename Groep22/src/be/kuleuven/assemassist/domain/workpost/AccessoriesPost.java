@@ -1,9 +1,8 @@
 package be.kuleuven.assemassist.domain.workpost;
 
+import be.kuleuven.assemassist.domain.AssemblyTask;
 import be.kuleuven.assemassist.domain.CarAssemblyProcess;
 import be.kuleuven.assemassist.domain.ProductionSchedule;
-import be.kuleuven.assemassist.domain.task.InstallSeats;
-import be.kuleuven.assemassist.domain.task.MountWheels;
 
 /**
  * This class is the Accessories Post of the assembly process.
@@ -28,8 +27,8 @@ public class AccessoriesPost extends WorkStation {
 	@Override
 	public void init() {
 		CarAssemblyProcess assemblyProcess = new CarAssemblyProcess();
-		assemblyProcess.addTask(new InstallSeats());
-		assemblyProcess.addTask(new MountWheels());
+		assemblyProcess.addTask(AssemblyTask.INSTALL_SEATS);
+		assemblyProcess.addTask(AssemblyTask.MOUNT_WHEELS);
 		setAssemblyProcess(assemblyProcess);
 	}
 

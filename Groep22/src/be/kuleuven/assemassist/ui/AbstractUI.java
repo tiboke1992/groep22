@@ -21,7 +21,12 @@ public abstract class AbstractUI {
 	}
 
 	public void pushEvent(Event e) {
-		for (Controller c : controllers)
-			c.handleEvent(e);
+		try {
+			for (Controller c : controllers)
+				c.handleEvent(e);
+		} catch (Exception ex) {
+			System.out.println("Exception with handling event!");
+			ex.printStackTrace();
+		}
 	}
 }
