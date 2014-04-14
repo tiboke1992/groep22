@@ -21,6 +21,7 @@ import be.kuleuven.assemassist.domain.workpost.WorkStation;
 import be.kuleuven.assemassist.event.CarOrderCompletedEvent;
 import be.kuleuven.assemassist.event.CarOrderCreatedEvent;
 import be.kuleuven.assemassist.event.CarOrderModelSelectedEvent;
+import be.kuleuven.assemassist.event.CheckAssemblyLineStatusEvent;
 import be.kuleuven.assemassist.event.LoginEvent;
 import be.kuleuven.assemassist.event.SelectTaskEvent;
 import be.kuleuven.assemassist.event.ShowCarModelsEvent;
@@ -68,7 +69,7 @@ public class UI extends AbstractUI {
 		try {
 			int option = scanner.nextInt();
 			if (option == 1) {
-				// pushEvent(new AssemblyAdvanceEvent());
+				pushEvent(new CheckAssemblyLineStatusEvent());
 			} else if (option == 2) {
 				showLoginOptions();
 			} else {
@@ -296,6 +297,11 @@ public class UI extends AbstractUI {
 	public void showWorkOrderCompleted(CarOrder order) {
 		System.out.println("Order " + order + " has been completed.");
 		pushEvent(new CarOrderCompletedEvent(order));
+	}
+
+	public void showAssemblyLineStatus(String overview) {
+		System.out.println(overview);
+		showManagerMenu();
 	}
 
 }

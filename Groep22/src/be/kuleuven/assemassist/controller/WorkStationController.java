@@ -14,6 +14,7 @@ import be.kuleuven.assemassist.domain.CarOrder;
 import be.kuleuven.assemassist.domain.role.CarMechanic;
 import be.kuleuven.assemassist.domain.workpost.WorkStation;
 import be.kuleuven.assemassist.event.CarOrderCreatedEvent;
+import be.kuleuven.assemassist.event.CheckAssemblyLineStatusEvent;
 import be.kuleuven.assemassist.event.Event;
 import be.kuleuven.assemassist.event.LoginEvent;
 import be.kuleuven.assemassist.event.SelectTaskEvent;
@@ -110,28 +111,40 @@ public class WorkStationController extends Controller {
 	}
 
 	private String getOverview() {
-		String result = "Current State :";
+		StringBuilder overview = new StringBuilder("Current State :");
 		for (WorkStation station : getWorkStations()) {
 			String current = (station.getCurrentCarOrder() == null) ? "There is currently no car at this workstation"
 					: station.getCurrentCarOrder().toString();
-			result += "\nWorkstation : " + station + "\nCurrent order: " + current;
-			result += "\n\nPending Tasks : \n";
-			result += getPendingTasksText(station);
-
+			overview.append("\nWorkstation : ").append(station).append("\nCurrent order: ").append(current)
+					.append("\n\nCompleted Tasks : \n").append(getCompletedTasksText(station))
+					.append("\nPending Tasks : \n").append(getPendingTasksText(station));
 		}
-		return result;
+		return overview.toString();
+	}
+
+	private String getCompletedTasksText(WorkStation station) {
+		StringBuilder result = new StringBuilder();
+		List<AssemblyTask> completedTasks = station.getAssemblyProcess().getCompletedTasks();
+		if (completedTasks.isEmpty()) {
+			result.append("\tNo completed tasks.");
+		} else {
+			for (AssemblyTask task : completedTasks) {
+				result.append("\t").append(task.toString()).append("\n");
+			}
+		}
+		return result.toString();
 	}
 
 	private String getPendingTasksText(WorkStation station) {
-		String result = "";
+		StringBuilder result = new StringBuilder();
 		if (station.getAssemblyProcess().getPendingTasks().isEmpty()) {
-			result += "No pending tasks.";
+			result.append("\tNo pending tasks.");
 		} else {
 			for (AssemblyTask task : station.getAssemblyProcess().getPendingTasks()) {
-				result += task.toString() + "\n";
+				result.append("\t").append(task.toString()).append("\n");
 			}
 		}
-		return result;
+		return result.toString();
 	}
 
 	public boolean getNonePendingAllEmpty() {
@@ -157,7 +170,6 @@ public class WorkStationController extends Controller {
 			}
 
 			WorkStation first = getCompany().getAssemblyLine().getFirstWorkStation();
-			// if (first != null) {
 			lastStation.setCurrentCarOrder(first.getCurrentCarOrder());
 			// TODO enough cars for today?
 			if (getTimeManager().getTime().isBefore(
@@ -168,9 +180,7 @@ public class WorkStationController extends Controller {
 				first.setCurrentCarOrder(null);
 			}
 			first.init();
-			// getUi().showOverview(getOverview());
 			getUi().showAssemblyLineAdvanced();
-			// }
 		} catch (Exception t) {
 			getUi().showError(t);
 		}
@@ -194,6 +204,8 @@ public class WorkStationController extends Controller {
 		} else if (event instanceof CarOrderCreatedEvent) {
 			if (getCompany().getAssemblyLine().canAdvance())
 				advanceAssemblyLine();
+		} else if (event instanceof CheckAssemblyLineStatusEvent) {
+			getUi().showAssemblyLineStatus(getOverview());
 		}
 	}
 }

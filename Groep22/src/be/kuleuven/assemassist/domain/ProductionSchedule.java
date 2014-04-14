@@ -51,11 +51,17 @@ public class ProductionSchedule {
 	}
 
 	public void addCarOrder(CarOrder order) {
+		if (order == null)
+			throw new IllegalArgumentException("Cannot add null order.");
 		pendingCarOrders.add(order);
 		workingCarOrders.add(order);
 	}
 
 	public void completeOrder(CarOrder order) {
+		if (order == null)
+			throw new IllegalArgumentException("Cannot complete null order.");
+		if (!pendingCarOrders.contains(order))
+			throw new IllegalArgumentException("Order is not a pending order.");
 		completedCarOrders.add(order);
 		pendingCarOrders.remove(order);
 	}
