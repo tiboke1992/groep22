@@ -1,23 +1,24 @@
 package be.kuleuven.assemassist.controller;
 
+import static be.kuleuven.assemassist.AssemAssist.getTimeManager;
+
 import java.util.Collections;
 import java.util.List;
 
 import org.joda.time.DateTime;
 
-import be.kuleuven.assemassist.AssemAssist;
 import be.kuleuven.assemassist.domain.AssemblyTask;
 import be.kuleuven.assemassist.domain.CarAssemblyProcess;
 import be.kuleuven.assemassist.domain.CarManufacturingCompany;
 import be.kuleuven.assemassist.domain.CarOrder;
 import be.kuleuven.assemassist.domain.role.CarMechanic;
 import be.kuleuven.assemassist.domain.workpost.WorkStation;
-import be.kuleuven.assemassist.event.AssemblyAdvanceEvent;
-import be.kuleuven.assemassist.event.CompleteTaskEvent;
+import be.kuleuven.assemassist.event.CarOrderCreatedEvent;
 import be.kuleuven.assemassist.event.Event;
 import be.kuleuven.assemassist.event.LoginEvent;
 import be.kuleuven.assemassist.event.SelectTaskEvent;
 import be.kuleuven.assemassist.event.ShowWorkPostsMenuEvent;
+import be.kuleuven.assemassist.event.TaskCompletedEvent;
 import be.kuleuven.assemassist.event.WorkStationSelectionEvent;
 
 /**
@@ -99,6 +100,8 @@ public class WorkStationController extends Controller {
 				.setEstimatedTime(
 						workStation.getCurrentCarOrder().getDeliveryTime().getEstimatedTime()
 								- (workStation.getEstimatedTaskTimeCost() - time));
+		if (getCompany().getAssemblyLine().canAdvance())
+			advanceAssemblyLine();
 		getUi().showTaskCompleted(lastTask);
 		if (assemblyProcess.getPendingTasks().isEmpty()) {
 			getUi().showAllTasksCompleted();
@@ -145,55 +148,52 @@ public class WorkStationController extends Controller {
 
 	public void advanceAssemblyLine() {
 		try {
-			if (!getNonePendingAllEmpty() && getCompany().getAssemblyLine().canAdvance()) {
-				WorkStation lastStation = getCompany().getAssemblyLine().getLastWorkStation();
-				CarOrder last = lastStation.getCurrentCarOrder();
-				if (last != null) {
-					getCompany().getProductionSchedule().completeOrder(last);
-					lastStation.init();
-					getUi().showWorkOrderCompleted(last);
-				}
+			WorkStation lastStation = getCompany().getAssemblyLine().getLastWorkStation();
+			CarOrder last = lastStation.getCurrentCarOrder();
+			if (last != null) {
+				getCompany().getProductionSchedule().completeOrder(last);
+				lastStation.init();
+				getUi().showWorkOrderCompleted(last);
+			}
 
-				WorkStation first = getCompany().getAssemblyLine().getLayout().getWorkStations().get(0);
-				if (first != null) {
-					lastStation.setCurrentCarOrder(first.getCurrentCarOrder());
-					if (AssemAssist.getTimeManager().getTime()
-							.isBefore(new DateTime().withHourOfDay(20).withMinuteOfHour(0).withSecondOfMinute(0))
-							&& !getCompany().getProductionSchedule().getPendingCarOrders().isEmpty()) {
-						first.setCurrentCarOrder(getCompany().getProductionSchedule().getNextWorkCarOrder());
-					} else {
-						first.setCurrentCarOrder(null);
-					}
-					first.init();
-					getUi().showOverview(getOverview());
-					getUi().showAssemblyLineAdvanced();
-				}
-			} else
-				getUi().showCanNotAdvanceError();
-			getUi().showManagerMenu();
+			WorkStation first = getCompany().getAssemblyLine().getFirstWorkStation();
+			// if (first != null) {
+			lastStation.setCurrentCarOrder(first.getCurrentCarOrder());
+			// TODO enough cars for today?
+			if (getTimeManager().getTime().isBefore(
+					new DateTime().withHourOfDay(20).withMinuteOfHour(0).withSecondOfMinute(0))
+					&& !getCompany().getProductionSchedule().getPendingCarOrders().isEmpty()) {
+				first.setCurrentCarOrder(getCompany().getProductionSchedule().getNextWorkCarOrder());
+			} else {
+				first.setCurrentCarOrder(null);
+			}
+			first.init();
+			// getUi().showOverview(getOverview());
+			getUi().showAssemblyLineAdvanced();
+			// }
 		} catch (Exception t) {
 			getUi().showError(t);
-			getUi().showLoginOptions();
 		}
 	}
 
 	@Override
 	public void handleEvent(Event event) {
-		if (event instanceof AssemblyAdvanceEvent)
-			advanceAssemblyLine();
-		else if (event instanceof LoginEvent) {
+		if (event instanceof LoginEvent) {
 			if (((LoginEvent) event).getRoleId() == 2)
 				setCarMechanic(new CarMechanic());
 		} else if (event instanceof WorkStationSelectionEvent) {
 			selectWorkStation(((WorkStationSelectionEvent) event).getWorkStationId());
 		} else if (event instanceof SelectTaskEvent) {
 			selectTask(((SelectTaskEvent) event).getTaskId());
-		} else if (event instanceof CompleteTaskEvent)
-			completeTask(((CompleteTaskEvent) event).getTimeToComplete());
+		} else if (event instanceof TaskCompletedEvent)
+			completeTask(((TaskCompletedEvent) event).getTimeToComplete());
 		else if (event instanceof ShowWorkPostsMenuEvent) {
 			ShowWorkPostsMenuEvent e = (ShowWorkPostsMenuEvent) event;
 			setCarMechanic(e.getCarMechanic());
 			getUi().showWorkPostMenu(getWorkStations());
+		} else if (event instanceof CarOrderCreatedEvent) {
+			if (getCompany().getAssemblyLine().canAdvance())
+				advanceAssemblyLine();
 		}
 	}
 }

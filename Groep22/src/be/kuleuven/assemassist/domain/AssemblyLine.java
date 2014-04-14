@@ -45,4 +45,10 @@ public class AssemblyLine {
 			return null;
 		return layout.getWorkStations().get(layout.getWorkStations().size() - 1);
 	}
+
+	public WorkStation getFirstWorkStation() {
+		if (layout.getWorkStations().isEmpty())
+			return null;
+		return layout.getWorkStations().get(0);
+	}
 }

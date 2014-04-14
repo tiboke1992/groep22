@@ -34,11 +34,7 @@ public class TestUI extends UI {
 	}
 
 	@Override
-	public void showCanNotAdvanceError() {
-	}
-
-	@Override
-	public void showDeliveryTime(DateTime time) {
+	public void onOrderCompleted(DateTime time) {
 	}
 
 	@Override
