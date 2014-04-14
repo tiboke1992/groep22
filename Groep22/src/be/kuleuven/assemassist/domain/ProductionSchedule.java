@@ -42,6 +42,15 @@ public class ProductionSchedule {
 		return order.getDeliveryTime().getStartTime().plusMinutes(time);
 	}
 
+	public boolean canHandleAnotherCarOrder(CarOrder order) {// TODO use
+		DateTime lastExpectedOrderTime = calculateExpectedDeliveryTime(pendingCarOrders
+				.get(pendingCarOrders.size() - 1));
+		int time = order.getDeliveryTime().getEstimatedTime();
+		DateTime maxTimeForNewOrder = new DateTime(lastExpectedOrderTime).withHourOfDay(22).withMinuteOfHour(0)
+				.withSecondOfMinute(0).minusMinutes(time);
+		return lastExpectedOrderTime.isBefore(maxTimeForNewOrder);
+	}
+
 	public List<CarOrder> getPendingCarOrders() {
 		return pendingCarOrders;
 	}
