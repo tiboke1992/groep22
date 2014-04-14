@@ -17,12 +17,16 @@ import be.kuleuven.assemassist.domain.carmodel.CarModelSpecification;
 import be.kuleuven.assemassist.domain.options.CarOption;
 import be.kuleuven.assemassist.domain.options.Spoiler;
 import be.kuleuven.assemassist.domain.role.CarMechanic;
+import be.kuleuven.assemassist.domain.sorting.SortingAlgorithm;
+import be.kuleuven.assemassist.domain.sorting.SupportedSortingAlgorithms;
 import be.kuleuven.assemassist.domain.workpost.WorkStation;
 import be.kuleuven.assemassist.event.CarOrderCompletedEvent;
 import be.kuleuven.assemassist.event.CarOrderCreatedEvent;
 import be.kuleuven.assemassist.event.CarOrderModelSelectedEvent;
+import be.kuleuven.assemassist.event.ChangeSchedulingAlgorithmEvent;
 import be.kuleuven.assemassist.event.CheckAssemblyLineStatusEvent;
 import be.kuleuven.assemassist.event.LoginEvent;
+import be.kuleuven.assemassist.event.SelectBatchSortingAlgorithm;
 import be.kuleuven.assemassist.event.SelectTaskEvent;
 import be.kuleuven.assemassist.event.ShowCarModelsEvent;
 import be.kuleuven.assemassist.event.ShowOrderDetailsEvent;
@@ -64,16 +68,43 @@ public class UI extends AbstractUI {
 
 	public void showManagerMenu() {
 		System.out.println("1) check assembly line status");
-		System.out.println("2) login as someone else");
+		System.out.println("2) select alternative scheduling algorithm ");
+		System.out.println("3) login as someone else");
 		System.out.println("*) exit");
 		try {
 			int option = scanner.nextInt();
 			if (option == 1) {
 				pushEvent(new CheckAssemblyLineStatusEvent());
 			} else if (option == 2) {
+				showSchedulingAlgorithms();
+			} else if (option == 3) {
 				showLoginOptions();
 			} else {
 				shutdown();
+			}
+		} catch (Throwable t) {
+			shutdown();
+		}
+	}
+
+	// TODO current algoritme nog tonen
+	public void showSchedulingAlgorithms() {
+		System.out.println("0) exit");
+		int counter = 1;
+		for (SupportedSortingAlgorithms sort : SupportedSortingAlgorithms
+				.values()) {
+			System.out.println(counter + ") " + sort.toString());
+			counter++;
+		}
+		try {
+			int option = scanner.nextInt();
+			if (option == 0) {
+				showManagerMenu();
+			} else if (option > 0
+					&& option <= SupportedSortingAlgorithms.values().length) {
+				SupportedSortingAlgorithms sort = SupportedSortingAlgorithms
+						.values()[option - 1];
+				pushEvent(new ChangeSchedulingAlgorithmEvent(sort));
 			}
 		} catch (Throwable t) {
 			shutdown();
@@ -85,19 +116,29 @@ public class UI extends AbstractUI {
 		System.out.println();
 	}
 
-	public void showOrders(Collection<CarOrder> pending, Collection<CarOrder> completed, ProductionSchedule schedule) {
+	public void showOrders(Collection<CarOrder> pending,
+			Collection<CarOrder> completed, ProductionSchedule schedule) {
 		System.out.println();
 		System.out.println("Overview:");
 		System.out.println("Pending orders:");
 		for (CarOrder order : pending) {
-			System.out.println(order.getId() + "\t\t"
-					+ PENDING_FORMAT.format(schedule.calculateExpectedDeliveryTime(order).toDate()));
+			System.out.println(order.getId()
+					+ "\t\t"
+					+ PENDING_FORMAT.format(schedule
+							.calculateExpectedDeliveryTime(order).toDate()));
 		}
 		System.out.println("Completed orders:");
 		for (CarOrder order : completed) {
-			System.out.println(order.getId() + "\t\t"
-					+ COMPLETED_FORMAT.format(order.getDeliveryTime().getCompletionTime().toDate()));
+			System.out.println(order.getId()
+					+ "\t\t"
+					+ COMPLETED_FORMAT.format(order.getDeliveryTime()
+							.getCompletionTime().toDate()));
 		}
+	}
+	
+	public void showChangedToFifoSort(){
+		System.out.println("Succesfully changed the sorting algorithm to FIFO-Sorting");
+		showManagerMenu();
 	}
 
 	public void showGarageHolderMenu() {
@@ -123,7 +164,8 @@ public class UI extends AbstractUI {
 		}
 	}
 
-	public void showOrderDetails(List<CarOrder> pending, List<CarOrder> completed, ProductionSchedule schedule) {
+	public void showOrderDetails(List<CarOrder> pending,
+			List<CarOrder> completed, ProductionSchedule schedule) {
 		int i = 0;
 		System.out.println();
 		System.out.println("Pending orders:");
@@ -140,7 +182,8 @@ public class UI extends AbstractUI {
 			if (option >= 0 && option < pending.size()) {
 				showOrderDetail(pending.get(option), schedule);
 			} else if ((option - pending.size()) < completed.size()) {
-				showOrderDetail(completed.get(option - pending.size()), schedule);
+				showOrderDetail(completed.get(option - pending.size()),
+						schedule);
 			} else
 				showGarageHolderMenu();
 		} catch (Throwable t) {
@@ -148,13 +191,16 @@ public class UI extends AbstractUI {
 		}
 	}
 
-	private void showOrderDetail(CarOrder order, ProductionSchedule productionSchedule) {
+	private void showOrderDetail(CarOrder order,
+			ProductionSchedule productionSchedule) {
 		System.out.println("Order " + order.getId());
 		if (order.getDeliveryTime().getCompletionTime() == null)
 			System.out.println("\tEstimated delivery time: "
-					+ productionSchedule.calculateExpectedDeliveryTime(order).toDate());
+					+ productionSchedule.calculateExpectedDeliveryTime(order)
+							.toDate());
 		else
-			System.out.println("\tDelivery time: " + order.getDeliveryTime().getCompletionTime());
+			System.out.println("\tDelivery time: "
+					+ order.getDeliveryTime().getCompletionTime());
 		System.out.println("\tOptions:");
 		System.out.println("\t\tEngine: " + order.getEngine());
 		System.out.println("\t\tGearbox: " + order.getGearbox());
@@ -180,7 +226,8 @@ public class UI extends AbstractUI {
 		try {
 			int option = scanner.nextInt();
 			if (option > 0 && option <= carModels.size())
-				pushEvent(new CarOrderModelSelectedEvent(carModels.get(option - 1)));
+				pushEvent(new CarOrderModelSelectedEvent(
+						carModels.get(option - 1)));
 			else
 				shutdown();
 		} catch (Throwable t) {
@@ -188,10 +235,12 @@ public class UI extends AbstractUI {
 		}
 	}
 
-	public <T extends CarOption> T askCarOption(CarModelSpecification spec, Class<T> carOptionClass) {
+	public <T extends CarOption> T askCarOption(CarModelSpecification spec,
+			Class<T> carOptionClass) {
 		System.out.println();
 		System.out.println("Choose an " + carOptionClass.getSimpleName() + ":");
-		List<T> possibleOptions = spec.filterOutInvalidOptions(carOptionClass.getEnumConstants(), carOptionClass);
+		List<T> possibleOptions = spec.filterOutInvalidOptions(
+				carOptionClass.getEnumConstants(), carOptionClass);
 		for (int i = 0; i < possibleOptions.size(); i++)
 			System.out.println((i + 1) + ") " + possibleOptions.get(i));
 		System.out.println("*) Exit");
@@ -207,7 +256,8 @@ public class UI extends AbstractUI {
 	}
 
 	public void onOrderCompleted(DateTime time) {
-		System.out.println("Estimated delivery time: " + PENDING_FORMAT.format(time.toDate()));
+		System.out.println("Estimated delivery time: "
+				+ PENDING_FORMAT.format(time.toDate()));
 		pushEvent(new CarOrderCreatedEvent());
 	}
 
@@ -266,7 +316,8 @@ public class UI extends AbstractUI {
 		try {
 			int option = scanner.nextInt();
 			if (option == 1) {
-				System.out.println("Enter the time it took to complete this task.");
+				System.out
+						.println("Enter the time it took to complete this task.");
 				pushEvent(new TaskCompletedEvent(scanner.nextInt()));
 			} else
 				pushEvent(new ShowWorkPostsMenuEvent(mechanic));
@@ -301,6 +352,44 @@ public class UI extends AbstractUI {
 
 	public void showAssemblyLineStatus(String overview) {
 		System.out.println(overview);
+		showManagerMenu();
+	}
+
+	public void showBatchPermutations(List<List<CarOption>> caroptions) {
+		if(caroptions.isEmpty()){
+			System.out.println("There is no set of options with more then 3 orders");
+			showManagerMenu();
+		}else{
+			System.out.println("0) exit");
+			int counter = 1;
+			for (List<CarOption> options : caroptions) {
+				String str = "";
+				for (CarOption option : options) {
+					str += option.toString() + " - ";
+				}
+				System.out.println("Option : " + counter + ") " + str);
+				counter++;
+			}
+			try {
+				int option = scanner.nextInt();
+				if (option == 0) {
+					showManagerMenu();;
+				} else if(option > 0 && option <= caroptions.size()) {
+					List<CarOption> selectedOption = caroptions.get(option - 1);
+					pushEvent(new SelectBatchSortingAlgorithm(selectedOption));
+				}else{
+					shutdown();
+				}
+			} catch (Throwable t) {
+				shutdown();
+			}
+			
+		}
+		
+	}
+
+	public void showBatchSortSelected() {
+		System.out.println("Succesfully changed the sorting algorithm to Batch-Sorting");
 		showManagerMenu();
 	}
 

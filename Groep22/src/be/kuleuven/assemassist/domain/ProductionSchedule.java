@@ -69,6 +69,10 @@ public class ProductionSchedule {
 	public List<CarOrder> getCompletedCarOrders() {
 		return completedCarOrders;
 	}
+	
+	public List<CarOrder> getWorkingCarOrders(){
+		return this.workingCarOrders;
+	}
 
 	public void addCarOrder(CarOrder order) {
 		if (order == null)
@@ -127,7 +131,7 @@ public class ProductionSchedule {
 	public List<CarOption> getCarOptions() {
 		return carOptions;
 	}
-
+	
 	public void setCarOptions(List<CarOption> carOptions) {
 		this.carOptions = carOptions;
 	}
