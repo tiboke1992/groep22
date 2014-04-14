@@ -1,10 +1,10 @@
 package be.kuleuven.assemassist.event;
 
-public class CompleteTaskEvent implements Event {
+public class TaskCompletedEvent implements Event {
 
 	private final int timeToComplete;
 
-	public CompleteTaskEvent(int timeToComplete) {
+	public TaskCompletedEvent(int timeToComplete) {
 		this.timeToComplete = timeToComplete;
 	}
 

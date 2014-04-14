@@ -47,6 +47,14 @@ public class CarAssemblyProcess {
 		return copy;
 	}
 
+	public List<AssemblyTask> getCompletedTasks() {
+		List<AssemblyTask> copy = new LinkedList<>();
+		for (AssemblyTask task : tasks)
+			if (taskStatus.get(task) > 0)
+				copy.add(task);
+		return copy;
+	}
+
 	public void completeTask(AssemblyTask task, int time) {
 		if (!taskStatus.keySet().contains(task))
 			throw new IllegalArgumentException("The task " + task + " does not belong to this assembly process.");

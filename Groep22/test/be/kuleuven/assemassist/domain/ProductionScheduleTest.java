@@ -2,8 +2,6 @@ package be.kuleuven.assemassist.domain;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 import java.util.ArrayList;
@@ -24,16 +22,6 @@ public class ProductionScheduleTest {
 		schedule.addCarOrder(new CarOrder(new CarModel(new CarManufacturingCompany("bla", new Manager()), "bla", 50,
 				new CarModelSpecification(new ArrayList<CarOption>()))));
 		assertEquals(1, schedule.getPendingCarOrders().size());
-	}
-
-	@Test
-	public void testAddCarOrder_initsCarOrder() {
-		ProductionSchedule schedule = new ProductionSchedule();
-		CarOrder order = new CarOrder(new CarModel(new CarManufacturingCompany("bla", new Manager()), "bla", 50,
-				new CarModelSpecification(new ArrayList<CarOption>())));
-		assertNull(order.getDeliveryTime());
-		schedule.addCarOrder(order);
-		assertNotNull(order.getDeliveryTime());
 	}
 
 	@Test(expected = IllegalArgumentException.class)

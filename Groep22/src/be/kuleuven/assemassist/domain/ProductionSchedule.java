@@ -53,6 +53,15 @@ public class ProductionSchedule {
 		return order.getDeliveryTime().getStartTime().plusMinutes(time);
 	}
 
+	public boolean canHandleAnotherCarOrder(CarOrder order) {// TODO use
+		DateTime lastExpectedOrderTime = calculateExpectedDeliveryTime(pendingCarOrders
+				.get(pendingCarOrders.size() - 1));
+		int time = order.getDeliveryTime().getEstimatedTime();
+		DateTime maxTimeForNewOrder = new DateTime(lastExpectedOrderTime).withHourOfDay(22).withMinuteOfHour(0)
+				.withSecondOfMinute(0).minusMinutes(time);
+		return lastExpectedOrderTime.isBefore(maxTimeForNewOrder);
+	}
+
 	public List<CarOrder> getPendingCarOrders() {
 		return pendingCarOrders;
 	}
@@ -62,12 +71,18 @@ public class ProductionSchedule {
 	}
 
 	public void addCarOrder(CarOrder order) {
+		if (order == null)
+			throw new IllegalArgumentException("Cannot add null order.");
 		pendingCarOrders.add(order);
 		workingCarOrders.add(order);
 		this.sortCheck();
 	}
 
 	public void completeOrder(CarOrder order) {
+		if (order == null)
+			throw new IllegalArgumentException("Cannot complete null order.");
+		if (!pendingCarOrders.contains(order))
+			throw new IllegalArgumentException("Order is not a pending order.");
 		completedCarOrders.add(order);
 		pendingCarOrders.remove(order);
 	}

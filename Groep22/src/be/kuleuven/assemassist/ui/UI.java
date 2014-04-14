@@ -18,17 +18,18 @@ import be.kuleuven.assemassist.domain.options.CarOption;
 import be.kuleuven.assemassist.domain.options.Spoiler;
 import be.kuleuven.assemassist.domain.role.CarMechanic;
 import be.kuleuven.assemassist.domain.workpost.WorkStation;
-import be.kuleuven.assemassist.event.AssemblyAdvanceEvent;
 import be.kuleuven.assemassist.event.CarOrderCompletedEvent;
-import be.kuleuven.assemassist.event.CompleteTaskEvent;
+import be.kuleuven.assemassist.event.CarOrderCreatedEvent;
+import be.kuleuven.assemassist.event.CarOrderModelSelectedEvent;
+import be.kuleuven.assemassist.event.CheckAssemblyLineStatusEvent;
 import be.kuleuven.assemassist.event.LoginEvent;
-import be.kuleuven.assemassist.event.OrderEvent;
 import be.kuleuven.assemassist.event.SelectTaskEvent;
 import be.kuleuven.assemassist.event.ShowCarModelsEvent;
 import be.kuleuven.assemassist.event.ShowOrderDetailsEvent;
 import be.kuleuven.assemassist.event.ShowOrdersEvent;
 import be.kuleuven.assemassist.event.ShowWorkPostsMenuEvent;
 import be.kuleuven.assemassist.event.ShutdownEvent;
+import be.kuleuven.assemassist.event.TaskCompletedEvent;
 import be.kuleuven.assemassist.event.WorkStationSelectionEvent;
 
 public class UI extends AbstractUI {
@@ -62,13 +63,13 @@ public class UI extends AbstractUI {
 	}
 
 	public void showManagerMenu() {
-		System.out.println("1) advance assembly line");
+		System.out.println("1) check assembly line status");
 		System.out.println("2) login as someone else");
 		System.out.println("*) exit");
 		try {
 			int option = scanner.nextInt();
 			if (option == 1) {
-				pushEvent(new AssemblyAdvanceEvent());
+				pushEvent(new CheckAssemblyLineStatusEvent());
 			} else if (option == 2) {
 				showLoginOptions();
 			} else {
@@ -179,7 +180,7 @@ public class UI extends AbstractUI {
 		try {
 			int option = scanner.nextInt();
 			if (option > 0 && option <= carModels.size())
-				pushEvent(new OrderEvent(carModels.get(option - 1)));
+				pushEvent(new CarOrderModelSelectedEvent(carModels.get(option - 1)));
 			else
 				shutdown();
 		} catch (Throwable t) {
@@ -205,8 +206,9 @@ public class UI extends AbstractUI {
 		return null;
 	}
 
-	public void showDeliveryTime(DateTime time) {
+	public void onOrderCompleted(DateTime time) {
 		System.out.println("Estimated delivery time: " + PENDING_FORMAT.format(time.toDate()));
+		pushEvent(new CarOrderCreatedEvent());
 	}
 
 	public void showWorkPostMenu(List<WorkStation> workStations) {
@@ -265,7 +267,7 @@ public class UI extends AbstractUI {
 			int option = scanner.nextInt();
 			if (option == 1) {
 				System.out.println("Enter the time it took to complete this task.");
-				pushEvent(new CompleteTaskEvent(scanner.nextInt()));
+				pushEvent(new TaskCompletedEvent(scanner.nextInt()));
 			} else
 				pushEvent(new ShowWorkPostsMenuEvent(mechanic));
 		} catch (Throwable t) {
@@ -287,19 +289,19 @@ public class UI extends AbstractUI {
 		System.out.println(overview);
 	}
 
-	public void showCanNotAdvanceError() {
-		System.out.println("The assembly line could not be advanced.");
-		showManagerMenu();
-	}
-
 	public void showAssemblyLineAdvanced() {
+		System.out.println();
 		System.out.println("Assembly line succesfully advanced");
-		this.showManagerMenu();
 	}
 
 	public void showWorkOrderCompleted(CarOrder order) {
 		System.out.println("Order " + order + " has been completed.");
 		pushEvent(new CarOrderCompletedEvent(order));
+	}
+
+	public void showAssemblyLineStatus(String overview) {
+		System.out.println(overview);
+		showManagerMenu();
 	}
 
 }

@@ -16,7 +16,7 @@ import be.kuleuven.assemassist.domain.options.Spoiler;
 import be.kuleuven.assemassist.domain.options.Wheels;
 import be.kuleuven.assemassist.domain.workpost.WorkStation;
 import be.kuleuven.assemassist.event.Event;
-import be.kuleuven.assemassist.event.OrderEvent;
+import be.kuleuven.assemassist.event.CarOrderModelSelectedEvent;
 import be.kuleuven.assemassist.event.ShowCarModelsEvent;
 import be.kuleuven.assemassist.event.ShowOrderDetailsEvent;
 import be.kuleuven.assemassist.event.ShowOrdersEvent;
@@ -73,7 +73,7 @@ public class OrderController extends Controller {
 			}
 			order.init(getTimeManager().getTime(), totalEstimatedTimeCost);
 			getCompany().getProductionSchedule().addCarOrder(order);
-			getUi().showDeliveryTime(getCompany().getProductionSchedule().calculateExpectedDeliveryTime(order));
+			getUi().onOrderCompleted(getCompany().getProductionSchedule().calculateExpectedDeliveryTime(order));
 			getUi().showGarageHolderMenu();
 		} catch (Exception t) {
 			getUi().showError(t);
@@ -92,8 +92,8 @@ public class OrderController extends Controller {
 
 	@Override
 	public void handleEvent(Event event) {
-		if (event instanceof OrderEvent) {
-			makeOrder(((OrderEvent) event).getModel());
+		if (event instanceof CarOrderModelSelectedEvent) {
+			makeOrder(((CarOrderModelSelectedEvent) event).getModel());
 		} else if (event instanceof ShowOrdersEvent) {
 			getUi().showOrders(getPendingCarOrders(), getCompletedCarOrders(), getCompany().getProductionSchedule());
 		} else if (event instanceof ShowCarModelsEvent) {
