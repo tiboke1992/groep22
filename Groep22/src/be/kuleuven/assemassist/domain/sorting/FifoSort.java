@@ -6,6 +6,10 @@ import be.kuleuven.assemassist.domain.CarOrder;
 
 public class FifoSort extends SortingAlgorithm{
 
+	public FifoSort(){
+		
+	}
+	
 	public FifoSort(List<CarOrder> pending) {
 		super(pending);
 	}

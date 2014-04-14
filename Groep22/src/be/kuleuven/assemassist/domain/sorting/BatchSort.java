@@ -15,6 +15,10 @@ import be.kuleuven.assemassist.domain.options.Wheels;
 public class BatchSort extends SortingAlgorithm {
 
 	private List<CarOption> options;
+	
+	public BatchSort(){
+		
+	}
 
 	public BatchSort(List<CarOrder> pending) {
 		super(pending);
@@ -85,7 +89,7 @@ public class BatchSort extends SortingAlgorithm {
 		return result;
 	}
 
-	private int countSuitableCarOrders(List<CarOption> checkOptions) {
+	public int countSuitableCarOrders(List<CarOption> checkOptions) {
 		int result = 0;
 		for (CarOrder order : super.getPending()) {
 			boolean hasAllOptions = true;

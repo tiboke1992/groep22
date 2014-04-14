@@ -7,6 +7,10 @@ import be.kuleuven.assemassist.domain.CarOrder;
 public abstract class SortingAlgorithm {
 	
 	private List<CarOrder> pending;
+	
+	public SortingAlgorithm(){
+		
+	}
 
 	public SortingAlgorithm(List<CarOrder> pending){
 		this.setPending(pending);
@@ -16,7 +20,7 @@ public abstract class SortingAlgorithm {
 		return pending;
 	}
 
-	private void setPending(List<CarOrder> pending) {
+	public void setPending(List<CarOrder> pending) {
 		this.pending = pending;
 	}
 	
