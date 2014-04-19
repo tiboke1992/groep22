@@ -113,11 +113,15 @@ public class WorkStationController extends Controller {
 	private String getOverview() {
 		StringBuilder overview = new StringBuilder("Current State :");
 		for (WorkStation station : getWorkStations()) {
-			String current = (station.getCurrentCarOrder() == null) ? "There is currently no car at this workstation"
-					: station.getCurrentCarOrder().toString();
-			overview.append("\nWorkstation : ").append(station).append("\nCurrent order: ").append(current)
-					.append("\n\nCompleted Tasks : \n").append(getCompletedTasksText(station))
-					.append("\nPending Tasks : \n").append(getPendingTasksText(station));
+			if (station.getCurrentCarOrder() == null) {
+				overview.append("\nWorkstation : ").append(station).append("\nCurrent order: ")
+						.append("There is currently no car at this workstation");
+			} else {
+				overview.append("\nWorkstation : ").append(station).append("\nCurrent order: ")
+						.append(station.getCurrentCarOrder().toString()).append("\n\nCompleted Tasks : \n")
+						.append(getCompletedTasksText(station)).append("\nPending Tasks : \n")
+						.append(getPendingTasksText(station));
+			}
 		}
 		return overview.toString();
 	}
@@ -205,7 +209,7 @@ public class WorkStationController extends Controller {
 			if (getCompany().getAssemblyLine().canAdvance())
 				advanceAssemblyLine();
 		} else if (event instanceof CheckAssemblyLineStatusEvent) {
-			getUi().showAssemblyLineStatus(getOverview());
+			getUi().showAssemblyLineStatus(carMechanic, getOverview());
 		}
 	}
 }

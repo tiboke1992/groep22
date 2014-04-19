@@ -11,11 +11,10 @@ import be.kuleuven.assemassist.domain.role.Role;
 import be.kuleuven.assemassist.domain.workpost.AccessoriesPost;
 import be.kuleuven.assemassist.domain.workpost.DriveTrainPost;
 import be.kuleuven.assemassist.event.CarOrderCompletedEvent;
-import be.kuleuven.assemassist.event.TaskCompletedEvent;
 import be.kuleuven.assemassist.event.Event;
 import be.kuleuven.assemassist.event.LoginEvent;
-import be.kuleuven.assemassist.event.ShowWorkPostsMenuEvent;
 import be.kuleuven.assemassist.event.ShutdownEvent;
+import be.kuleuven.assemassist.event.TaskCompletedEvent;
 
 /**
  * 
@@ -48,7 +47,7 @@ public class SystemController extends Controller {
 			case 2:
 				role = new CarMechanic();
 				getUi().showGreeting(role.toString());
-				getUi().pushEvent(new ShowWorkPostsMenuEvent((CarMechanic) role));
+				getUi().showCarMechanicMenu((CarMechanic) role);
 				break;
 			case 3:
 				role = getCompany().getManager();
