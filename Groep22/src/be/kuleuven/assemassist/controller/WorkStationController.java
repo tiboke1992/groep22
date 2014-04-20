@@ -267,10 +267,6 @@ public class WorkStationController extends Controller {
 				startingTime = startingTime.plusDays(1);
 			}
 			Collections.sort(list);
-			System.out.println("test");
-			for(int i : list){
-				System.out.println(i);
-			}
 			if (list.size() == 1)
 				result = list.get(0);
 			else if (list.size() % 2 == 0) {
