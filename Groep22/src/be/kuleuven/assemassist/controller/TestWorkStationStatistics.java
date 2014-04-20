@@ -85,7 +85,7 @@ public class TestWorkStationStatistics {
 	    WorkStationController c = new WorkStationController(m);
 	    
 	  
-	    System.out.println("average" + c.getAverageProducedCarsPerDay());
+	    System.out.println("average " + c.getAverageProducedCarsPerDay());
 	    System.out.println("mediaan " + c.getMedianProducedCars());
 		
 	}
