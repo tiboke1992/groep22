@@ -37,6 +37,7 @@ public class DeliveryTime {
 	public DateTime getCompletionTime() {
 		return completionTime;
 	}
+	
 
 	public void setEstimatedTime(int estimatedTime) {
 		if (estimatedTime <= 0)

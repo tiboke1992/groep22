@@ -2,10 +2,12 @@ package be.kuleuven.assemassist.controller;
 
 import static be.kuleuven.assemassist.AssemAssist.getTimeManager;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
 import org.joda.time.DateTime;
+import org.joda.time.Days;
 
 import be.kuleuven.assemassist.domain.AssemblyTask;
 import be.kuleuven.assemassist.domain.CarAssemblyProcess;
@@ -37,7 +39,8 @@ public class WorkStationController extends Controller {
 	}
 
 	public List<WorkStation> getWorkStations() {
-		return Collections.unmodifiableList(getCompany().getAssemblyLine().getLayout().getWorkStations());
+		return Collections.unmodifiableList(getCompany().getAssemblyLine()
+				.getLayout().getWorkStations());
 	}
 
 	/**
@@ -54,7 +57,8 @@ public class WorkStationController extends Controller {
 			if (workPost.getCurrentCarOrder() == null) {
 				getUi().showNoCarToWorkOn();
 			} else {
-				getUi().showPendingAssemblyTasks(workPost.getAssemblyProcess().getPendingTasks());
+				getUi().showPendingAssemblyTasks(
+						workPost.getAssemblyProcess().getPendingTasks());
 			}
 		} catch (Exception t) {
 			getUi().showError(t);
@@ -71,7 +75,8 @@ public class WorkStationController extends Controller {
 	 */
 	public void selectTask(int option) {
 		try {
-			List<AssemblyTask> tasks = carMechanic.getWorkStation().getAssemblyProcess().getPendingTasks();
+			List<AssemblyTask> tasks = carMechanic.getWorkStation()
+					.getAssemblyProcess().getPendingTasks();
 			lastTask = tasks.get(option - 1);
 			getUi().showHandleTask(carMechanic);
 		} catch (Exception t) {
@@ -99,7 +104,8 @@ public class WorkStationController extends Controller {
 				.getCurrentCarOrder()
 				.getDeliveryTime()
 				.setEstimatedTime(
-						workStation.getCurrentCarOrder().getDeliveryTime().getEstimatedTime()
+						workStation.getCurrentCarOrder().getDeliveryTime()
+								.getEstimatedTime()
 								- (workStation.getEstimatedTaskTimeCost() - time));
 		if (getCompany().getAssemblyLine().canAdvance())
 			advanceAssemblyLine();
@@ -114,12 +120,17 @@ public class WorkStationController extends Controller {
 		StringBuilder overview = new StringBuilder("Current State :");
 		for (WorkStation station : getWorkStations()) {
 			if (station.getCurrentCarOrder() == null) {
-				overview.append("\nWorkstation : ").append(station).append("\nCurrent order: ")
+				overview.append("\nWorkstation : ")
+						.append(station)
+						.append("\nCurrent order: ")
 						.append("There is currently no car at this workstation");
 			} else {
-				overview.append("\nWorkstation : ").append(station).append("\nCurrent order: ")
-						.append(station.getCurrentCarOrder().toString()).append("\n\nCompleted Tasks : \n")
-						.append(getCompletedTasksText(station)).append("\nPending Tasks : \n")
+				overview.append("\nWorkstation : ").append(station)
+						.append("\nCurrent order: ")
+						.append(station.getCurrentCarOrder().toString())
+						.append("\n\nCompleted Tasks : \n")
+						.append(getCompletedTasksText(station))
+						.append("\nPending Tasks : \n")
 						.append(getPendingTasksText(station));
 			}
 		}
@@ -128,7 +139,8 @@ public class WorkStationController extends Controller {
 
 	private String getCompletedTasksText(WorkStation station) {
 		StringBuilder result = new StringBuilder();
-		List<AssemblyTask> completedTasks = station.getAssemblyProcess().getCompletedTasks();
+		List<AssemblyTask> completedTasks = station.getAssemblyProcess()
+				.getCompletedTasks();
 		if (completedTasks.isEmpty()) {
 			result.append("\tNo completed tasks.");
 		} else {
@@ -144,7 +156,8 @@ public class WorkStationController extends Controller {
 		if (station.getAssemblyProcess().getPendingTasks().isEmpty()) {
 			result.append("\tNo pending tasks.");
 		} else {
-			for (AssemblyTask task : station.getAssemblyProcess().getPendingTasks()) {
+			for (AssemblyTask task : station.getAssemblyProcess()
+					.getPendingTasks()) {
 				result.append("\t").append(task.toString()).append("\n");
 			}
 		}
@@ -156,7 +169,8 @@ public class WorkStationController extends Controller {
 	}
 
 	private boolean noPendingCarOrders() {
-		return this.getCompany().getProductionSchedule().getPendingCarOrders().isEmpty();
+		return this.getCompany().getProductionSchedule().getPendingCarOrders()
+				.isEmpty();
 	}
 
 	private boolean allWorkstationsEmpty() {
@@ -165,7 +179,8 @@ public class WorkStationController extends Controller {
 
 	public void advanceAssemblyLine() {
 		try {
-			WorkStation lastStation = getCompany().getAssemblyLine().getLastWorkStation();
+			WorkStation lastStation = getCompany().getAssemblyLine()
+					.getLastWorkStation();
 			CarOrder last = lastStation.getCurrentCarOrder();
 			if (last != null) {
 				getCompany().getProductionSchedule().completeOrder(last);
@@ -173,13 +188,17 @@ public class WorkStationController extends Controller {
 				getUi().showWorkOrderCompleted(last);
 			}
 
-			WorkStation first = getCompany().getAssemblyLine().getFirstWorkStation();
+			WorkStation first = getCompany().getAssemblyLine()
+					.getFirstWorkStation();
 			lastStation.setCurrentCarOrder(first.getCurrentCarOrder());
 			// TODO enough cars for today?
 			if (getTimeManager().getTime().isBefore(
-					new DateTime().withHourOfDay(20).withMinuteOfHour(0).withSecondOfMinute(0))
-					&& !getCompany().getProductionSchedule().getPendingCarOrders().isEmpty()) {
-				first.setCurrentCarOrder(getCompany().getProductionSchedule().getNextWorkCarOrder());
+					new DateTime().withHourOfDay(20).withMinuteOfHour(0)
+							.withSecondOfMinute(0))
+					&& !getCompany().getProductionSchedule()
+							.getPendingCarOrders().isEmpty()) {
+				first.setCurrentCarOrder(getCompany().getProductionSchedule()
+						.getNextWorkCarOrder());
 			} else {
 				first.setCurrentCarOrder(null);
 			}
@@ -196,7 +215,8 @@ public class WorkStationController extends Controller {
 			if (((LoginEvent) event).getRoleId() == 2)
 				setCarMechanic(new CarMechanic());
 		} else if (event instanceof WorkStationSelectionEvent) {
-			selectWorkStation(((WorkStationSelectionEvent) event).getWorkStationId());
+			selectWorkStation(((WorkStationSelectionEvent) event)
+					.getWorkStationId());
 		} else if (event instanceof SelectTaskEvent) {
 			selectTask(((SelectTaskEvent) event).getTaskId());
 		} else if (event instanceof TaskCompletedEvent)
@@ -211,5 +231,72 @@ public class WorkStationController extends Controller {
 		} else if (event instanceof CheckAssemblyLineStatusEvent) {
 			getUi().showAssemblyLineStatus(carMechanic, getOverview());
 		}
+	}
+
+	public int getAverageProducedCarsPerDay() {
+		int result = 0;
+		List<CarOrder> completed = getCompany().getProductionSchedule()
+				.getCompletedCarOrders();
+		if (!completed.isEmpty()) {
+			DateTime startingTime = completed.get(0).getDeliveryTime()
+					.getCompletionTime();
+			DateTime endingOrderTime = completed.get(completed.size() - 1)
+					.getDeliveryTime().getCompletionTime();
+			int days = Days.daysBetween(startingTime, endingOrderTime)
+					.getDays() + 1;
+			result = completed.size() / days;
+		}
+		return result;
+	}
+
+	public int getMedianProducedCars() {
+		int result = 0;
+		List<CarOrder> completed = getCompany().getProductionSchedule()
+				.getCompletedCarOrders();
+		if (!completed.isEmpty()) {
+			List<Integer> list = new ArrayList<Integer>();
+			DateTime startingTime = completed.get(0).getDeliveryTime()
+					.getCompletionTime();
+			DateTime endingOrderTime = completed.get(completed.size() - 1)
+					.getDeliveryTime().getCompletionTime();
+			endingOrderTime = endingOrderTime.plusDays(1);
+			while (startingTime.toLocalDate().isBefore(
+					endingOrderTime.toLocalDate())) {
+				int number = getNumberOfCompletedOnDateTime(startingTime);
+				list.add(number);
+				startingTime = startingTime.plusDays(1);
+			}
+			Collections.sort(list);
+			System.out.println("test");
+			for(int i : list){
+				System.out.println(i);
+			}
+			if (list.size() == 1)
+				result = list.get(0);
+			else if (list.size() % 2 == 0) {
+				int first = list.get((list.size() / 2)-1);
+				int second = list.get(list.size() / 2);
+				result = (first + second) / 2;
+			} else {
+				result = list.get((list.size() / 2));
+			}
+
+		}
+		return result;
+	}
+
+	public int getNumberOfCompletedOnDateTime(DateTime time) {
+		int result = 0;
+		if (time == null)
+			throw new IllegalArgumentException("The given time cant be null");
+
+		for (CarOrder order : getCompany().getProductionSchedule()
+				.getCompletedCarOrders()) {
+			if (Days.daysBetween(time,
+					order.getDeliveryTime().getCompletionTime()).getDays() == 0)
+				result++;
+		}
+
+		return result;
 	}
 }
