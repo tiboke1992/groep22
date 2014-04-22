@@ -37,8 +37,8 @@ import be.kuleuven.assemassist.event.WorkStationSelectionEvent;
 
 public class UI extends AbstractUI {
 
-	private static final DateFormat COMPLETED_FORMAT = new SimpleDateFormat();// TODO
-	private static final DateFormat PENDING_FORMAT = new SimpleDateFormat();// TODO
+	private static final DateFormat COMPLETED_FORMAT = new SimpleDateFormat("dd/MM/YYYY HH:mm:ss");
+	private static final DateFormat PENDING_FORMAT = new SimpleDateFormat("dd/MM/YYYY HH:mm:ss");
 
 	private Scanner scanner;
 
@@ -182,7 +182,7 @@ public class UI extends AbstractUI {
 		System.out.println("Order " + order.getId());
 		if (order.getDeliveryTime().getCompletionTime() == null)
 			System.out.println("\tEstimated delivery time: "
-					+ productionSchedule.calculateExpectedDeliveryTime(order).toDate());
+					+ PENDING_FORMAT.format(productionSchedule.calculateExpectedDeliveryTime(order).toDate()));
 		else
 			System.out.println("\tDelivery time: " + order.getDeliveryTime().getCompletionTime());
 		System.out.println("\tOptions:");

@@ -43,23 +43,12 @@ public class ProductionSchedule {
 			return order.getDeliveryTime().getCompletionTime();
 		int idx = pendingCarOrders.indexOf(order);
 		if (idx == -1)
-			throw new IllegalArgumentException("Order " + order
-					+ " is not on the production schedule.");
+			throw new IllegalArgumentException("Order " + order + " is not on the production schedule.");
 		int time = 0;
 		for (int i = 0; i <= idx; i++) {
-			time += pendingCarOrders.get(i).getDeliveryTime()
-					.getEstimatedTime();
+			time += pendingCarOrders.get(i).getDeliveryTime().getEstimatedTime();
 		}
 		return order.getDeliveryTime().getStartTime().plusMinutes(time);
-	}
-
-	public boolean canHandleAnotherCarOrder(CarOrder order) {// TODO use
-		DateTime lastExpectedOrderTime = calculateExpectedDeliveryTime(pendingCarOrders
-				.get(pendingCarOrders.size() - 1));
-		int time = order.getDeliveryTime().getEstimatedTime();
-		DateTime maxTimeForNewOrder = new DateTime(lastExpectedOrderTime).withHourOfDay(22).withMinuteOfHour(0)
-				.withSecondOfMinute(0).minusMinutes(time);
-		return lastExpectedOrderTime.isBefore(maxTimeForNewOrder);
 	}
 
 	public List<CarOrder> getPendingCarOrders() {
@@ -69,8 +58,8 @@ public class ProductionSchedule {
 	public List<CarOrder> getCompletedCarOrders() {
 		return completedCarOrders;
 	}
-	
-	public List<CarOrder> getWorkingCarOrders(){
+
+	public List<CarOrder> getWorkingCarOrders() {
 		return this.workingCarOrders;
 	}
 
@@ -90,28 +79,27 @@ public class ProductionSchedule {
 		completedCarOrders.add(order);
 		pendingCarOrders.remove(order);
 	}
-	
-	public void changeSortingAlgorithm(SortingAlgorithm algorithm, List<CarOption> carOptions){
-		if(algorithm == null)
+
+	public void changeSortingAlgorithm(SortingAlgorithm algorithm, List<CarOption> carOptions) {
+		if (algorithm == null)
 			throw new IllegalArgumentException("The algorithm can't be null");
-		if(algorithm instanceof BatchSort && carOptions == null)
+		if (algorithm instanceof BatchSort && carOptions == null)
 			throw new IllegalArgumentException("The batchSort algorithm cant have a null list of carOptions");
 		this.setSortingAlgorithm(algorithm);
 		this.setCarOptions(carOptions);
 		this.sortCheck();
 	}
-	
-	
-	private void sortCheck(){
-		if(this.getSortingAlgorithm() != null && this.getCarOptions() != null){
-			if(this.getSortingAlgorithm() instanceof BatchSort && !this.getCarOptions().isEmpty()){
-				BatchSort batchSort = (BatchSort)this.getSortingAlgorithm();
+
+	private void sortCheck() {
+		if (this.getSortingAlgorithm() != null && this.getCarOptions() != null) {
+			if (this.getSortingAlgorithm() instanceof BatchSort && !this.getCarOptions().isEmpty()) {
+				BatchSort batchSort = (BatchSort) this.getSortingAlgorithm();
 				batchSort.setOptions(this.getCarOptions());
 				batchSort.setPending(this.workingCarOrders);
-				if(batchSort.countSuitableCarOrders(this.getCarOptions()) == 0){
+				if (batchSort.countSuitableCarOrders(this.getCarOptions()) == 0) {
 					this.setSortingAlgorithm(new FifoSort());
 					this.setCarOptions(new ArrayList<CarOption>());
-				}else{
+				} else {
 					this.workingCarOrders = batchSort.sortOrders();
 					batchSort.setPending(pendingCarOrders);
 					this.pendingCarOrders = batchSort.sortOrders();
@@ -131,7 +119,7 @@ public class ProductionSchedule {
 	public List<CarOption> getCarOptions() {
 		return carOptions;
 	}
-	
+
 	public void setCarOptions(List<CarOption> carOptions) {
 		this.carOptions = carOptions;
 	}
