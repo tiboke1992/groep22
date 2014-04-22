@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.joda.time.DateTime;
+import org.joda.time.LocalTime;
 
 import be.kuleuven.assemassist.domain.options.CarOption;
 import be.kuleuven.assemassist.domain.sorting.BatchSort;
@@ -23,6 +24,9 @@ public class ProductionSchedule {
 	private List<CarOrder> completedCarOrders;
 	private SortingAlgorithm sortingAlgorithm;
 	private List<CarOption> carOptions;
+
+	public static final LocalTime START_OF_DAY = new LocalTime(6, 0, 0);
+	public static final LocalTime END_OF_DAY = new LocalTime(22, 0, 0);
 
 	public ProductionSchedule() {
 		pendingCarOrders = new ArrayList<>();

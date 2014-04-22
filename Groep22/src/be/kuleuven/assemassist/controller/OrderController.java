@@ -18,7 +18,6 @@ import be.kuleuven.assemassist.domain.options.Wheels;
 import be.kuleuven.assemassist.domain.sorting.BatchSort;
 import be.kuleuven.assemassist.domain.sorting.FifoSort;
 import be.kuleuven.assemassist.domain.sorting.SupportedSortingAlgorithms;
-import be.kuleuven.assemassist.domain.workpost.WorkStation;
 import be.kuleuven.assemassist.event.CarOrderModelSelectedEvent;
 import be.kuleuven.assemassist.event.ChangeSchedulingAlgorithmEvent;
 import be.kuleuven.assemassist.event.Event;
@@ -73,10 +72,8 @@ public class OrderController extends Controller {
 			order.setWheels(getUi().askCarOption(spec, Wheels.class));
 			order.setSeats(getUi().askCarOption(spec, Seats.class));
 			order.setSpoiler(getUi().askCarOption(spec, Spoiler.class));
-			int totalEstimatedTimeCost = 0;
-			for (WorkStation w : getCompany().getAssemblyLine().getLayout().getWorkStations()) {
-				totalEstimatedTimeCost += model.getEstimatedTimeCost();
-			}
+			int totalEstimatedTimeCost = model.getEstimatedTimeCost()
+					* getCompany().getAssemblyLine().getLayout().getWorkStations().size();
 			order.init(getTimeManager().getTime(), totalEstimatedTimeCost);
 			getCompany().getProductionSchedule().addCarOrder(order);
 			getUi().onOrderCompleted(getCompany().getProductionSchedule().calculateExpectedDeliveryTime(order));

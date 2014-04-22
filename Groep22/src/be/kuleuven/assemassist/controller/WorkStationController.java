@@ -153,18 +153,6 @@ public class WorkStationController extends Controller {
 		return result.toString();
 	}
 
-	public boolean getNonePendingAllEmpty() {
-		return noPendingCarOrders() && allWorkstationsEmpty();
-	}
-
-	private boolean noPendingCarOrders() {
-		return this.getCompany().getProductionSchedule().getPendingCarOrders().isEmpty();
-	}
-
-	private boolean allWorkstationsEmpty() {
-		return !getCompany().getAssemblyLine().isCarLeftAtAWorkStation();
-	}
-
 	public void advanceAssemblyLine() {
 		try {
 			WorkStation lastStation = getCompany().getAssemblyLine().getLastWorkStation();
