@@ -1,16 +1,17 @@
-package be.kuleuven.assemassist.controller;
+package be.kuleuven.assemassist;
 
 import static org.junit.Assert.*;
 
 import org.joda.time.DateTime;
 import org.junit.Test;
 
+import be.kuleuven.assemassist.controller.WorkStationController;
 import be.kuleuven.assemassist.domain.CarManufacturingCompany;
 import be.kuleuven.assemassist.domain.CarOrder;
 import be.kuleuven.assemassist.domain.ProductionSchedule;
 import be.kuleuven.assemassist.domain.carmodel.CarModel;
 
-public class TestWorkStationStatistics {
+public class WorkStationStatisticsScenarioTest {
 
 	@Test
 	public void test() {
