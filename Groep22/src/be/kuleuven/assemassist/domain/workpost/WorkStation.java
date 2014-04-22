@@ -79,14 +79,6 @@ public abstract class WorkStation {
 	public abstract void init();
 
 	public int getEstimatedTimeCost() {
-		return assemblyProcess.getTasks().size() * getEstimatedTaskTimeCost();
-	}
-
-	public int getEstimatedTaskTimeCost() {
-		return currentCarOrder.getCarModel().getTaskTimeCost();
-	}
-
-	public int getTaskSize() {
-		return assemblyProcess.getTasks().size();
+		return currentCarOrder.getCarModel().getEstimatedTimeCost();
 	}
 }

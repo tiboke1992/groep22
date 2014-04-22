@@ -2,8 +2,6 @@ package be.kuleuven.assemassist.controller;
 
 import static be.kuleuven.assemassist.AssemAssist.getTimeManager;
 
-
-
 import java.util.Collections;
 import java.util.List;
 
@@ -21,9 +19,9 @@ import be.kuleuven.assemassist.domain.sorting.BatchSort;
 import be.kuleuven.assemassist.domain.sorting.FifoSort;
 import be.kuleuven.assemassist.domain.sorting.SupportedSortingAlgorithms;
 import be.kuleuven.assemassist.domain.workpost.WorkStation;
+import be.kuleuven.assemassist.event.CarOrderModelSelectedEvent;
 import be.kuleuven.assemassist.event.ChangeSchedulingAlgorithmEvent;
 import be.kuleuven.assemassist.event.Event;
-import be.kuleuven.assemassist.event.CarOrderModelSelectedEvent;
 import be.kuleuven.assemassist.event.SelectBatchSortingAlgorithm;
 import be.kuleuven.assemassist.event.ShowCarModelsEvent;
 import be.kuleuven.assemassist.event.ShowOrderDetailsEvent;
@@ -47,8 +45,7 @@ public class OrderController extends Controller {
 	 * @return A collection of pending car orders
 	 */
 	public List<CarOrder> getPendingCarOrders() {
-		return Collections.unmodifiableList(getCompany()
-				.getProductionSchedule().getPendingCarOrders());
+		return Collections.unmodifiableList(getCompany().getProductionSchedule().getPendingCarOrders());
 	}
 
 	/**
@@ -58,8 +55,7 @@ public class OrderController extends Controller {
 	 * @return A collection of completed car orders
 	 */
 	public List<CarOrder> getCompletedCarOrders() {
-		return Collections.unmodifiableList(getCompany()
-				.getProductionSchedule().getCompletedCarOrders());
+		return Collections.unmodifiableList(getCompany().getProductionSchedule().getCompletedCarOrders());
 	}
 
 	/**
@@ -78,16 +74,12 @@ public class OrderController extends Controller {
 			order.setSeats(getUi().askCarOption(spec, Seats.class));
 			order.setSpoiler(getUi().askCarOption(spec, Spoiler.class));
 			int totalEstimatedTimeCost = 0;
-			for (WorkStation w : getCompany().getAssemblyLine().getLayout()
-					.getWorkStations()) {
-				totalEstimatedTimeCost += w.getTaskSize()
-						* model.getTaskTimeCost();
+			for (WorkStation w : getCompany().getAssemblyLine().getLayout().getWorkStations()) {
+				totalEstimatedTimeCost += model.getEstimatedTimeCost();
 			}
 			order.init(getTimeManager().getTime(), totalEstimatedTimeCost);
 			getCompany().getProductionSchedule().addCarOrder(order);
-			getUi().onOrderCompleted(
-					getCompany().getProductionSchedule()
-							.calculateExpectedDeliveryTime(order));
+			getUi().onOrderCompleted(getCompany().getProductionSchedule().calculateExpectedDeliveryTime(order));
 			getUi().showGarageHolderMenu();
 		} catch (Exception t) {
 			getUi().showError(t);
@@ -101,25 +93,25 @@ public class OrderController extends Controller {
 	 * @return A list of the available car models
 	 */
 	public List<CarModel> getAvailableCarModels() {
-		return Collections.unmodifiableList(getCompany()
-				.getAvailableCarModels());
+		return Collections.unmodifiableList(getCompany().getAvailableCarModels());
 	}
-	
-	private void handleChangeAlgorithm(Event event){
-		SupportedSortingAlgorithms algo = ((ChangeSchedulingAlgorithmEvent)event).getAlgorithm();
-		if(algo == SupportedSortingAlgorithms.FIFO){
+
+	private void handleChangeAlgorithm(Event event) {
+		SupportedSortingAlgorithms algo = ((ChangeSchedulingAlgorithmEvent) event).getAlgorithm();
+		if (algo == SupportedSortingAlgorithms.FIFO) {
 			this.getCompany().getProductionSchedule().changeSortingAlgorithm(new FifoSort(), null);
 			getUi().showChangedToFifoSort();
-		}else if(algo == SupportedSortingAlgorithms.BATCH){
+		} else if (algo == SupportedSortingAlgorithms.BATCH) {
 			BatchSort batch = new BatchSort();
 			batch.setPending(this.getCompany().getProductionSchedule().getWorkingCarOrders());
 			List<List<CarOption>> caroptions = batch.getPermutations();
 			getUi().showBatchPermutations(caroptions);
 		}
 	}
-	
-	private void handleBatchAlgorithm(Event event){
-		this.getCompany().getProductionSchedule().changeSortingAlgorithm(new BatchSort(), ((SelectBatchSortingAlgorithm)event).getCarOptions());
+
+	private void handleBatchAlgorithm(Event event) {
+		this.getCompany().getProductionSchedule()
+				.changeSortingAlgorithm(new BatchSort(), ((SelectBatchSortingAlgorithm) event).getCarOptions());
 		getUi().showBatchSortSelected();
 	}
 
@@ -128,17 +120,15 @@ public class OrderController extends Controller {
 		if (event instanceof CarOrderModelSelectedEvent) {
 			makeOrder(((CarOrderModelSelectedEvent) event).getModel());
 		} else if (event instanceof ShowOrdersEvent) {
-			getUi().showOrders(getPendingCarOrders(), getCompletedCarOrders(),
-					getCompany().getProductionSchedule());
+			getUi().showOrders(getPendingCarOrders(), getCompletedCarOrders(), getCompany().getProductionSchedule());
 		} else if (event instanceof ShowCarModelsEvent) {
 			getUi().showCarModels(getAvailableCarModels());
 		} else if (event instanceof ShowOrderDetailsEvent) {
-			getUi().showOrderDetails(getPendingCarOrders(),
-					getCompletedCarOrders(),
+			getUi().showOrderDetails(getPendingCarOrders(), getCompletedCarOrders(),
 					getCompany().getProductionSchedule());
-		}else if(event instanceof ChangeSchedulingAlgorithmEvent){
+		} else if (event instanceof ChangeSchedulingAlgorithmEvent) {
 			handleChangeAlgorithm(event);
-		}else if(event instanceof SelectBatchSortingAlgorithm){
+		} else if (event instanceof SelectBatchSortingAlgorithm) {
 			handleBatchAlgorithm(event);
 		}
 

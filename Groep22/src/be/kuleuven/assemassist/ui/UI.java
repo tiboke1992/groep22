@@ -85,7 +85,7 @@ public class UI extends AbstractUI {
 
 	// TODO current algoritme nog tonen
 	public void showSchedulingAlgorithms() {
-		System.out.println("0) exit");
+		System.out.println("*) Back to manager menu");
 		int counter = 1;
 		for (SupportedSortingAlgorithms sort : SupportedSortingAlgorithms.values()) {
 			System.out.println(counter + ") " + sort.toString());
@@ -98,9 +98,10 @@ public class UI extends AbstractUI {
 			} else if (option > 0 && option <= SupportedSortingAlgorithms.values().length) {
 				SupportedSortingAlgorithms sort = SupportedSortingAlgorithms.values()[option - 1];
 				pushEvent(new ChangeSchedulingAlgorithmEvent(sort));
-			}
+			} else
+				showManagerMenu();
 		} catch (Throwable t) {
-			shutdown();
+			showManagerMenu();
 		}
 	}
 

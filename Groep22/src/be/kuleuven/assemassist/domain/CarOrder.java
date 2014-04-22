@@ -50,7 +50,7 @@ public class CarOrder {
 	public CarOrder(CarOrder order) {
 		this.id = order.getId();
 		this.carModel = new CarModel(order.carModel.getCarManufacturingCompany(), order.carModel.getName(),
-				order.carModel.getTaskTimeCost(), new CarModelSpecification(order.carModel.getSpecification()));
+				order.carModel.getEstimatedTimeCost(), new CarModelSpecification(order.carModel.getSpecification()));
 		this.deliveryTime = order.getDeliveryTime() == null ? null : new DeliveryTime(order.getDeliveryTime());
 		this.engine = order.getEngine();
 		this.gearbox = order.getGearbox();

@@ -11,7 +11,7 @@ import be.kuleuven.assemassist.domain.CarManufacturingCompany;
 
 public final class CarModel {
 
-	private final int taskTimeCost;
+	private final int estimatedTimeCost;
 	private final String name;
 	private final CarModelSpecification specification;
 	private final CarManufacturingCompany carManufacturingCompany;
@@ -20,7 +20,7 @@ public final class CarModel {
 		this.carManufacturingCompany = company;
 		this.name = name;
 		this.specification = specification;
-		this.taskTimeCost = taskTimeCost;
+		this.estimatedTimeCost = taskTimeCost;
 	}
 
 	public CarModelSpecification getSpecification() {
@@ -65,8 +65,8 @@ public final class CarModel {
 		return true;
 	}
 
-	public int getTaskTimeCost() {
-		return taskTimeCost;
+	public int getEstimatedTimeCost() {
+		return estimatedTimeCost;
 	}
 
 }
