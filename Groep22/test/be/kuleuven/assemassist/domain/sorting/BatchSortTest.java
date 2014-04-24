@@ -12,6 +12,7 @@ import be.kuleuven.assemassist.domain.options.Gearbox;
 import be.kuleuven.assemassist.domain.options.Seats;
 import be.kuleuven.assemassist.domain.options.Spoiler;
 import be.kuleuven.assemassist.domain.options.Wheels;
+import be.kuleuven.assemassist.domain.sorting.BatchSort;
 
 public class BatchSortTest {
 
