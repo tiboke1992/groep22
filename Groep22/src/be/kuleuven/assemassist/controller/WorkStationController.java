@@ -102,21 +102,30 @@ public class WorkStationController extends Controller {
 		WorkStation workStation = carMechanic.getWorkStation();
 		CarAssemblyProcess assemblyProcess = workStation.getAssemblyProcess();
 		assemblyProcess.completeTask(lastTask, time);
-		workStation
-				.getCurrentCarOrder()
-				.getDeliveryTime()
-				.setEstimatedTime(
-						workStation.getCurrentCarOrder().getDeliveryTime().getEstimatedTime()
-								- (workStation.getEstimatedTimeCost() / assemblyProcess.getTasks().size() - time));
+		CarOrder current = workStation.getCurrentCarOrder();
+		int estimatedTimeCost = workStation.getEstimatedTimeCost();
+		current.getDeliveryTime().setEstimatedTime(
+				current.getDeliveryTime().getEstimatedTime()
+						- (estimatedTimeCost / assemblyProcess.getTasks().size() - time));
 		if (getCompany().getAssemblyLine().canAdvance())
 			advanceAssemblyLine();
 		getUi().showTaskCompleted(lastTask);
 		if (assemblyProcess.getPendingTasks().isEmpty()) {
+			if (estimatedTimeCost * assemblyProcess.getTasks().size() < assemblyProcess.getTotalTimeSpentOnTasks())
+				getCompany().getProductionSchedule().addDelay(
+						new Delay(assemblyProcess.getTotalTimeSpentOnTasks() - estimatedTimeCost
+								* assemblyProcess.getTasks().size(), getTimeManager().getTime(), current));
 			getUi().showAllTasksCompleted();
 		} else
 			getUi().showPendingAssemblyTasks(assemblyProcess.getPendingTasks());
 	}
 
+	/**
+	 * Produces a string representation of the workstations, their associated
+	 * order and their tasks.
+	 * 
+	 * @return the overview
+	 */
 	private String getOverview() {
 		StringBuilder overview = new StringBuilder("Current State :");
 		for (WorkStation station : getWorkStations()) {
@@ -133,6 +142,14 @@ public class WorkStationController extends Controller {
 		return overview.toString();
 	}
 
+	/**
+	 * Produces a string representation of the completed tasks of the given
+	 * workstation
+	 * 
+	 * @param station
+	 *            the workstation that we want the list for
+	 * @return list of completed tasks in string format
+	 */
 	private String getCompletedTasksText(WorkStation station) {
 		StringBuilder result = new StringBuilder();
 		List<AssemblyTask> completedTasks = station.getAssemblyProcess().getCompletedTasks();
@@ -146,6 +163,14 @@ public class WorkStationController extends Controller {
 		return result.toString();
 	}
 
+	/**
+	 * Produces a string representation of the pending tasks of the given
+	 * workstation
+	 * 
+	 * @param station
+	 *            the workstation that we want the list for
+	 * @return list of pending tasks in string format
+	 */
 	private String getPendingTasksText(WorkStation station) {
 		StringBuilder result = new StringBuilder();
 		if (station.getAssemblyProcess().getPendingTasks().isEmpty()) {
@@ -158,15 +183,12 @@ public class WorkStationController extends Controller {
 		return result.toString();
 	}
 
+	/**
+	 * Advances the assembly line
+	 */
 	public void advanceAssemblyLine() {
 		try {
-			DateTime time = getTimeManager().getTime();
 			ProductionSchedule schedule = getCompany().getProductionSchedule();
-			// if
-			// (time.isAfter(time.withFields(ProductionSchedule.START_OF_DAY))
-			// &&
-			// time.isBefore(time.withFields(ProductionSchedule.END_OF_DAY).minusMinutes(
-			// getCompany().getProductionSchedule().getOverworkMinutes()))) {
 			WorkStation lastStation = getCompany().getAssemblyLine().getLastWorkStation();
 			CarOrder last = lastStation.getCurrentCarOrder();
 			if (last != null) {
@@ -185,7 +207,6 @@ public class WorkStationController extends Controller {
 			}
 			first.init();
 			getUi().showAssemblyLineAdvanced();
-			// }
 		} catch (Exception t) {
 			getUi().showError(t);
 		}
@@ -259,7 +280,10 @@ public class WorkStationController extends Controller {
 		Delay last = getLastDelay();
 		if (last == null)
 			return null;
-		return delays.headSet(last).last();
+		SortedSet<Delay> headSet = delays.headSet(last);
+		if (headSet.isEmpty())
+			return null;
+		return headSet.last();
 	}
 
 	public double getAverageProducedCarsPerDay() {

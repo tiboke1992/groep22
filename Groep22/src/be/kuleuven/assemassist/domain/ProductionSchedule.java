@@ -47,12 +47,23 @@ public class ProductionSchedule {
 		setCarOptions(new ArrayList<CarOption>());
 	}
 
+	/**
+	 * Returns the next car order to be put on the assembly line and removes it
+	 * from the collection.
+	 */
 	public CarOrder getNextWorkCarOrder() {
 		if (workingCarOrders.isEmpty())
 			return null;
 		return workingCarOrders.remove(0);
 	}
 
+	/**
+	 * Calculates the expected delivery time for a given car order
+	 * 
+	 * @param order
+	 *            car order
+	 * @return the expected delivery time
+	 */
 	public DateTime calculateExpectedDeliveryTime(CarOrder order) {
 		if (completedCarOrders.contains(order))
 			return order.getDeliveryTime().getCompletionTime();
@@ -70,6 +81,13 @@ public class ProductionSchedule {
 		return expected;
 	}
 
+	/**
+	 * Checks if a given time is before the end of the work day (takes overwork
+	 * into account)
+	 * 
+	 * @param time
+	 * @return
+	 */
 	public boolean isBeforeEndOfDay(DateTime time) {
 		return time.isBefore(time.withFields(END_OF_DAY).minusMinutes(overworkMinutes));
 	}

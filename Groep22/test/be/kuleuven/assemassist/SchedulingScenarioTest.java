@@ -31,6 +31,7 @@ import be.kuleuven.assemassist.domain.options.Wheels;
 import be.kuleuven.assemassist.domain.role.CarMechanic;
 import be.kuleuven.assemassist.domain.role.Manager;
 import be.kuleuven.assemassist.domain.workpost.WorkStation;
+import be.kuleuven.assemassist.event.ShowStatisticsEvent;
 import be.kuleuven.assemassist.ui.TestUI;
 
 public class SchedulingScenarioTest {
@@ -84,12 +85,12 @@ public class SchedulingScenarioTest {
 		assertNull(last.getCurrentCarOrder());
 		systemController.loginAs(CAR_MECHANIC);
 		workStationController.setCarMechanic(new CarMechanic());
-		completeTasksAtWorkStation(0);
+		completeTasksAtWorkStation(0, 30);
 		assertNotNull(first.getCurrentCarOrder());
 		assertNotNull(last.getCurrentCarOrder());
 		assertEquals(last.getCurrentCarOrder().getId(), id);
 		id = first.getCurrentCarOrder().getId();
-		completeTasksAtWorkStation(1);
+		completeTasksAtWorkStation(1, 30);
 		assertNotNull(first.getCurrentCarOrder());
 		assertNotNull(last.getCurrentCarOrder());
 		assertEquals(last.getCurrentCarOrder().getId(), id);
@@ -102,12 +103,36 @@ public class SchedulingScenarioTest {
 		assertFalse(newTime.isBefore(time.plusDays(1).withFields(ProductionSchedule.START_OF_DAY)));
 	}
 
-	private void completeTasksAtWorkStation(int workStation) {
+	@Test
+	public void testDelays() {
+		new TestUI(systemController, orderController, workStationController);
+		systemController.start();
+		systemController.loginAs(GARAGE_HOLDER);
+		for (int i = 0; i < 100; i++)
+			orderController.makeOrder(model);
+
+		AssemblyLine assemblyLine = carManufacturingCompany.getAssemblyLine();
+		ProductionSchedule productionSchedule = carManufacturingCompany.getProductionSchedule();
+		WorkStation first = assemblyLine.getFirstWorkStation();
+		WorkStation last = assemblyLine.getLastWorkStation();
+		if (assemblyLine.canAdvance())
+			workStationController.advanceAssemblyLine();
+		systemController.loginAs(CAR_MECHANIC);
+		workStationController.setCarMechanic(new CarMechanic());
+		for (int i = 0; i < 40; i++) {
+			completeTasksAtWorkStation(0, 10 + (int) (Math.random() * ((50 - 10) + 1)));
+			completeTasksAtWorkStation(1, 10 + (int) (Math.random() * ((50 - 10) + 1)));
+		}
+		printOrdersAtStationInfo();
+		workStationController.handleEvent(new ShowStatisticsEvent());
+	}
+
+	private void completeTasksAtWorkStation(int workStation, int time) {
 		workStationController.selectWorkStation(workStation);
 		while (!carManufacturingCompany.getAssemblyLine().getLayout().getWorkStations().get(workStation)
 				.getAssemblyProcess().getPendingTasks().isEmpty()) {
 			workStationController.selectTask(1);
-			workStationController.completeTask(30);
+			workStationController.completeTask(time);
 		}
 	}
 

@@ -84,8 +84,10 @@ public class SystemController extends Controller {
 			DateTime time = getTimeManager().getTime();
 			e.getOrder().getDeliveryTime().setCompletionTime(time);
 			int minutes = Minutes.minutesBetween(time.withFields(END_OF_DAY), time).getMinutes();
-			if (time.withFields(END_OF_DAY).isBefore(time))
+			if (time.withFields(END_OF_DAY).isBefore(time)) {
 				getCompany().getProductionSchedule().setOverworkMinutes(minutes);
+				getTimeManager().nextDay();
+			}
 		}
 	}
 }
