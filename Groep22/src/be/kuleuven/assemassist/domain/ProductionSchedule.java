@@ -1,7 +1,10 @@
 package be.kuleuven.assemassist.domain;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
+import java.util.SortedSet;
+import java.util.TreeSet;
 
 import org.joda.time.DateTime;
 import org.joda.time.LocalTime;
@@ -24,6 +27,8 @@ public class ProductionSchedule {
 	private List<CarOrder> completedCarOrders;
 	private SortingAlgorithm sortingAlgorithm;
 	private List<CarOption> carOptions;
+	private int overworkMinutes;
+	private SortedSet<Delay> delays;
 
 	public static final LocalTime START_OF_DAY = new LocalTime(6, 0, 0);
 	public static final LocalTime END_OF_DAY = new LocalTime(22, 0, 0);
@@ -32,6 +37,12 @@ public class ProductionSchedule {
 		pendingCarOrders = new ArrayList<>();
 		workingCarOrders = new ArrayList<>();
 		completedCarOrders = new ArrayList<>();
+		delays = new TreeSet<>(new Comparator<Delay>() {
+			@Override
+			public int compare(Delay o1, Delay o2) {
+				return (int) (o1.getTime().getMillis() - o2.getTime().getMillis());
+			}
+		});
 		setSortingAlgorithm(new FifoSort());
 		setCarOptions(new ArrayList<CarOption>());
 	}
@@ -48,11 +59,19 @@ public class ProductionSchedule {
 		int idx = pendingCarOrders.indexOf(order);
 		if (idx == -1)
 			throw new IllegalArgumentException("Order " + order + " is not on the production schedule.");
-		int time = 0;
+		DateTime expected = order.getDeliveryTime().getStartTime();
 		for (int i = 0; i <= idx; i++) {
-			time += pendingCarOrders.get(i).getDeliveryTime().getEstimatedTime();
+			int minutes = pendingCarOrders.get(i).getDeliveryTime().getEstimatedTime();
+			if (isBeforeEndOfDay(expected.plusMinutes(minutes))) {
+				expected = expected.plusMinutes(minutes);
+			} else
+				expected = expected.withFields(START_OF_DAY).plusDays(1).plusMinutes(minutes);
 		}
-		return order.getDeliveryTime().getStartTime().plusMinutes(time);
+		return expected;
+	}
+
+	public boolean isBeforeEndOfDay(DateTime time) {
+		return time.isBefore(time.withFields(END_OF_DAY).minusMinutes(overworkMinutes));
 	}
 
 	public List<CarOrder> getPendingCarOrders() {
@@ -126,5 +145,21 @@ public class ProductionSchedule {
 
 	public void setCarOptions(List<CarOption> carOptions) {
 		this.carOptions = carOptions;
+	}
+
+	public int getOverworkMinutes() {
+		return overworkMinutes;
+	}
+
+	public void addDelay(Delay d) {
+		delays.add(d);
+	}
+
+	public SortedSet<Delay> getDelays() {
+		return delays;
+	}
+
+	public void setOverworkMinutes(int overworkMinutes) {
+		this.overworkMinutes = overworkMinutes;
 	}
 }

@@ -1,5 +1,11 @@
 package be.kuleuven.assemassist.controller;
 
+import static be.kuleuven.assemassist.AssemAssist.getTimeManager;
+import static be.kuleuven.assemassist.domain.ProductionSchedule.END_OF_DAY;
+
+import org.joda.time.DateTime;
+import org.joda.time.Minutes;
+
 import be.kuleuven.assemassist.AssemAssist;
 import be.kuleuven.assemassist.domain.AssemblyLine;
 import be.kuleuven.assemassist.domain.CarManufacturingCompany;
@@ -75,7 +81,11 @@ public class SystemController extends Controller {
 			AssemAssist.getTimeManager().addMinutes(e.getTimeToComplete());
 		} else if (event instanceof CarOrderCompletedEvent) {
 			CarOrderCompletedEvent e = (CarOrderCompletedEvent) event;
-			e.getOrder().getDeliveryTime().setCompletionTime(AssemAssist.getTimeManager().getTime());
+			DateTime time = getTimeManager().getTime();
+			e.getOrder().getDeliveryTime().setCompletionTime(time);
+			int minutes = Minutes.minutesBetween(time.withFields(END_OF_DAY), time).getMinutes();
+			if (time.withFields(END_OF_DAY).isBefore(time))
+				getCompany().getProductionSchedule().setOverworkMinutes(minutes);
 		}
 	}
 }

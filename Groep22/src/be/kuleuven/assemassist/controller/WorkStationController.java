@@ -4,7 +4,9 @@ import static be.kuleuven.assemassist.AssemAssist.getTimeManager;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
+import java.util.SortedSet;
 
 import org.joda.time.DateTime;
 import org.joda.time.Days;
@@ -13,6 +15,8 @@ import be.kuleuven.assemassist.domain.AssemblyTask;
 import be.kuleuven.assemassist.domain.CarAssemblyProcess;
 import be.kuleuven.assemassist.domain.CarManufacturingCompany;
 import be.kuleuven.assemassist.domain.CarOrder;
+import be.kuleuven.assemassist.domain.Delay;
+import be.kuleuven.assemassist.domain.ProductionSchedule;
 import be.kuleuven.assemassist.domain.role.CarMechanic;
 import be.kuleuven.assemassist.domain.workpost.WorkStation;
 import be.kuleuven.assemassist.event.CarOrderCreatedEvent;
@@ -20,6 +24,7 @@ import be.kuleuven.assemassist.event.CheckAssemblyLineStatusEvent;
 import be.kuleuven.assemassist.event.Event;
 import be.kuleuven.assemassist.event.LoginEvent;
 import be.kuleuven.assemassist.event.SelectTaskEvent;
+import be.kuleuven.assemassist.event.ShowStatisticsEvent;
 import be.kuleuven.assemassist.event.ShowWorkPostsMenuEvent;
 import be.kuleuven.assemassist.event.TaskCompletedEvent;
 import be.kuleuven.assemassist.event.WorkStationSelectionEvent;
@@ -155,26 +160,32 @@ public class WorkStationController extends Controller {
 
 	public void advanceAssemblyLine() {
 		try {
+			DateTime time = getTimeManager().getTime();
+			ProductionSchedule schedule = getCompany().getProductionSchedule();
+			// if
+			// (time.isAfter(time.withFields(ProductionSchedule.START_OF_DAY))
+			// &&
+			// time.isBefore(time.withFields(ProductionSchedule.END_OF_DAY).minusMinutes(
+			// getCompany().getProductionSchedule().getOverworkMinutes()))) {
 			WorkStation lastStation = getCompany().getAssemblyLine().getLastWorkStation();
 			CarOrder last = lastStation.getCurrentCarOrder();
 			if (last != null) {
-				getCompany().getProductionSchedule().completeOrder(last);
+				schedule.completeOrder(last);
 				lastStation.init();
 				getUi().showWorkOrderCompleted(last);
 			}
 
 			WorkStation first = getCompany().getAssemblyLine().getFirstWorkStation();
 			lastStation.setCurrentCarOrder(first.getCurrentCarOrder());
-			// TODO enough cars for today?
-			if (getTimeManager().getTime().isBefore(
-					new DateTime().withHourOfDay(20).withMinuteOfHour(0).withSecondOfMinute(0))
-					&& !getCompany().getProductionSchedule().getPendingCarOrders().isEmpty()) {
-				first.setCurrentCarOrder(getCompany().getProductionSchedule().getNextWorkCarOrder());
+			if ((last == null || (last != null && schedule.isBeforeEndOfDay(schedule
+					.calculateExpectedDeliveryTime(last)))) && !schedule.getPendingCarOrders().isEmpty()) {
+				first.setCurrentCarOrder(schedule.getNextWorkCarOrder());
 			} else {
 				first.setCurrentCarOrder(null);
 			}
 			first.init();
 			getUi().showAssemblyLineAdvanced();
+			// }
 		} catch (Exception t) {
 			getUi().showError(t);
 		}
@@ -200,23 +211,71 @@ public class WorkStationController extends Controller {
 				advanceAssemblyLine();
 		} else if (event instanceof CheckAssemblyLineStatusEvent) {
 			getUi().showAssemblyLineStatus(carMechanic, getOverview());
+		} else if (event instanceof ShowStatisticsEvent) {
+			getUi().showStatistics(getAverageProducedCarsPerDay(), getMedianProducedCars(),
+					getNumberOfCompletedOnDateTime(getTimeManager().getTime()),
+					getNumberOfCompletedOnDateTime(getTimeManager().getTime().minusDays(1)), getAverageDelay(),
+					getMedianDelay(), getLastDelay(), getSecondLastDelay());
 		}
 	}
 
-	public int getAverageProducedCarsPerDay() {
-		int result = 0;
+	public double getAverageDelay() {
+		double delay = 0;
+		SortedSet<Delay> delays = getCompany().getProductionSchedule().getDelays();
+		if (delays.isEmpty())
+			return 0;
+		for (Delay d : delays)
+			delay += d.getMinutesDelay();
+		return delay / delays.size();
+	}
+
+	public double getMedianDelay() {
+		List<Delay> delays = new ArrayList<>();
+		for (Delay d : getCompany().getProductionSchedule().getDelays())
+			delays.add(d);
+		Collections.sort(delays, new Comparator<Delay>() {
+			@Override
+			public int compare(Delay o1, Delay o2) {
+				return o1.getMinutesDelay() - o2.getMinutesDelay();
+			}
+		});
+		if (delays.isEmpty())
+			return 0;
+		if (delays.size() % 2 == 0)
+			return (delays.get(delays.size() / 2).getMinutesDelay() + delays.get(delays.size() / 2 - 1)
+					.getMinutesDelay()) / 2;
+		return delays.get(delays.size() / 2).getMinutesDelay();
+	}
+
+	public Delay getLastDelay() {
+		SortedSet<Delay> delays = getCompany().getProductionSchedule().getDelays();
+		if (delays.isEmpty())
+			return null;
+		return delays.last();
+	}
+
+	public Delay getSecondLastDelay() {
+		SortedSet<Delay> delays = getCompany().getProductionSchedule().getDelays();
+		Delay last = getLastDelay();
+		if (last == null)
+			return null;
+		return delays.headSet(last).last();
+	}
+
+	public double getAverageProducedCarsPerDay() {
+		double result = 0;
 		List<CarOrder> completed = getCompany().getProductionSchedule().getCompletedCarOrders();
 		if (!completed.isEmpty()) {
 			DateTime startingTime = completed.get(0).getDeliveryTime().getCompletionTime();
 			DateTime endingOrderTime = completed.get(completed.size() - 1).getDeliveryTime().getCompletionTime();
-			int days = Days.daysBetween(startingTime, endingOrderTime).getDays() + 1;
+			double days = Days.daysBetween(startingTime, endingOrderTime).getDays() + 1;
 			result = completed.size() / days;
 		}
 		return result;
 	}
 
-	public int getMedianProducedCars() {
-		int result = 0;
+	public double getMedianProducedCars() {
+		double result = 0;
 		List<CarOrder> completed = getCompany().getProductionSchedule().getCompletedCarOrders();
 		if (!completed.isEmpty()) {
 			List<Integer> list = new ArrayList<Integer>();
@@ -232,8 +291,8 @@ public class WorkStationController extends Controller {
 			if (list.size() == 1)
 				result = list.get(0);
 			else if (list.size() % 2 == 0) {
-				int first = list.get((list.size() / 2) - 1);
-				int second = list.get(list.size() / 2);
+				double first = list.get((list.size() / 2) - 1);
+				double second = list.get(list.size() / 2);
 				result = (first + second) / 2;
 			} else {
 				result = list.get((list.size() / 2));
@@ -244,9 +303,9 @@ public class WorkStationController extends Controller {
 	}
 
 	public int getNumberOfCompletedOnDateTime(DateTime time) {
-		int result = 0;
 		if (time == null)
 			throw new IllegalArgumentException("The given time cant be null");
+		int result = 0;
 
 		for (CarOrder order : getCompany().getProductionSchedule().getCompletedCarOrders()) {
 			if (Days.daysBetween(time, order.getDeliveryTime().getCompletionTime()).getDays() == 0)

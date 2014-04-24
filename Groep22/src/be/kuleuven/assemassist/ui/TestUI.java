@@ -10,10 +10,12 @@ import be.kuleuven.assemassist.controller.OrderController;
 import be.kuleuven.assemassist.controller.SystemController;
 import be.kuleuven.assemassist.controller.WorkStationController;
 import be.kuleuven.assemassist.domain.AssemblyTask;
+import be.kuleuven.assemassist.domain.CarOrder;
 import be.kuleuven.assemassist.domain.carmodel.CarModelSpecification;
 import be.kuleuven.assemassist.domain.options.CarOption;
 import be.kuleuven.assemassist.domain.role.CarMechanic;
 import be.kuleuven.assemassist.domain.workpost.WorkStation;
+import be.kuleuven.assemassist.event.CarOrderCompletedEvent;
 
 public class TestUI extends UI {
 
@@ -85,5 +87,18 @@ public class TestUI extends UI {
 
 	@Override
 	public void showWorkPostMenu(List<WorkStation> l) {
+	}
+
+	@Override
+	public void showCarMechanicMenu(CarMechanic mechanic) {
+	}
+
+	@Override
+	public void showAllTasksCompleted() {
+	}
+
+	@Override
+	public void showWorkOrderCompleted(CarOrder order) {
+		pushEvent(new CarOrderCompletedEvent(order));
 	}
 }

@@ -11,6 +11,7 @@ import org.joda.time.DateTime;
 import be.kuleuven.assemassist.controller.Controller;
 import be.kuleuven.assemassist.domain.AssemblyTask;
 import be.kuleuven.assemassist.domain.CarOrder;
+import be.kuleuven.assemassist.domain.Delay;
 import be.kuleuven.assemassist.domain.ProductionSchedule;
 import be.kuleuven.assemassist.domain.carmodel.CarModel;
 import be.kuleuven.assemassist.domain.carmodel.CarModelSpecification;
@@ -30,6 +31,7 @@ import be.kuleuven.assemassist.event.SelectTaskEvent;
 import be.kuleuven.assemassist.event.ShowCarModelsEvent;
 import be.kuleuven.assemassist.event.ShowOrderDetailsEvent;
 import be.kuleuven.assemassist.event.ShowOrdersEvent;
+import be.kuleuven.assemassist.event.ShowStatisticsEvent;
 import be.kuleuven.assemassist.event.ShowWorkPostsMenuEvent;
 import be.kuleuven.assemassist.event.ShutdownEvent;
 import be.kuleuven.assemassist.event.TaskCompletedEvent;
@@ -67,19 +69,19 @@ public class UI extends AbstractUI {
 
 	public void showManagerMenu() {
 		System.out.println("1) select alternative scheduling algorithm ");
-		System.out.println("2) login as someone else");
-		System.out.println("*) exit");
+		System.out.println("2) view statistics");
+		System.out.println("*) login as someone else");
 		try {
 			int option = scanner.nextInt();
 			if (option == 1) {
 				showSchedulingAlgorithms();
 			} else if (option == 2) {
-				showLoginOptions();
+				pushEvent(new ShowStatisticsEvent());
 			} else {
-				shutdown();
+				showLoginOptions();
 			}
 		} catch (Throwable t) {
-			shutdown();
+			showLoginOptions();
 		}
 	}
 
@@ -391,4 +393,29 @@ public class UI extends AbstractUI {
 		showManagerMenu();
 	}
 
+	public void showStatistics(double avgCarsProduced, double medianCarsProduced, double todayProduced,
+			double yesterdayProduced, double avgDelay, double medianDelay, Delay lastDelay, Delay secondLastDelay) {
+		System.out.println();
+		System.out.println("Average cars produced: " + avgCarsProduced);
+		System.out.println("Median cars produced: " + medianCarsProduced);
+		System.out.println("Cars produced today: " + todayProduced);
+		System.out.println("Cars produced yesterday: " + yesterdayProduced);
+		System.out.println("Average delay: " + avgDelay + " minutes");
+		System.out.println("Median delay: " + medianDelay + " minutes");
+		if (secondLastDelay == null)
+			System.out.println("Second last delay: /");
+		else
+			System.out.println("Second last delay: " + secondLastDelay.getMinutesDelay() + " minutes on "
+					+ secondLastDelay.getTime().toString("dd/MM/YYYY"));
+		if (lastDelay == null)
+			System.out.println("Last delay: /");
+		else
+			System.out.println("Last delay: " + lastDelay.getMinutesDelay() + " minutes on "
+					+ lastDelay.getTime().toString("dd/MM/YYYY"));
+		try {
+			scanner.nextInt();
+		} catch (Exception e) {
+		}
+		showManagerMenu();
+	}
 }
